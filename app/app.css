@@ -7,11 +7,35 @@
   --font-space-grotesk:
     "Space Grotesk", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+  --primary-100: #2e8b57;
+  --primary-200: #61bc84;
+  --primary-300: #c6ffe6;
+  --accent-100: #8fbc8f;
+  --accent-200: #345e37;
+  --text-100: #ffffff;
+  --text-200: #e0e0e0;
+  --bg-100: #1e1e1e;
+  --bg-200: #2d2d2d;
+  --bg-300: #454545;
+
+  --color-primary-100: var(--primary-100);
+  --color-primary-200: var(--primary-200);
+  --color-primary-300: var(--primary-300);
+  --color-accent-100: var(--accent-100);
+  --color-accent-200: var(--accent-200);
+  --color-text-100: var(--text-100);
+  --color-text-200: var(--text-200);
+  --color-bg-100: var(--bg-100);
+  --color-bg-200: var(--bg-200);
+  --color-bg-300: var(--bg-300);
 }
 
 html,
 body {
-  @apply bg-white dark:bg-neutral-900 font-sans bg-[radial-gradient(80vw_50vw_at_10%_0%,oklch(0.627_0.194_149.214/0.16),transparent_60%),radial-gradient(70vw_40vw_at_90%_100%,oklch(0.627_0.194_149.214/0.1),transparent_65%)];
+  @apply min-h-screen bg-bg-100 text-text-100 font-sans;
+  background-size: 100% 100%, 100% 100%;
+  background-attachment: fixed;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
