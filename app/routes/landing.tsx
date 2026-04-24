@@ -13,10 +13,10 @@ export default function Landing() {
                     </p>
 
                     <div className="flex gap-6 mt-6">
-                        <button className="px-6 py-2 bg-primary-400 text-text-100 rounded-lg transition-transform hover:-translate-y-1 hover:bg-primary-500 cursor-pointer">
+                        <button className="px-6 py-2 bg-primary-400 text-text-100 rounded-full transition-transform hover:-translate-y-1 hover:bg-primary-500 cursor-pointer">
                             Descargar Cliente
                         </button>
-                        <button className="px-6 py-2 bg-bg-200 text-text-100 border border-bg-300 rounded-lg transition-transform hover:-translate-y-1 hover:bg-bg-300 cursor-pointer">
+                        <button className="px-6 py-2 bg-bg-200 text-text-100 border border-bg-300 rounded-full transition-transform hover:-translate-y-1 hover:bg-bg-100 cursor-pointer">
                             Documentación
                         </button>
                     </div>

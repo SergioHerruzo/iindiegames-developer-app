@@ -13,9 +13,9 @@ export default function Dashboard() {
                         <h1 className="text-4xl">Mis juegos</h1>
                         <h3 className="text-sm text-text-400">Gestiona tus juegos, compilaciones y análisis.</h3>
                     </div>
-                    <button className="text-sm self-center inline-flex items-center justify-center px-4 py-2 bg-primary-400 text-text-100 rounded-lg hover:bg-primary-500 transition-colors cursor-pointer">
+                    <button className="text-sm self-center inline-flex items-center justify-center px-4 py-2 bg-primary-400 text-text-100 rounded-full hover:bg-primary-500 transition-colors cursor-pointer">
                         <Plus className="w-6 h-6 mr-2" />
-                        Agregar nuevo juego
+                        Agregar juego
                     </button>
                 </div>
                 <div className="flex items-center justify-start w-full gap-4">
