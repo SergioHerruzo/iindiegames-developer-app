@@ -1,7 +1,7 @@
-import React from 'react'
+import type { ReactNode } from "react"
 
 type CardProps = {
-    children: React.ReactNode
+    children: ReactNode
 }
 
 function CardStatsBase({ children }: CardProps) {
@@ -12,15 +12,15 @@ function CardStatsBase({ children }: CardProps) {
     )
 }
 
-function CardIcon({ children }: { children: React.ReactNode }) {
+function CardIcon({ children }: { children: ReactNode }) {
     return <div className="text-2xl">{children}</div>
 }
 
-function CardTitle({ children }: { children: React.ReactNode }) {
+function CardTitle({ children }: { children: ReactNode }) {
     return <h3 className="font-semibold text-5xl font-space-grotesk text-green-400">{children}</h3>
 }
 
-function CardDescription({ children }: { children: React.ReactNode }) {
+function CardDescription({ children }: { children: ReactNode }) {
     return <p className="text-white font-space-grotesk uppercase font-bold">{children}</p>
 }
 
