@@ -6,7 +6,7 @@ type CardStatsProps = {
 
 function CardStatsBase({ children }: CardStatsProps) {
     return (
-        <div className="flex flex-col gap-2 bg-bg-200 border border-bg-300 rounded-2xl shadow-lg p-6 flex-1 text-center transition-transform hover:-translate-y-1">
+        <div className="flex flex-col gap-2 bg-bg-200 border border-bg-300 rounded-2xl shadow-lg p-6 flex-1 text-center">
             {children}
         </div>
     )
@@ -21,7 +21,7 @@ function CardStatsTitle({ children }: { children: ReactNode }) {
 }
 
 function CardStatsDescription({ children }: { children: ReactNode }) {
-    return <p className="text-text-100 uppercase font-bold">{children}</p>
+    return <p className="text-text-100 uppercase">{children}</p>
 }
 
 type CardStatsComponent = React.FC<CardStatsProps> & {
