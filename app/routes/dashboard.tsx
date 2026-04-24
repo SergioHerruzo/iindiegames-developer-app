@@ -1,9 +1,12 @@
 import GameCardStats from '@components/game-card-stats'
 import GameCard from '@components/game-card'
 import { Plus, Gamepad, Computer, DollarSign, TriangleAlert } from 'lucide-react'
+import TopBar from '~/components/top-bar'
 
 export default function Dashboard() {
     return (
+        <>
+        <TopBar />
         <div className="flex flex-col items-start justify-start w-full min-h-screen p-8 gap-8">
             <div className="flex items-center justify-start w-full gap-4">
                 <GameCardStats
@@ -65,6 +68,6 @@ export default function Dashboard() {
                 />
             </div>
         </div>
-
+    </>
     )
 }
