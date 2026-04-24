@@ -3,7 +3,6 @@ export default function Login() {
         <div className="flex items-center justify-center h-screen">
             <form className="bg-neutral-800 border border-neutral-700 rounded-2xl shadow-lg p-8 w-full max-w-xl">
                 <h1 className="font-space-grotesk text-3xl font-bold">Indie Games</h1>
-                <h2 className="text-lg font-bold">Iniciar Sesión</h2>
                 <h3 className="text-sm text-neutral-400">Bienvenido de nuevo, por favor ingresa tus credenciales.</h3>
 
                 <label className="block mt-4 text-sm font-medium">Nombre de Usuario</label>
