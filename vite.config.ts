@@ -6,5 +6,10 @@ export default defineConfig({
   plugins: [tailwindcss(), reactRouter()],
   resolve: {
     tsconfigPaths: true,
+    alias: {
+      "@": "/app",
+      "@components": "/app/components",
+      "@routes": "/app/routes",
+    }
   },
 });
