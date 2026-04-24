@@ -8,9 +8,14 @@
     "Space Grotesk", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
-  --primary-100: #2e8b57;
-  --primary-200: #61bc84;
-  --primary-300: #c6ffe6;
+  --primary-50:  #e9fff5;
+  --primary-100: #61bc84;
+  --primary-200: #4aa06c;
+  --primary-300: #2e8b57;
+  --primary-400: #256f46;
+  --primary-500: #1d5737;
+  --primary-600: #154128;
+  --primary-700: #0e2d1c;
   --accent-100: #8fbc8f;
   --accent-200: #345e37;
   --text-50:  #ffffff;
@@ -34,9 +39,16 @@
   --bg-800: #6f6f6f;
   --bg-900: #8a8a8a;
 
+  --color-primary-50: var(--primary-50);
   --color-primary-100: var(--primary-100);
   --color-primary-200: var(--primary-200);
   --color-primary-300: var(--primary-300);
+  --color-primary-400: var(--primary-400);
+  --color-primary-500: var(--primary-500);
+  --color-primary-600: var(--primary-600);
+  --color-primary-700: var(--primary-700);
+  --color-primary-800: var(--primary-800);
+  --color-primary-900: var(--primary-900);
   --color-accent-100: var(--accent-100);
   --color-accent-200: var(--accent-200);
   --color-text-50: var(--text-50);
