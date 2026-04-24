@@ -22,22 +22,22 @@ export default function Dashboard() {
                     <GameCardStats
                         title="Vendidos"
                         description="1,247"
-                        icon={<ShoppingCart className="h-auto w-20 text-green-500 opacity-20" />}
+                        icon={<ShoppingCart className="h-auto w-20 text-green-500 opacity-10" />}
                     />
                     <GameCardStats
                         title="Total"
                         description="47"
-                        icon={<Gamepad2 className="h-auto w-20 text-neutral-500 opacity-20" />}
+                        icon={<Gamepad2 className="h-auto w-20 text-neutral-500 opacity-10" />}
                     />
                     <GameCardStats
                         title="Juegos publicados"
                         description="47"
-                        icon={<CircleCheck className="h-auto w-20 text-blue-500 opacity-20" />}
+                        icon={<CircleCheck className="h-auto w-20 text-blue-500 opacity-10" />}
                     />
                     <GameCardStats
                         title="Juegos en revisión"
                         description="0"
-                        icon={<TriangleAlert className="h-auto w-20 text-yellow-500 opacity-20" />}
+                        icon={<TriangleAlert className="h-auto w-20 text-yellow-500 opacity-10" />}
                     />
                 </div>
             </div>
