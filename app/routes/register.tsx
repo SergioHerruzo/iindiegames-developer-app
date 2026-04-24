@@ -47,7 +47,7 @@ export default function Register() {
                     />
                 </div>
 
-                <button className="w-full mt-6 px-4 py-2 bg-primary-100 text-text-100 rounded-full cursor-pointer hover:bg-primary-200 transition-colors">
+                <button className="w-full mt-6 px-4 py-2 bg-primary-100 text-text-100 rounded-lg cursor-pointer hover:bg-primary-200 transition-colors">
                     Crear Cuenta
                 </button>
 
