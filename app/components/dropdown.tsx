@@ -54,7 +54,7 @@ export default function Dropdown<T extends string>({
             <div
                 className={`
           absolute left-0 top-full mt-2 w-full overflow-hidden rounded-md border border-bg-400 bg-bg-100 text-xs shadow-md
-          transition-all duration-200 origin-top
+          transition-all duration-200 origin-top z-50
           ${open
                         ? "scale-100 opacity-100"
                         : "pointer-events-none scale-95 opacity-0"

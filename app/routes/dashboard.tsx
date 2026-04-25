@@ -5,10 +5,10 @@ import { Plus, Gamepad2, CircleCheck, TriangleAlert, ShoppingCart, Search } from
 import TopBar from '@components/TopBar'
 import { useState } from 'react'
 
-type Status = "all" | "active" | "pending" | "closed";
+type Status = "All" | "Published" | "NotPublished" | "Deleting" | "Failed";
 
 export default function Dashboard() {
-    const [status, setStatus] = useState<Status>("all");
+    const [status, setStatus] = useState<Status>("All");
 
     return (
         <>
@@ -61,10 +61,11 @@ export default function Dashboard() {
                         onChange={setStatus}
                         placeholder="Todos los status"
                         options={[
-                            { label: "Todos los status", value: "all" },
-                            { label: "Activo", value: "active" },
-                            { label: "Pendiente", value: "pending" },
-                            { label: "Cerrado", value: "closed" },
+                            { label: "Todos", value: "All" },
+                            { label: "Activo", value: "Published" },
+                            { label: "Pendiente", value: "NotPublished" },
+                            { label: "Fallido", value: "Failed" },
+                            { label: "Cerrado", value: "Deleting" },
                         ]}
                     />
                 </div>
