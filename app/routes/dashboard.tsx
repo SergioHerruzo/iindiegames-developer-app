@@ -41,7 +41,7 @@ export default function Dashboard() {
                         icon={<CircleCheck className="h-auto w-20 text-blue-500 opacity-10" />}
                     />
                     <GameCardStats
-                        title="Juegos en revisión"
+                        title="Juegos fallidos"
                         description="0"
                         icon={<TriangleAlert className="h-auto w-20 text-yellow-500 opacity-10" />}
                     />
