@@ -34,6 +34,32 @@ npm run dev
 
 Your application will be available at `http://localhost:5173`.
 
+## AWS Cognito (Registro e Inicio de Sesion)
+
+Esta app ya incluye autenticacion con AWS Cognito para:
+
+- Registro (`/register`)
+- Inicio de sesion (`/login`)
+
+### Variables de entorno
+
+Crea tu archivo `.env` tomando como base `.env.example` y configura:
+
+```bash
+VITE_AWS_REGION=us-east-1
+VITE_AWS_COGNITO_USER_POOL_ID=us-east-1_XXXXXXXXX
+VITE_AWS_COGNITO_CLIENT_ID=xxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+### Configuracion sugerida en Cognito
+
+- User Pool con login por `username`
+- Atributo `email` habilitado
+- App Client sin `client secret` (public client para frontend)
+- Politica de password alineada con tu validacion
+
+Si falta alguna variable, la interfaz mostrara un error explicando cual falta.
+
 ## Building for Production
 
 Create a production build:
