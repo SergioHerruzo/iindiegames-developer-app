@@ -1,7 +1,7 @@
 import GameCardStats from '@components/GameCardStats'
 import GameCard from '@components/GameCard'
 import Dropdown from '@components/Dropdown'
-import { Plus, Gamepad2, CircleCheck, TriangleAlert, ShoppingCart, Search, ChevronDown } from 'lucide-react'
+import { Plus, Gamepad2, CircleCheck, TriangleAlert, ShoppingCart, Search } from 'lucide-react'
 import TopBar from '@components/TopBar'
 import { useState } from 'react'
 
