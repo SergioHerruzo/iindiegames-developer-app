@@ -73,6 +73,25 @@ export default function Dashboard() {
                         title="Juego de ejemplo"
                         description="Un juego de ejemplo para mostrar cómo se vería un juego en el dashboard."
                         imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/202970/ss_984d4a8eecace2d353f7507772c8dc329d2ccfa0.1920x1080.jpg?t=1748037715'
+                        status="Published"
+                    />
+                    <GameCard
+                        title="Juego de ejemplo"
+                        description="Un juego de ejemplo para mostrar cómo se vería un juego en el dashboard."
+                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/202970/ss_984d4a8eecace2d353f7507772c8dc329d2ccfa0.1920x1080.jpg?t=1748037715'
+                        status="Deleting"
+                    />
+                    <GameCard
+                        title="Juego de ejemplo"
+                        description="Un juego de ejemplo para mostrar cómo se vería un juego en el dashboard."
+                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/202970/ss_984d4a8eecace2d353f7507772c8dc329d2ccfa0.1920x1080.jpg?t=1748037715'
+                        status="Failed"
+                    />
+                    <GameCard
+                        title="Juego de ejemplo"
+                        description="Un juego de ejemplo para mostrar cómo se vería un juego en el dashboard."
+                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/202970/ss_984d4a8eecace2d353f7507772c8dc329d2ccfa0.1920x1080.jpg?t=1748037715'
+                        status="NotPublished"
                     />
                 </div>
             </div>
