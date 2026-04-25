@@ -22,7 +22,7 @@ export default function GameCard({ title, description, imageUrl, status }: GameC
         <button className="flex h-full flex-col overflow-hidden rounded-lg bg-bg-200 shadow-md cursor-pointer border border-bg-300">
             <div className="relative h-52 w-full overflow-hidden">
                 <img src={imageUrl} alt={title} className="h-full w-full object-cover transition-transform" />
-                <div className="absolute bottom-2 left-2 flex items-center gap-2 rounded-full bg-bg-200/60 border border-bg-300 px-4 py-1 text-xs text-white backdrop-blur-sm">
+                <div className="absolute bottom-2 left-2 flex items-center gap-2 rounded-full bg-bg-200/60 px-4 py-1 text-xs text-white backdrop-blur-sm">
                     <span>
                         <Circle className={`h-2 w-2 ${config.color}`} />
                     </span>
