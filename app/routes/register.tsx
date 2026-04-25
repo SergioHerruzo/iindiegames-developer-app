@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Lock, Mail, ShieldCheck, User } from "lucide-react";
 import { registerWithCognito } from "@services/cognito.client";
 
 export default function Register() {
+    const navigate = useNavigate();
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -30,7 +31,7 @@ export default function Register() {
             if (response.userConfirmed) {
                 setSuccessMessage("Cuenta creada. Ya puedes iniciar sesión.");
             } else {
-                setSuccessMessage("Cuenta creada. Revisa tu correo para confirmar la cuenta antes de iniciar sesión.");
+                navigate(`/confirm-account?username=${encodeURIComponent(username)}`);
             }
         } catch (error) {
             const message = error instanceof Error ? error.message : "No se pudo crear la cuenta.";

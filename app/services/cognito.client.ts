@@ -1,4 +1,5 @@
 import {
+    ConfirmSignUpCommand,
     CognitoIdentityProviderClient,
     InitiateAuthCommand,
     SignUpCommand,
@@ -19,6 +20,11 @@ type CognitoTokens = {
     idToken: string;
     accessToken: string;
     refreshToken: string;
+};
+
+type ConfirmSignUpInput = {
+    username: string;
+    code: string;
 };
 
 const cognitoConfig = {
@@ -102,4 +108,16 @@ export async function loginWithCognito(input: LoginInput): Promise<CognitoTokens
         accessToken: response.AuthenticationResult.AccessToken ?? "",
         refreshToken: response.AuthenticationResult.RefreshToken ?? "",
     };
+}
+
+export async function confirmSignUpWithCognito(input: ConfirmSignUpInput): Promise<void> {
+    validateConfig();
+
+    await cognitoClient.send(
+        new ConfirmSignUpCommand({
+            ClientId: cognitoConfig.clientId,
+            Username: input.username,
+            ConfirmationCode: input.code,
+        })
+    );
 }
