@@ -41,7 +41,7 @@ export default function Dashboard() {
                         icon={<CircleCheck className="h-auto w-20 text-blue-500 opacity-10" />}
                     />
                     <GameCardStats
-                        title="Juegos fallidos"
+                        title="Juegos con fallos"
                         description="0"
                         icon={<TriangleAlert className="h-auto w-20 text-yellow-500 opacity-10" />}
                     />
@@ -53,7 +53,7 @@ export default function Dashboard() {
                         </div>
                         <input
                             placeholder="Buscar"
-                            className="w-full text-sm rounded-md border placeholder:text-text-400 border-bg-400 py-3 pl-12 pr-4 outline-none focus:border-primary-500"
+                            className="w-full text-sm rounded-md border placeholder:text-text-400 border-bg-400 bg-bg-200 py-3 pl-12 pr-4 outline-none focus:border-primary-500"
                         />
                     </div>
                     <Dropdown<Status>

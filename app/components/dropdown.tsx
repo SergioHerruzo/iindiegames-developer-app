@@ -24,7 +24,6 @@ export default function Dropdown<T extends string>({
 
     const selected = options.find((o) => o.value === value);
 
-    // cerrar al click fuera
     useEffect(() => {
         const handler = (e: MouseEvent) => {
             if (ref.current && !ref.current.contains(e.target as Node)) {
@@ -41,7 +40,7 @@ export default function Dropdown<T extends string>({
             <button
                 type="button"
                 onClick={() => setOpen((v) => !v)}
-                className="flex w-full items-center justify-between rounded-md border border-bg-400 px-3 py-3 text-sm text-text-400 hover:border-primary-500 transition-colors"
+                className="flex w-full items-center justify-between rounded-md border border-bg-400 bg-bg-200 px-3 py-3 text-sm text-text-400 hover:border-primary-500 transition-colors"
             >
                 <span>{selected?.label ?? placeholder}</span>
 
@@ -53,7 +52,7 @@ export default function Dropdown<T extends string>({
 
             <div
                 className={`
-          absolute left-0 top-full mt-2 w-full overflow-hidden rounded-md border border-bg-400 bg-bg-100 text-xs shadow-md
+          absolute left-0 top-full mt-2 w-full overflow-hidden rounded-md border border-bg-400 bg-bg-200 text-xs shadow-md
           transition-all duration-200 origin-top z-50
           ${open
                         ? "scale-100 opacity-100"
@@ -69,7 +68,7 @@ export default function Dropdown<T extends string>({
                             onChange(opt.value);
                             setOpen(false);
                         }}
-                        className="w-full px-3 py-2 text-left hover:bg-bg-200 transition-colors"
+                        className="w-full px-3 py-2 text-left hover:bg-bg-300 transition-colors"
                     >
                         {opt.label}
                     </button>
