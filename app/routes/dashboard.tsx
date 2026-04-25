@@ -73,19 +73,19 @@ export default function Dashboard() {
                     <GameCard
                         title="Fallout 4"
                         description="De Bethesda Game Studios, los galardonados creadores de Starfield y The Elder Scrolls V: Skyrim, llega Fallout 4. Un hito en el diseño del rol de mundo abierto y ganador de más de 200 premios."
-                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/377160/header.jpg?t=1764687456'
+                        imageUrl='https://assets.isthereanydeal.com/018d937f-2bba-710d-aa7f-64f220f04817/banner600.jpg?t=1764696912'
                         status="Published"
                     />
                     <GameCard
                         title="Call of Duty®: Black Ops II"
                         description="Superando las expectativas de los fans con respecto a esta franquicia que ha batido todos los récords, Call of Duty®: Black Ops 2 lleva a los jugadores a una futura Guerra Fría."
-                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/202970/header.jpg?t=1748037715'
+                        imageUrl='https://images6.alphacoders.com/447/447007.jpg'
                         status="Deleting"
                     />
                     <GameCard
                         title="VTOL VR"
                         description="VTOL VR is a near-futuristic combat flight game built for Virtual Reality. Pilot advanced multi-role jets, using your hands to flip switches, press buttons, and manipulate the virtual flight controls."
-                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/667970/header.jpg?t=1732654698'
+                        imageUrl='https://clan.fastly.steamstatic.com/images/29602983/c9da956631a621c501cbdb8c40dfe4335fee9a89.png'
                         status="Failed"
                     />
                     <GameCard
@@ -97,13 +97,13 @@ export default function Dashboard() {
                     <GameCard
                         title="Call of Duty®: Black Ops III"
                         description="Call of Duty® Black Ops III: Zombies Chronicles Edition incluye el juego original completo y la expansión de contenido Zombies Chronicles."
-                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311210/header.jpg?t=1748022663'
+                        imageUrl='https://www.activision.com/content/dam/atvi/activision/atvi-touchui/activision/games/game-details/call-of-duty/black-ops-3/bo3-hero.jpg'
                         status="Published"
                     />
                     <GameCard
                         title="RV There Yet?"
                         description="Una aventura cooperativa que consiste en conducir una autocaravana de vuelta a casa."
-                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3949040/cae24b4ed7f4531be51f0d63f785b7d253f92dc3/header.jpg?t=1776874113'
+                        imageUrl='https://cdn2.steamgriddb.com/hero_thumb/4be513b952b64b729c1a264ad536c9e0.jpg'
                         status="Published"
                     />
                 </div>
