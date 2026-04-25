@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Lock, User } from "lucide-react";
 import { loginWithCognito } from "@services/cognito.client";
+import { setAuthToken } from "@services/http.client";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ export default function Login() {
         try {
             const session = await loginWithCognito({ username, password });
             localStorage.setItem("auth.idToken", session.idToken);
-            localStorage.setItem("auth.accessToken", session.accessToken);
+            setAuthToken(session.accessToken);
             localStorage.setItem("auth.refreshToken", session.refreshToken);
             navigate("/dashboard");
         } catch (error) {
