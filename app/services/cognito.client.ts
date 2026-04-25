@@ -1,9 +1,8 @@
 import {
-    AuthenticationDetails,
-    CognitoUser,
-    CognitoUserAttribute,
-    CognitoUserPool,
-} from "amazon-cognito-identity-js";
+    CognitoIdentityProviderClient,
+    InitiateAuthCommand,
+    SignUpCommand,
+} from "@aws-sdk/client-cognito-identity-provider";
 
 type RegisterInput = {
     username: string;
@@ -46,65 +45,61 @@ function getMissingConfig(): string[] {
     return missing;
 }
 
-function getUserPool(): CognitoUserPool {
+function validateConfig(): void {
     const missingConfig = getMissingConfig();
 
     if (missingConfig.length > 0) {
         throw new Error(`Faltan variables de entorno de Cognito: ${missingConfig.join(", ")}`);
     }
-
-    return new CognitoUserPool({
-        UserPoolId: cognitoConfig.userPoolId,
-        ClientId: cognitoConfig.clientId,
-    });
 }
 
-export function registerWithCognito(input: RegisterInput): Promise<{ userConfirmed: boolean }> {
-    const attributes = [
-        new CognitoUserAttribute({ Name: "email", Value: input.email }),
-        new CognitoUserAttribute({ Name: "preferred_username", Value: input.username }),
-    ];
+const cognitoClient = new CognitoIdentityProviderClient({
+    region: cognitoConfig.region,
+});
 
-    return new Promise((resolve, reject) => {
-        getUserPool().signUp(input.username, input.password, attributes, [], (error, result) => {
-            if (error) {
-                reject(error);
-                return;
-            }
+export async function registerWithCognito(input: RegisterInput): Promise<{ userConfirmed: boolean }> {
+    validateConfig();
 
-            resolve({ userConfirmed: Boolean(result?.userConfirmed) });
-        });
-    });
+    const response = await cognitoClient.send(
+        new SignUpCommand({
+            ClientId: cognitoConfig.clientId,
+            Username: input.username,
+            Password: input.password,
+            UserAttributes: [
+                { Name: "email", Value: input.email },
+                { Name: "preferred_username", Value: input.username },
+            ],
+        })
+    );
+
+    return { userConfirmed: Boolean(response.UserConfirmed) };
 }
 
-export function loginWithCognito(input: LoginInput): Promise<CognitoTokens> {
-    const userPool = getUserPool();
+export async function loginWithCognito(input: LoginInput): Promise<CognitoTokens> {
+    validateConfig();
 
-    const cognitoUser = new CognitoUser({
-        Username: input.username,
-        Pool: userPool,
-    });
+    const response = await cognitoClient.send(
+        new InitiateAuthCommand({
+            AuthFlow: "USER_PASSWORD_AUTH",
+            ClientId: cognitoConfig.clientId,
+            AuthParameters: {
+                USERNAME: input.username,
+                PASSWORD: input.password,
+            },
+        })
+    );
 
-    const authenticationDetails = new AuthenticationDetails({
-        Username: input.username,
-        Password: input.password,
-    });
+    if (response.ChallengeName === "NEW_PASSWORD_REQUIRED") {
+        throw new Error("Esta cuenta requiere cambio de contraseña antes de iniciar sesión.");
+    }
 
-    return new Promise((resolve, reject) => {
-        cognitoUser.authenticateUser(authenticationDetails, {
-            onSuccess: (session) => {
-                resolve({
-                    idToken: session.getIdToken().getJwtToken(),
-                    accessToken: session.getAccessToken().getJwtToken(),
-                    refreshToken: session.getRefreshToken().getToken(),
-                });
-            },
-            onFailure: (error) => {
-                reject(error);
-            },
-            newPasswordRequired: () => {
-                reject(new Error("Esta cuenta requiere cambio de contraseña antes de iniciar sesión."));
-            },
-        });
-    });
+    if (!response.AuthenticationResult) {
+        throw new Error("No se pudo completar la autenticación.");
+    }
+
+    return {
+        idToken: response.AuthenticationResult.IdToken ?? "",
+        accessToken: response.AuthenticationResult.AccessToken ?? "",
+        refreshToken: response.AuthenticationResult.RefreshToken ?? "",
+    };
 }

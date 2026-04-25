@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { Lock, Mail, ShieldCheck, User } from "lucide-react";
-import { registerWithCognito } from "../services/cognito.client";
+import { registerWithCognito } from "@services/cognito.client";
 
 export default function Register() {
     const [email, setEmail] = useState("");

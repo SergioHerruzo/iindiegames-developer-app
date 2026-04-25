@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Lock, User } from "lucide-react";
-import { loginWithCognito } from "../services/cognito.client";
+import { loginWithCognito } from "@services/cognito.client";
 
 export default function Login() {
     const navigate = useNavigate();

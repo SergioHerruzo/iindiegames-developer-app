@@ -17,6 +17,7 @@ export default defineConfig({
       "@": "/app",
       "@components": "/app/components",
       "@routes": "/app/routes",
+      "@services": "/app/services",
     }
   },
 });

@@ -16,7 +16,8 @@
     "paths": {
       "~/*": ["./app/*"],
       "@components/*": ["./app/components/*"],
-      "@/routes/*": ["./app/routes/*"]
+      "@/routes/*": ["./app/routes/*"],
+      "@services/*": ["./app/services/*"]
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,
