@@ -26,12 +26,12 @@ export default function GameCard({ title, description, imageUrl, status }: GameC
                     <span>
                         <Circle className={`h-2 w-2 ${config.color}`} />
                     </span>
-                    <span className="text-sm text-text-300">{config.label}</span>
+                    <span className="text-text-300">{config.label}</span>
                 </div>
             </div>
-            <div className="flex flex-1 flex-col px-4 py-6 text-left gap-3">
+            <div className="flex flex-1 flex-col px-4 pt-6 text-left gap-3">
                 <h2 className="text-xl">{title}</h2>
-                <p className="text-xs text-text-400">{description}</p>
+                <p className="text-sm text-text-400">{description}</p>
             </div>
         </button>
     )

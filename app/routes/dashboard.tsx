@@ -85,7 +85,7 @@ export default function Dashboard() {
                     <GameCard
                         title="VTOL VR"
                         description="VTOL VR is a near-futuristic combat flight game built for Virtual Reality. Pilot advanced multi-role jets, using your hands to flip switches, press buttons, and manipulate the virtual flight controls."
-                        imageUrl='https://clan.fastly.steamstatic.com/images/29602983/c9da956631a621c501cbdb8c40dfe4335fee9a89.png'
+                        imageUrl='https://www.bhaptics.com/_next/image/?url=https%3A%2F%2Fcdn.cloudflare.steamstatic.com%2Fsteam%2Fapps%2F667970%2Fss_68d2d960754b6b36b16b68d8adf3bb3482ba08c5.1920x1080.jpg%3Ft%3D1649333292&w=3840&q=80'
                         status="Failed"
                     />
                     <GameCard
