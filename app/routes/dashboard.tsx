@@ -94,6 +94,18 @@ export default function Dashboard() {
                         imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/739630/c227a2855aba60f3657bc0c3a46515b8c41fb2b6/header.jpg?t=1776847215'
                         status="NotPublished"
                     />
+                    <GameCard
+                        title="Call of Duty®: Black Ops III"
+                        description="Call of Duty® Black Ops III: Zombies Chronicles Edition incluye el juego original completo y la expansión de contenido Zombies Chronicles."
+                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/311210/header.jpg?t=1748022663'
+                        status="Published"
+                    />
+                    <GameCard
+                        title="RV There Yet?"
+                        description="Una aventura cooperativa que consiste en conducir una autocaravana de vuelta a casa."
+                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/3949040/cae24b4ed7f4531be51f0d63f785b7d253f92dc3/header.jpg?t=1776874113'
+                        status="Published"
+                    />
                 </div>
             </div>
         </>
