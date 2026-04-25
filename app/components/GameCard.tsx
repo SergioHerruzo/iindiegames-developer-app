@@ -31,7 +31,7 @@ export default function GameCard({ id, title, description, imageUrl, status }: G
                     <span className="text-text-300">{config.label}</span>
                 </div>
             </div>
-            <div className="flex flex-1 flex-col px-4 pt-6 text-left gap-3">
+            <div className="flex flex-1 flex-col px-4 py-4 text-left gap-3">
                 <h2 className="text-xl">{title}</h2>
                 <p className="text-sm text-text-400">{description}</p>
             </div>
