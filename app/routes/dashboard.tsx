@@ -48,12 +48,12 @@ export default function Dashboard() {
                 </div>
                 <div className="flex w-full gap-4">
                     <div className="relative w-full">
-                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-text-600">
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-text-400">
                             <Search />
                         </div>
                         <input
                             placeholder="Buscar"
-                            className="w-full text-sm rounded-md border text-text-200 border-bg-400 py-3 pl-12 pr-4 outline-none focus:border-primary-500"
+                            className="w-full text-sm rounded-md border placeholder:text-text-400 border-bg-400 py-3 pl-12 pr-4 outline-none focus:border-primary-500"
                         />
                     </div>
                     <Dropdown<Status>
