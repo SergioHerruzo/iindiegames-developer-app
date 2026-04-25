@@ -1,9 +1,15 @@
 import GameCardStats from '@components/game-card-stats'
 import GameCard from '@components/game-card'
-import { Plus, Gamepad2, CircleCheck, TriangleAlert, ShoppingCart } from 'lucide-react'
+import Dropdown from '@components/dropdown'
+import { Plus, Gamepad2, CircleCheck, TriangleAlert, ShoppingCart, Search, ChevronDown } from 'lucide-react'
 import TopBar from '@components/top-bar'
+import { useState } from 'react'
+
+type Status = "all" | "active" | "pending" | "closed";
 
 export default function Dashboard() {
+    const [status, setStatus] = useState<Status>("all");
+
     return (
         <>
             <TopBar />
@@ -38,6 +44,35 @@ export default function Dashboard() {
                         title="Juegos en revisión"
                         description="0"
                         icon={<TriangleAlert className="h-auto w-20 text-yellow-500 opacity-10" />}
+                    />
+                </div>
+                <div className="flex w-full gap-6">
+                    <div className="relative w-full">
+                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-bg-500">
+                            <Search />
+                        </div>
+                        <input
+                            placeholder="Buscar"
+                            className="w-full text-sm rounded-md border border-bg-400 py-3 pl-12 pr-4 outline-none focus:border-primary-500"
+                        />
+                    </div>
+                    <Dropdown<Status>
+                        value={status}
+                        onChange={setStatus}
+                        placeholder="Todos los status"
+                        options={[
+                            { label: "Todos los status", value: "all" },
+                            { label: "Activo", value: "active" },
+                            { label: "Pendiente", value: "pending" },
+                            { label: "Cerrado", value: "closed" },
+                        ]}
+                    />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+                    <GameCard
+                        title="Juego de ejemplo"
+                        description="Un juego de ejemplo para mostrar cómo se vería un juego en el dashboard."
+                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/202970/ss_984d4a8eecace2d353f7507772c8dc329d2ccfa0.1920x1080.jpg?t=1748037715'
                     />
                 </div>
             </div>
