@@ -3,10 +3,10 @@ import { Circle } from "lucide-react"
 type GameStatus = "Published" | "NotPublished" | "Deleting" | "Failed";
 
 const statusConfig: Record<GameStatus, { color: string; label: string }> = {
-    "Published": { color: "text-green-500 fill-green-500", label: "Publicado" },
-    "NotPublished": { color: "text-gray-500 fill-gray-500", label: "No publicado" },
+    "Published": { color: "text-green-600 fill-green-600", label: "Publicado" },
+    "NotPublished": { color: "text-gray-600 fill-gray-600", label: "No publicado" },
     "Deleting": { color: "text-red-500 fill-red-500", label: "Eliminando" },
-    "Failed": { color: "text-amber-500 fill-amber-500", label: "Fallido" },
+    "Failed": { color: "text-amber-600 fill-amber-600", label: "Fallido" },
 };
 
 type GameCardProps = {
@@ -22,11 +22,11 @@ export default function GameCard({ title, description, imageUrl, status }: GameC
         <button className="flex h-full flex-col overflow-hidden rounded-lg bg-bg-200 shadow-md cursor-pointer border border-bg-300">
             <div className="relative h-52 w-full overflow-hidden">
                 <img src={imageUrl} alt={title} className="h-full w-full object-cover transition-transform" />
-                <div className="absolute bottom-2 left-2 flex items-center gap-2 rounded-full bg-bg-200/60 px-4 py-1 text-xs text-white backdrop-blur-sm">
+                <div className="absolute bottom-2 left-2 flex items-center gap-2 rounded-full bg-bg-200/60 px-3 py-1.5 text-xs text-white backdrop-blur-sm">
                     <span>
                         <Circle className={`h-2 w-2 ${config.color}`} />
                     </span>
-                    <span className="text-sm text-text-200">{config.label}</span>
+                    <span className="text-sm text-text-300">{config.label}</span>
                 </div>
             </div>
             <div className="flex flex-1 flex-col px-4 py-6 text-left gap-3">
