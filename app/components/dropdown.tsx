@@ -46,7 +46,7 @@ export default function Dropdown<T extends string>({
                 <span>{selected?.label ?? placeholder}</span>
 
                 <ChevronDown
-                    className={`h-4 w-4 text-bg-500 transition-transform ${open ? "rotate-180" : ""
+                    className={`h-4 w-4 text-text-400 transition-transform ${open ? "rotate-180" : ""
                         }`}
                 />
             </button>
