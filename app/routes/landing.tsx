@@ -1,4 +1,4 @@
-import CardStats from '@components/card-stats'
+import CardStats from '@components/CardStats'
 
 export default function Landing() {
     return (

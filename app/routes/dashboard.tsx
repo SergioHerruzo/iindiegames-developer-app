@@ -1,8 +1,8 @@
-import GameCardStats from '@components/game-card-stats'
-import GameCard from '@components/game-card'
-import Dropdown from '@components/dropdown'
+import GameCardStats from '@components/GameCardStats'
+import GameCard from '@components/GameCard'
+import Dropdown from '@components/Dropdown'
 import { Plus, Gamepad2, CircleCheck, TriangleAlert, ShoppingCart, Search, ChevronDown } from 'lucide-react'
-import TopBar from '@components/top-bar'
+import TopBar from '@components/TopBar'
 import { useState } from 'react'
 
 type Status = "all" | "active" | "pending" | "closed";
