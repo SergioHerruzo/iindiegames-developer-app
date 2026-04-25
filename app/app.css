@@ -78,6 +78,7 @@ body {
   @apply min-h-screen bg-bg-100 text-text-100 font-sans tracking-wide;
   background-size: 100% 100%, 100% 100%;
   background-attachment: fixed;
+  scrollbar-gutter: stable;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;

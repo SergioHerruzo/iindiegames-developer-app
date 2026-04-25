@@ -71,36 +71,42 @@ export default function Dashboard() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
                     <GameCard
+                        id="1"
                         title="Fallout 4"
                         description="De Bethesda Game Studios, los galardonados creadores de Starfield y The Elder Scrolls V: Skyrim, llega Fallout 4. Un hito en el diseño del rol de mundo abierto y ganador de más de 200 premios."
                         imageUrl='https://assets.isthereanydeal.com/018d937f-2bba-710d-aa7f-64f220f04817/banner600.jpg?t=1764696912'
                         status="Published"
                     />
                     <GameCard
+                        id="2"
                         title="Call of Duty®: Black Ops II"
                         description="Superando las expectativas de los fans con respecto a esta franquicia que ha batido todos los récords, Call of Duty®: Black Ops 2 lleva a los jugadores a una futura Guerra Fría."
                         imageUrl='https://images6.alphacoders.com/447/447007.jpg'
                         status="Deleting"
                     />
                     <GameCard
+                        id="3"
                         title="VTOL VR"
                         description="VTOL VR is a near-futuristic combat flight game built for Virtual Reality. Pilot advanced multi-role jets, using your hands to flip switches, press buttons, and manipulate the virtual flight controls."
                         imageUrl='https://www.bhaptics.com/_next/image/?url=https%3A%2F%2Fcdn.cloudflare.steamstatic.com%2Fsteam%2Fapps%2F667970%2Fss_68d2d960754b6b36b16b68d8adf3bb3482ba08c5.1920x1080.jpg%3Ft%3D1649333292&w=3840&q=80'
                         status="Failed"
                     />
                     <GameCard
+                        id="4"
                         title="Phasmophobia"
                         description="Phasmophobia is a 4 player online co-op psychological horror. Paranormal activity is on the rise and it’s up to you and your team to use all the ghost-hunting equipment at your disposal in order to gather as much evidence as you can."
                         imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/739630/c227a2855aba60f3657bc0c3a46515b8c41fb2b6/header.jpg?t=1776847215'
                         status="NotPublished"
                     />
                     <GameCard
+                        id="5"
                         title="Call of Duty®: Black Ops III"
                         description="Call of Duty® Black Ops III: Zombies Chronicles Edition incluye el juego original completo y la expansión de contenido Zombies Chronicles."
                         imageUrl='https://www.activision.com/content/dam/atvi/activision/atvi-touchui/activision/games/game-details/call-of-duty/black-ops-3/bo3-hero.jpg'
                         status="Published"
                     />
                     <GameCard
+                        id="6"
                         title="RV There Yet?"
                         description="Una aventura cooperativa que consiste en conducir una autocaravana de vuelta a casa."
                         imageUrl='https://cdn2.steamgriddb.com/hero_thumb/4be513b952b64b729c1a264ad536c9e0.jpg'
