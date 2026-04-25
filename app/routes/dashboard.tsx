@@ -70,27 +70,27 @@ export default function Dashboard() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
                     <GameCard
-                        title="Juego de ejemplo"
-                        description="Un juego de ejemplo para mostrar cómo se vería un juego en el dashboard."
-                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/202970/ss_984d4a8eecace2d353f7507772c8dc329d2ccfa0.1920x1080.jpg?t=1748037715'
+                        title="Fallout 4"
+                        description="De Bethesda Game Studios, los galardonados creadores de Starfield y The Elder Scrolls V: Skyrim, llega Fallout 4. Un hito en el diseño del rol de mundo abierto y ganador de más de 200 premios."
+                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/377160/header.jpg?t=1764687456'
                         status="Published"
                     />
                     <GameCard
-                        title="Juego de ejemplo"
-                        description="Un juego de ejemplo para mostrar cómo se vería un juego en el dashboard."
-                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/202970/ss_984d4a8eecace2d353f7507772c8dc329d2ccfa0.1920x1080.jpg?t=1748037715'
+                        title="Call of Duty®: Black Ops II"
+                        description="Superando las expectativas de los fans con respecto a esta franquicia que ha batido todos los récords, Call of Duty®: Black Ops 2 lleva a los jugadores a una futura Guerra Fría."
+                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/202970/header.jpg?t=1748037715'
                         status="Deleting"
                     />
                     <GameCard
-                        title="Juego de ejemplo"
-                        description="Un juego de ejemplo para mostrar cómo se vería un juego en el dashboard."
-                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/202970/ss_984d4a8eecace2d353f7507772c8dc329d2ccfa0.1920x1080.jpg?t=1748037715'
+                        title="VTOL VR"
+                        description="VTOL VR is a near-futuristic combat flight game built for Virtual Reality. Pilot advanced multi-role jets, using your hands to flip switches, press buttons, and manipulate the virtual flight controls."
+                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/667970/header.jpg?t=1732654698'
                         status="Failed"
                     />
                     <GameCard
-                        title="Juego de ejemplo"
-                        description="Un juego de ejemplo para mostrar cómo se vería un juego en el dashboard."
-                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/202970/ss_984d4a8eecace2d353f7507772c8dc329d2ccfa0.1920x1080.jpg?t=1748037715'
+                        title="Phasmophobia"
+                        description="Phasmophobia is a 4 player online co-op psychological horror. Paranormal activity is on the rise and it’s up to you and your team to use all the ghost-hunting equipment at your disposal in order to gather as much evidence as you can."
+                        imageUrl='https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/739630/c227a2855aba60f3657bc0c3a46515b8c41fb2b6/header.jpg?t=1776847215'
                         status="NotPublished"
                     />
                 </div>
