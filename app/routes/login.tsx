@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Lock, User } from "lucide-react";
-import { loginWithCognito } from "@services/cognito.client";
-import { setAuthToken } from "@services/http.client";
+import { loginAndLoadCurrentUser } from "@services/cognito.client";
+import { setAuthToken, setCurrentUser } from "@services/http.client";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -17,10 +17,11 @@ export default function Login() {
         setIsSubmitting(true);
 
         try {
-            const session = await loginWithCognito({ username, password });
+            const session = await loginAndLoadCurrentUser({ username, password });
             localStorage.setItem("auth.idToken", session.idToken);
             setAuthToken(session.accessToken);
             localStorage.setItem("auth.refreshToken", session.refreshToken);
+            setCurrentUser(session.currentUser);
             navigate("/dashboard");
         } catch (error) {
             const message = error instanceof Error ? error.message : "No se pudo iniciar sesión.";

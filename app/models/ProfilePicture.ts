@@ -1,5 +1,5 @@
 export type ProfilePicture = {
-    smallPictureUrl: string;
-    mediumPictureUrl: string;
-    largePictureUrl: string;
+    smallPictureUrl?: string;
+    mediumPictureUrl?: string;
+    largePictureUrl?: string;
 }

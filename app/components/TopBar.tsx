@@ -1,16 +1,30 @@
+import { Link } from "react-router";
+import { getStoredCurrentUser } from "@services/http.client";
+
 export default function TopBar() {
+    const currentUser = getStoredCurrentUser();
+    const avatarUrl = currentUser?.profilePicture.smallPictureUrl;
+
     return (
-        <nav className="w-full h-20 bg-bg-100 border-b border-bg-500 flex items-center justify-between px-40">
+        <nav className="flex h-20 w-full items-center justify-between border-b border-bg-500 bg-bg-100 px-40">
             <div className="flex items-center justify-start gap-8">
-                <a href="/dashboard" className="text-2xl font-space-grotesk text-text-200">Indie Games</a>
+                <Link to="/dashboard" className="text-2xl font-space-grotesk text-text-200">
+                    Indie Games
+                </Link>
             </div>
             <div className="flex items-center justify-start gap-4">
                 <button className="cursor-pointer">
-                    <img
-                        src="https://preview.redd.it/ce-spuneti-de-dictatorul-mbappe-v0-k8l241njsqtg1.jpeg?width=451&format=pjpg&auto=webp&s=860149b0068c2f1b1efd438b35b9a8154b6a3f93"
-                        alt="User Avatar"
-                        className="h-10 w-10 rounded-full object-cover border border-bg-300"
-                    />
+                    {avatarUrl ? (
+                        <img
+                            src={avatarUrl}
+                            alt="Image de perfil"
+                            className="h-10 w-10 rounded-full object-cover border border-bg-300"
+                        />
+                    ) : (
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full border border-bg-300 bg-bg-200 text-sm font-semibold text-text-200">
+                            Imagen de perfil
+                        </div>
+                    )}
                 </button>
             </div>
         </nav>

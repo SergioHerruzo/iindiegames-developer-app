@@ -4,6 +4,8 @@ import {
     InitiateAuthCommand,
     SignUpCommand,
 } from "@aws-sdk/client-cognito-identity-provider";
+import type { CurrentUser } from "@models/CurrentUser";
+import { httpClient, setAuthToken, setCurrentUser } from "@services/http.client";
 
 type RegisterInput = {
     username: string;
@@ -20,6 +22,10 @@ type CognitoTokens = {
     idToken: string;
     accessToken: string;
     refreshToken: string;
+};
+
+type AuthSession = CognitoTokens & {
+    currentUser: CurrentUser;
 };
 
 type ConfirmSignUpInput = {
@@ -108,6 +114,54 @@ export async function loginWithCognito(input: LoginInput): Promise<CognitoTokens
         accessToken: response.AuthenticationResult.AccessToken ?? "",
         refreshToken: response.AuthenticationResult.RefreshToken ?? "",
     };
+}
+
+async function loadCurrentUser(): Promise<CurrentUser> {
+    const response = await httpClient.get<CurrentUser>("/users/me");
+    return response.data;
+}
+
+async function hydrateAuthSession(tokens: CognitoTokens): Promise<AuthSession> {
+    setAuthToken(tokens.accessToken);
+
+    const currentUser = await loadCurrentUser();
+    setCurrentUser(currentUser);
+
+    return {
+        ...tokens,
+        currentUser,
+    };
+}
+
+export async function loginAndLoadCurrentUser(input: LoginInput): Promise<AuthSession> {
+    const tokens = await loginWithCognito(input);
+    return hydrateAuthSession(tokens);
+}
+
+export async function refreshSessionWithCognito(refreshToken: string): Promise<AuthSession> {
+    validateConfig();
+
+    const response = await cognitoClient.send(
+        new InitiateAuthCommand({
+            AuthFlow: "REFRESH_TOKEN_AUTH",
+            ClientId: cognitoConfig.clientId,
+            AuthParameters: {
+                REFRESH_TOKEN: refreshToken,
+            },
+        })
+    );
+
+    if (!response.AuthenticationResult) {
+        throw new Error("No se pudo renovar la sesión.");
+    }
+
+    const tokens: CognitoTokens = {
+        idToken: response.AuthenticationResult.IdToken ?? "",
+        accessToken: response.AuthenticationResult.AccessToken ?? "",
+        refreshToken,
+    };
+
+    return hydrateAuthSession(tokens);
 }
 
 export async function confirmSignUpWithCognito(input: ConfirmSignUpInput): Promise<void> {
