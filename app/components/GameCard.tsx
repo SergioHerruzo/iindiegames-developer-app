@@ -19,9 +19,9 @@ type GameCardProps = {
 export default function GameCard({ title, description, imageUrl, status }: GameCardProps) {
     const config = statusConfig[status];
     return (
-        <button className="flex h-full flex-col overflow-hidden rounded-lg bg-bg-200 shadow-md cursor-pointer border border-bg-300">
+        <button className="transition-transform hover:scale-105 flex h-full flex-col overflow-hidden rounded-lg bg-bg-200 shadow-md cursor-pointer border border-bg-300">
             <div className="relative h-52 w-full overflow-hidden">
-                <img src={imageUrl} alt={title} className="h-full w-full object-cover transition-transform" />
+                <img src={imageUrl} alt={title} className="h-full w-full object-cover" />
                 <div className="absolute bottom-2 left-2 flex items-center gap-2 rounded-full bg-bg-200/60 px-3 py-1.5 text-xs text-white backdrop-blur-sm">
                     <span>
                         <Circle className={`h-2 w-2 ${config.color}`} />
