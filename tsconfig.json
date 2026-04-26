@@ -18,7 +18,8 @@
       "@components/*": ["./app/components/*"],
       "@routes/*": ["./app/routes/*"],
       "@services/*": ["./app/services/*"],
-      "@models/*": ["./app/models/*"]
+      "@models/*": ["./app/models/*"],
+      "@utils/*": ["./app/utils/*"]
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,
