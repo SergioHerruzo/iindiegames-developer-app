@@ -14,7 +14,7 @@ type GameCardProps = {
     id: string;
     title: string;
     description: string;
-    imageUrl: string;
+    imageUrl?: string | null;
     status: GameStatus;
 }
 
@@ -23,7 +23,13 @@ export default function GameCard({ id, title, description, imageUrl, status }: G
     return (
         <Link to={`/games/${id}`} className="transition-transform hover:scale-105 flex h-full flex-col overflow-hidden rounded-lg bg-bg-200 shadow-md cursor-pointer border border-bg-400">
             <div className="relative h-52 w-full overflow-hidden">
-                <img src={imageUrl} alt={title} className="h-full w-full object-cover" />
+                {imageUrl ? (
+                    <img src={imageUrl} alt={title} className="h-full w-full object-cover" />
+                ) : (
+                    <div className="flex h-full w-full items-center justify-center border-b border-dashed border-bg-300 bg-bg-300 px-4 text-center text-sm font-semibold tracking-[0.35em] text-text-300">
+                        NO PICTURE
+                    </div>
+                )}
                 <div className="absolute bottom-2 left-2 flex items-center gap-2 rounded-full bg-bg-200/60 px-3 py-1.5 text-xs text-white backdrop-blur-sm">
                     <span>
                         <Circle className={`h-2 w-2 ${config.color}`} />

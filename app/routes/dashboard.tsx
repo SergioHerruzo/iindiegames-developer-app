@@ -10,7 +10,6 @@ import type { CreatedGame } from '@models/CreatedGame'
 
 type Status = "All" | "Published" | "NotPublished" | "Deleting" | "Failed";
 
-const FALLBACK_IMAGE = 'https://placehold.co/600x340/101323/dae2f2?text=Indie+Game';
 const DEFAULT_PAGE_NUMBER = 1;
 const DEFAULT_PAGE_SIZE = 10;
 const STATUS_OPTIONS: { label: string; value: Status }[] = [
@@ -167,7 +166,7 @@ export default function Dashboard() {
                             id={game.id}
                             title={game.title}
                             description={game.description}
-                            imageUrl={FALLBACK_IMAGE}
+                            imageUrl={game.pictureUrl}
                             status="NotPublished"
                         />
                     ))}
