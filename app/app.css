@@ -8,36 +8,36 @@
     "Space Grotesk", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
-  --primary-50:  #e9fff5;
-  --primary-100: #61bc84;
-  --primary-200: #4aa06c;
-  --primary-300: #2e8b57;
-  --primary-400: #256f46;
-  --primary-500: #1d5737;
-  --primary-600: #154128;
-  --primary-700: #0e2d1c;
-  --accent-100: #8fbc8f;
-  --accent-200: #345e37;
+  --primary-100: #7fcfa2;
+  --primary-200: #5fb889;
+  --primary-300: #3f9e70;
+  --primary-400: #2f7a58;
+  --primary-500: #225e44;
+  --primary-600: #174532;
+  --primary-700: #0f2e22;
+
+  --accent-100: #8fbf8f;
+  --accent-200: #2f5a34;
+  
   --text-50:  #ffffff;
-  --text-100: #f5f5f5;
-  --text-200: #e0e0e0;
-  --text-300: #cfcfcf;
-  --text-400: #b1b1b1;
-  --text-500: #9a9a9a;
-  --text-600: #7a7a7a;
-  --text-700: #5f5f5f;
-  --text-800: #4a4a4a;
-  --text-900: #3a3a3a;
-  --bg-50:  #181818;
-  --bg-100: #1e1e1e;
-  --bg-200: #242424;
-  --bg-300: #2c2c2c;
-  --bg-400: #353535;
-  --bg-500: #3f3f3f;
-  --bg-600: #4a4a4a;
-  --bg-700: #5a5a5a;
-  --bg-800: #6f6f6f;
-  --bg-900: #8a8a8a;
+  --text-100: #eaeaea;
+  --text-200: #d0d0d0;
+  --text-300: #b5b5b5;
+  --text-400: #9a9a9a;
+  --text-500: #7f7f7f;
+  --text-600: #666666;
+  --text-700: #4d4d4d;
+  --text-800: #383838;
+
+  --bg-0:   #0f0f0f;
+  --bg-50:  #121212;
+  --bg-100: #151515;
+  --bg-200: #1a1a1a;
+  --bg-300: #202020;
+  --bg-400: #262626;
+  --bg-500: #2d2d2d;
+
+  --border: #181818;
 
   --color-primary-50: var(--primary-50);
   --color-primary-100: var(--primary-100);
@@ -71,11 +71,12 @@
   --color-bg-700: var(--bg-700);
   --color-bg-800: var(--bg-800);
   --color-bg-900: var(--bg-900);
+  --color-border: var(--border);
 }
 
 html,
 body {
-  @apply min-h-screen bg-bg-100 text-text-100 font-sans tracking-wide;
+  @apply min-h-screen bg-bg-50 text-text-100 font-sans tracking-wide;
   background-size: 100% 100%, 100% 100%;
   background-attachment: fixed;
   scrollbar-gutter: stable;

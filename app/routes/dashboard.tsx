@@ -102,26 +102,33 @@ export default function Dashboard() {
                         Agregar juego
                     </Link>
                 </div>
-                <div className="flex items-center justify-start w-full gap-4">
+                <div className="grid w-full gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                     <GameCardStats
                         title="Vendidos"
                         description="1,247"
-                        icon={<ShoppingCart className="h-auto w-20 text-green-500 opacity-10" />}
+                        change="+12% este mes"
+                        icon={ShoppingCart}
                     />
+
                     <GameCardStats
                         title="Total"
                         description={totalGames.toLocaleString('es-ES')}
-                        icon={<Gamepad2 className="h-auto w-20 text-neutral-500 opacity-10" />}
+                        change="+5 añadidos"
+                        icon={Gamepad2}
                     />
+
                     <GameCardStats
                         title="Juegos publicados"
                         description="47"
-                        icon={<CircleCheck className="h-auto w-20 text-blue-500 opacity-10" />}
+                        change="+2 esta semana"
+                        icon={CircleCheck}
                     />
+
                     <GameCardStats
                         title="Juegos con fallos"
                         description="0"
-                        icon={<TriangleAlert className="h-auto w-20 text-yellow-500 opacity-10" />}
+                        change="Sin incidencias"
+                        icon={TriangleAlert}
                     />
                 </div>
                 <div className="flex w-full gap-4">

@@ -1,21 +1,30 @@
-import type { ReactNode } from "react";
+import type { LucideIcon } from "lucide-react";
 
 type GameCardStatsProps = {
+    icon: LucideIcon;
     title: string;
     description: string;
-    icon: ReactNode;
+    change: string;
 };
 
-export default function GameCardStats({ title, description, icon }: GameCardStatsProps) {
+export default function GameCardStats({ icon: Icon, title, description, change }: GameCardStatsProps) {
     return (
-        <div className="flex h-full w-full items-center overflow-hidden rounded-2xl bg-bg-200 shadow-md border border-bg-300">
-            <div className="flex flex-1 flex-col text-left p-6">
-                <h2 className="text-sm uppercase text-text-400">{title}</h2>
-                <p className="mt-2 text-3xl">{description}</p>
+        <div className="bg-bg-100 border border-border rounded-xl p-6 transition-all duration-200 hover:bg-bg-200 hover:border-primary-500/20">
+            
+            <div className="flex items-center gap-3 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-primary-500/10 flex items-center justify-center">
+                    <Icon className="w-5 h-5 text-primary-300" />
+                </div>
+                <p className="text-sm text-text-400">{title}</p>
             </div>
-            <div className="self-end p-2">
-                {icon}
-            </div>
+
+            <h3 className="text-2xl font-semibold text-text-100 mb-1">
+                {description}
+            </h3>
+
+            <p className="text-xs text-text-500">
+                {change}
+            </p>
         </div>
     );
 }
