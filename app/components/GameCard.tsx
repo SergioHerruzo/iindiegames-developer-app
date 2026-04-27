@@ -21,7 +21,7 @@ type GameCardProps = {
 export default function GameCard({ id, title, description, imageUrl, status }: GameCardProps) {
     const config = statusConfig[status];
     return (
-        <Link to={`/games/${id}`} className="transition-transform hover:scale-105 flex h-full flex-col overflow-hidden rounded-lg bg-bg-200 shadow-md cursor-pointer border border-bg-400">
+        <Link to={`/game-details/${id}`} className="transition-transform hover:scale-105 flex h-full flex-col overflow-hidden rounded-lg bg-bg-200 shadow-md cursor-pointer border border-bg-400">
             <div className="relative h-52 w-full overflow-hidden">
                 {imageUrl ? (
                     <img src={imageUrl} alt={title} className="h-full w-full object-cover" />
