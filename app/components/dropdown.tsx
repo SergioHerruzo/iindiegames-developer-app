@@ -40,7 +40,7 @@ export default function Dropdown<T extends string>({
             <button
                 type="button"
                 onClick={() => setOpen((v) => !v)}
-                className="flex w-full items-center justify-between rounded-md border border-bg-400 bg-bg-200 px-3 py-3 text-sm text-text-400 hover:border-primary-500 transition-colors"
+                className="flex w-full items-center justify-between rounded-md border border-bg-300 bg-bg-200 px-3 py-3 text-sm text-text-400 hover:border-primary-500 transition-colors"
             >
                 <span>{selected?.label ?? placeholder}</span>
 
