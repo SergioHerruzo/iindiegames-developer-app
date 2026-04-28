@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { Search, Gamepad2, Bell } from "lucide-react";
+import { Search, GamepadDirectional, Bell } from "lucide-react";
 import type { CurrentUser } from "@models/CurrentUser";
 
 const AUTH_CURRENT_USER_KEY = "auth.currentUser";
@@ -35,7 +35,7 @@ export default function TopBar() {
                 <Link to="/dashboard" className="flex items-center gap-3">
 
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-500">
-                        <Gamepad2 size={25} className="text-text-200" />
+                        <GamepadDirectional size={25} className="text-text-200" />
                     </div>
 
                     <span className="text-2xl font-plus-jakarta-sans tracking-tight text-text-100">
