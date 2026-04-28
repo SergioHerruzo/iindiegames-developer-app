@@ -20,6 +20,7 @@ function readStoredCurrentUser(): CurrentUser | null {
 
 export default function TopBar() {
     const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         setCurrentUser(readStoredCurrentUser());
@@ -45,16 +46,20 @@ export default function TopBar() {
                 </Link>
             </div>
 
-            <div className="pointer-events-none absolute left-1/2 -translate-x-1/2">
-                <div className="pointer-events-auto flex items-center gap-1.5 rounded-lg border border-border bg-bg-100/80 px-3 py-2 shadow-sm transition focus-within:ring-1 focus-within:ring-primary-500/60">
-                    <Search size={20} className="text-text-400" />
-                    <input
-                        type="text"
-                        placeholder="Buscar"
-                        className="w-lg bg-transparent text-text-300 placeholder:text-text-400 outline-none"
-                    />
+            {location.pathname === "/dashboard" && (
+                <div className="pointer-events-none absolute left-1/2 -translate-x-1/2">
+                    <div className="pointer-events-auto flex items-center gap-1.5 rounded-lg border border-border bg-bg-100/80 px-3 py-2 shadow-sm transition focus-within:ring-1 focus-within:ring-primary-500/60">
+                        <Search size={20} className="text-text-400" />
+                        <input
+                            type="text"
+                            placeholder="Buscar"
+                            className="w-lg bg-transparent text-text-300 placeholder:text-text-400 outline-none"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                        />
+                    </div>
                 </div>
-            </div>
+            )}
 
             <div className="flex items-center gap-4">
                 <button className="relative flex items-center justify-center rounded-lg p-2 transition hover:bg-bg-200">
