@@ -46,12 +46,12 @@ export default function TopBar() {
             </div>
 
             <div className="pointer-events-none absolute left-1/2 -translate-x-1/2">
-                <div className="pointer-events-auto flex items-center gap-2 rounded-lg border border-border bg-bg-100 px-3 py-2 shadow-sm transition focus-within:ring-1 focus-within:ring-primary-500/60">
-                    <Search size={18} className="text-text-300" />
+                <div className="pointer-events-auto flex items-center gap-1.5 rounded-lg border border-border bg-bg-100 px-3 py-2 shadow-sm transition focus-within:ring-1 focus-within:ring-primary-500/60">
+                    <Search size={20} className="text-text-300" />
                     <input
                         type="text"
-                        placeholder="Buscar juegos"
-                        className="w-96 bg-transparent text-sm text-text-200 placeholder:text-text-300 outline-none"
+                        placeholder="Buscar"
+                        className="w-lg bg-transparent text-text-200 placeholder:text-text-300 outline-none"
                     />
                 </div>
             </div>
