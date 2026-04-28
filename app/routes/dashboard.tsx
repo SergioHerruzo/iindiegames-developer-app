@@ -1,7 +1,7 @@
 import GameCardStats from '@components/GameCardStats'
 import GameCard from '@components/GameCard'
 import Dropdown from '@components/Dropdown'
-import { Plus, Gamepad2, CircleCheck, TriangleAlert, ShoppingCart, Search } from 'lucide-react'
+import { Plus, Gamepad2, CircleCheck, TriangleAlert, ShoppingCart, Search, GamepadDirectional } from 'lucide-react'
 import TopBar from '@components/TopBar'
 import { useEffect, useState } from 'react'
 import { httpClient } from '@services/http.client'
@@ -94,10 +94,10 @@ export default function Dashboard() {
             <div className="flex flex-col items-start justify-start w-full min-h-screen py-8 px-6 gap-8">
                 <div className="flex items-start justify-between w-full gap-4">
                     <div className="flex flex-col items-start justify-start gap-2">
-                        <h1 className="text-4xl">Mis juegos</h1>
-                        <h3 className="text-sm text-text-400">Gestiona tus juegos, compilaciones y análisis.</h3>
+                        <h1 className="text-4xl text-text-100">Mis juegos</h1>
+                        <h3 className="text-sm text-text-300">Gestiona tus juegos, compilaciones y análisis.</h3>
                     </div>
-                    <Link to="/create-game" className="text-sm self-center inline-flex items-center justify-center px-4 py-2 bg-primary-500 text-text-100 rounded-full hover:bg-primary-600 cursor-pointer transition-transform hover:-translate-y-1">
+                    <Link to="/create-game" className="text-sm self-center inline-flex items-center justify-center px-4 py-2 bg-primary-600 text-text-100 rounded-full cursor-pointer transition-transform">
                         <Plus className="w-6 h-6 mr-2" />
                         Agregar juego
                     </Link>
@@ -114,7 +114,7 @@ export default function Dashboard() {
                         title="Total"
                         description={totalGames.toLocaleString('es-ES')}
                         change="+5 añadidos"
-                        icon={Gamepad2}
+                        icon={GamepadDirectional}
                     />
 
                     <GameCardStats
@@ -125,7 +125,7 @@ export default function Dashboard() {
                     />
 
                     <GameCardStats
-                        title="Juegos con fallos"
+                        title="Juegos con incidencias"
                         description="0"
                         change="Sin incidencias"
                         icon={TriangleAlert}

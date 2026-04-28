@@ -46,7 +46,7 @@ export default function TopBar() {
             </div>
 
             <div className="pointer-events-none absolute left-1/2 -translate-x-1/2">
-                <div className="pointer-events-auto flex items-center gap-2 rounded-lg border border-border bg-bg-100 px-3 py-2 shadow-sm transition focus-within:ring-2 focus-within:ring-primary-500/60">
+                <div className="pointer-events-auto flex items-center gap-2 rounded-lg border border-border bg-bg-100 px-3 py-2 shadow-sm transition focus-within:ring-1 focus-within:ring-primary-500/60">
                     <Search size={18} className="text-text-300" />
                     <input
                         type="text"
