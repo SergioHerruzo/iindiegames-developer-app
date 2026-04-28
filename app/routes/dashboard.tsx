@@ -1,7 +1,6 @@
 import GameCardStats from '@components/GameCardStats'
 import GameCard from '@components/GameCard'
-import Dropdown from '@components/Dropdown'
-import { Plus, Gamepad2, CircleCheck, TriangleAlert, ShoppingCart, Search, GamepadDirectional } from 'lucide-react'
+import { Plus, CircleCheck, TriangleAlert, ShoppingCart, GamepadDirectional } from 'lucide-react'
 import TopBar from '@components/TopBar'
 import { useEffect, useState } from 'react'
 import { httpClient } from '@services/http.client'
@@ -67,7 +66,7 @@ export default function Dashboard() {
                     return;
                 }
 
-                setGamesError('No se pudieron cargar tus juegos. Intenta nuevamente en unos segundos.');
+                setGamesError('No se han podido cargar tus juegos. Por favor, inténtalo de nuevo más tarde.');
             } finally {
                 if (!controller.signal.aborted) {
                     setIsLoadingGames(false);
@@ -91,7 +90,7 @@ export default function Dashboard() {
     return (
         <>
             <TopBar />
-            <div className="flex flex-col items-start justify-start w-full min-h-screen py-8 px-6 gap-8">
+            <div className="flex flex-col items-start justify-start w-full min-h-screen py-2 px-6 gap-8">
                 <div className="flex items-start justify-between w-full gap-4">
                     <div className="flex flex-col items-start justify-start gap-2">
                         <h1 className="text-4xl text-text-100">Mis juegos</h1>
@@ -129,25 +128,6 @@ export default function Dashboard() {
                         description="0"
                         change="Sin incidencias"
                         icon={TriangleAlert}
-                    />
-                </div>
-                <div className="flex w-full gap-4">
-                    <div className="relative w-full">
-                        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-text-400">
-                            <Search />
-                        </div>
-                        <input
-                            value={search}
-                            onChange={(event) => setSearch(event.target.value)}
-                            placeholder="Buscar"
-                            className="w-full text-sm rounded-md border placeholder:text-text-400 border-bg-300 bg-bg-200 py-3 pl-12 pr-4 outline-none focus:border-primary-500"
-                        />
-                    </div>
-                    <Dropdown<Status>
-                        value={status}
-                        onChange={setStatus}
-                        placeholder="Todos los status"
-                        options={STATUS_OPTIONS}
                     />
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">

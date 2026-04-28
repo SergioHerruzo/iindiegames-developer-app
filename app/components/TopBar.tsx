@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
-import { Search, Gamepad2 } from "lucide-react";
+import { Search, Gamepad2, Bell } from "lucide-react";
 import type { CurrentUser } from "@models/CurrentUser";
 
 const AUTH_CURRENT_USER_KEY = "auth.currentUser";
@@ -57,10 +57,16 @@ export default function TopBar() {
             </div>
 
             <div className="flex items-center gap-4">
-                <button className="flex items-center gap-3 cursor-pointer">
+                <button className="relative flex items-center justify-center rounded-lg p-2 transition hover:bg-bg-200">
+                    <Bell size={20} className="text-text-300" />
+                </button>
+
+                <div className="h-6 w-px bg-bg-300" />
+
+                <button className="flex items-center gap-3 rounded-lg p-1 pr-2 transition hover:bg-bg-200">
 
                     <div className="flex flex-col items-end justify-center text-right leading-tight">
-                        <span className="text-sm font-semibold text-text-100">
+                        <span className="text-sm text-text-100">
                             User
                         </span>
                         <span className="text-xs text-text-300">
@@ -81,6 +87,7 @@ export default function TopBar() {
                     )}
 
                 </button>
+
             </div>
         </nav>
     );
