@@ -138,7 +138,7 @@ export default function Dashboard() {
                     )}
 
                     {hasGamesError && (
-                        <div className="col-span-full flex min-h-56 w-full flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-bg-100 px-6 py-12 text-center gap-4">
+                        <div className="col-span-full flex min-h-56 w-full flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-bg-100/80 px-6 py-12 text-center gap-4">
                             <TriangleAlert className="w-10 h-10 text-red-400" />
                             <div className="flex flex-col gap-1">
                                 <p className="text-xl text-text-300">No se pudieron cargar tus juegos</p>

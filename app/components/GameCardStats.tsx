@@ -9,7 +9,7 @@ type GameCardStatsProps = {
 
 export default function GameCardStats({ icon: Icon, title, description, change }: GameCardStatsProps) {
     return (
-        <div className="bg-bg-100 border-2 border-border rounded-xl p-6 transition-all duration-200 hover:bg-bg-200/50 hover:border-primary-500/50">
+        <div className="bg-bg-100/80 border-2 border-border rounded-xl p-6 transition-all duration-200 hover:bg-bg-200/50 hover:border-primary-500/50">
             
             <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 rounded-lg bg-primary-500/10 flex items-center justify-center">
