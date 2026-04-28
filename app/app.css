@@ -97,7 +97,7 @@ body {
   background-attachment: fixed;
   background-size: cover;
 
-  scrollbar-gutter: stable;
+  overflow-y: overlay;
 
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;

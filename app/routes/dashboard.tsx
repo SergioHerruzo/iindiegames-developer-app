@@ -90,7 +90,7 @@ export default function Dashboard() {
     return (
         <>
             <TopBar />
-            <div className="flex flex-col items-start justify-start w-full min-h-screen py-2 px-6 gap-8">
+            <div className="flex flex-col items-start justify-start w-full py-2 px-6 gap-8">
                 <div className="flex items-start justify-between w-full gap-4">
                     <div className="flex flex-col items-start justify-start gap-2">
                         <h1 className="text-4xl text-text-200">Mis juegos</h1>
@@ -138,12 +138,24 @@ export default function Dashboard() {
                     )}
 
                     {hasGamesError && (
-                        <p className="text-sm text-red-400">{gamesError}</p>
+                        <div className="col-span-full flex min-h-56 w-full flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-bg-100 px-6 py-12 text-center gap-4">
+                            <TriangleAlert className="w-8 h-8 text-red-400" />
+                            <div className="flex flex-col gap-1">
+                                <p className="text-lg text-text-300">No se pudieron cargar tus juegos</p>
+                                <p className="text-xs text-text-400">{gamesError}</p>
+                            </div>
+                            <button
+                                onClick={() => setDebouncedSearch(prev => prev)}
+                                className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-600 text-text-200 cursor-pointer"
+                            >
+                                Reintentar
+                            </button>
+                        </div>
                     )}
 
                     {hasNoGames && (
-                        <div className="col-span-full flex min-h-56 w-full flex-col items-center justify-center rounded-2xl border border-dashed border-bg-300 bg-bg-200 px-6 py-12 text-center">
-                            <p className="text-xl text-text-200">Aún no has creado ningún juego.</p>
+                        <div className="col-span-full flex min-h-56 w-full flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-bg-100 px-6 py-12 text-center">
+                            <p className="text-xl text-text-300">Aún no has creado ningún juego.</p>
                             <p className="mt-2 text-sm text-text-400">Empieza tu próxima aventura y publica tu primer título.</p>
                         </div>
                     )}
