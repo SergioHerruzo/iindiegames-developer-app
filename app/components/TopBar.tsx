@@ -46,18 +46,28 @@ export default function TopBar() {
             </div>
 
             <div className="pointer-events-none absolute left-1/2 -translate-x-1/2">
-                <div className="pointer-events-auto flex items-center gap-2 rounded-lg border border-bg-300 bg-bg-200 px-4 py-2 shadow-sm transition focus-within:ring-2 focus-within:ring-primary-400">
+                <div className="pointer-events-auto flex items-center gap-2 rounded-lg border border-border bg-bg-100 px-3 py-2 shadow-sm transition focus-within:ring-2 focus-within:ring-primary-500/60">
                     <Search size={18} className="text-text-300" />
                     <input
                         type="text"
-                        placeholder="Buscar juegos..."
+                        placeholder="Buscar juegos"
                         className="w-96 bg-transparent text-sm text-text-200 placeholder:text-text-300 outline-none"
                     />
                 </div>
             </div>
 
             <div className="flex items-center gap-4">
-                <button className="cursor-pointer">
+                <button className="flex items-center gap-3 cursor-pointer">
+
+                    <div className="flex flex-col items-end justify-center text-right leading-tight">
+                        <span className="text-sm font-semibold text-text-100">
+                            User
+                        </span>
+                        <span className="text-xs text-text-300">
+                            Developer
+                        </span>
+                    </div>
+
                     {avatarUrl ? (
                         <img
                             src={avatarUrl}
@@ -69,6 +79,7 @@ export default function TopBar() {
                             {avatarLabel.slice(0, 1).toUpperCase()}
                         </div>
                     )}
+
                 </button>
             </div>
         </nav>
