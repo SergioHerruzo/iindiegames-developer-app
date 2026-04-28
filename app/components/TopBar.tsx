@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { Search, GamepadDirectional, Bell } from "lucide-react";
 import type { CurrentUser } from "@models/CurrentUser";
 
@@ -21,6 +21,7 @@ function readStoredCurrentUser(): CurrentUser | null {
 export default function TopBar() {
     const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
     const [search, setSearch] = useState("");
+    const location = useLocation();
 
     useEffect(() => {
         setCurrentUser(readStoredCurrentUser());
