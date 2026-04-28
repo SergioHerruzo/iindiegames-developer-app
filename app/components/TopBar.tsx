@@ -1,19 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
+import { Search, Gamepad2 } from "lucide-react";
 import type { CurrentUser } from "@models/CurrentUser";
 
 const AUTH_CURRENT_USER_KEY = "auth.currentUser";
 
 function readStoredCurrentUser(): CurrentUser | null {
-    if (typeof window === "undefined") {
-        return null;
-    }
+    if (typeof window === "undefined") return null;
 
     const storedUser = window.localStorage.getItem(AUTH_CURRENT_USER_KEY);
-
-    if (!storedUser) {
-        return null;
-    }
+    if (!storedUser) return null;
 
     try {
         return JSON.parse(storedUser) as CurrentUser;
@@ -33,13 +29,34 @@ export default function TopBar() {
     const avatarLabel = currentUser?.displayName ?? "Usuario";
 
     return (
-        <nav className="flex h-20 w-full items-center justify-between border-b border-bg-500 bg-bg-100 px-40">
-            <div className="flex items-center justify-start gap-8">
-                <Link to="/dashboard" className="text-2xl font-space-grotesk text-text-200">
-                    Indie Games
+        <nav className="relative flex w-full items-center justify-between bg-bg-50 py-4 px-6">
+
+            <div className="flex items-center gap-3">
+                <Link to="/dashboard" className="flex items-center gap-3">
+
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-500">
+                        <Gamepad2 size={25} className="text-text-200" />
+                    </div>
+
+                    <span className="text-2xl font-plus-jakarta-sans tracking-tight text-text-100">
+                        Indie Games
+                    </span>
+
                 </Link>
             </div>
-            <div className="flex items-center justify-start gap-4">
+
+            <div className="pointer-events-none absolute left-1/2 -translate-x-1/2">
+                <div className="pointer-events-auto flex items-center gap-2 rounded-lg border border-bg-300 bg-bg-200 px-4 py-2 shadow-sm transition focus-within:ring-2 focus-within:ring-primary-400">
+                    <Search size={18} className="text-text-300" />
+                    <input
+                        type="text"
+                        placeholder="Buscar juegos..."
+                        className="w-96 bg-transparent text-sm text-text-200 placeholder:text-text-300 outline-none"
+                    />
+                </div>
+            </div>
+
+            <div className="flex items-center gap-4">
                 <button className="cursor-pointer">
                     {avatarUrl ? (
                         <img
@@ -55,5 +72,5 @@ export default function TopBar() {
                 </button>
             </div>
         </nav>
-    )
+    );
 }

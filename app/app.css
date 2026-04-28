@@ -7,6 +7,9 @@
   --font-space-grotesk:
     "Space Grotesk", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-plus-jakarta-sans:
+    "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   --primary-100: #7fcfa2;
   --primary-200: #5fb889;
