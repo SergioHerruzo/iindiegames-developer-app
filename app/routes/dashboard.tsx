@@ -93,7 +93,7 @@ export default function Dashboard() {
             <div className="flex flex-col items-start justify-start w-full min-h-screen py-2 px-6 gap-8">
                 <div className="flex items-start justify-between w-full gap-4">
                     <div className="flex flex-col items-start justify-start gap-2">
-                        <h1 className="text-4xl text-text-100">Mis juegos</h1>
+                        <h1 className="text-4xl text-text-200">Mis juegos</h1>
                         <h3 className="text-sm text-text-300">Gestiona tus juegos, compilaciones y análisis.</h3>
                     </div>
                     <Link to="/create-game" className="text-sm self-center inline-flex items-center justify-center px-4 py-2 bg-primary-600 text-text-100 rounded-full cursor-pointer transition-transform">

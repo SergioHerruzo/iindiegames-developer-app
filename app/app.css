@@ -8,8 +8,8 @@
     "Space Grotesk", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   --font-plus-jakarta-sans:
-    "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
   --primary-100: #7fcfa2;
   --primary-200: #5fb889;
@@ -21,8 +21,8 @@
 
   --accent-100: #8fbf8f;
   --accent-200: #2f5a34;
-  
-  --text-50:  #ffffff;
+
+  --text-50: #ffffff;
   --text-100: #eaeaea;
   --text-200: #d0d0d0;
   --text-300: #b5b5b5;
@@ -32,8 +32,8 @@
   --text-700: #4d4d4d;
   --text-800: #383838;
 
-  --bg-0:   #0f0f0f;
-  --bg-50:  #121212;
+  --bg-0: #0f0f0f;
+  --bg-50: #121212;
   --bg-100: #151515;
   --bg-200: #1a1a1a;
   --bg-300: #202020;
@@ -80,8 +80,23 @@
 html,
 body {
   @apply min-h-screen bg-bg-50 text-text-100 font-sans tracking-wide;
-  background-size: 100% 100%, 100% 100%;
+
+  background:
+    radial-gradient(
+      ellipse 140% 100% at 20% 0%,
+      rgba(127, 207, 162, 0.06) 0%,
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 160% 120% at 50% 50%,
+      rgba(28, 32, 29, 1) 0%,
+      rgba(18, 20, 19, 1) 60%,
+      rgba(15, 16, 15, 1) 100%
+    );
+
   background-attachment: fixed;
+  background-size: cover;
+
   scrollbar-gutter: stable;
 
   @media (prefers-color-scheme: dark) {

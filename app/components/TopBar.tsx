@@ -29,7 +29,7 @@ export default function TopBar() {
     const avatarLabel = currentUser?.displayName ?? "Usuario";
 
     return (
-        <nav className="relative flex w-full items-center justify-between bg-bg-50 py-4 px-6">
+        <nav className="relative flex w-full items-center justify-between py-4 px-6">
 
             <div className="flex items-center gap-3">
                 <Link to="/dashboard" className="flex items-center gap-3">
@@ -38,7 +38,7 @@ export default function TopBar() {
                         <GamepadDirectional size={25} className="text-text-200" />
                     </div>
 
-                    <span className="text-2xl font-plus-jakarta-sans tracking-tight text-text-100">
+                    <span className="text-2xl font-plus-jakarta-sans tracking-tight text-text-200">
                         Indie Games
                     </span>
 
@@ -47,18 +47,18 @@ export default function TopBar() {
 
             <div className="pointer-events-none absolute left-1/2 -translate-x-1/2">
                 <div className="pointer-events-auto flex items-center gap-1.5 rounded-lg border border-border bg-bg-100 px-3 py-2 shadow-sm transition focus-within:ring-1 focus-within:ring-primary-500/60">
-                    <Search size={20} className="text-text-300" />
+                    <Search size={20} className="text-text-400" />
                     <input
                         type="text"
                         placeholder="Buscar"
-                        className="w-lg bg-transparent text-text-200 placeholder:text-text-300 outline-none"
+                        className="w-lg bg-transparent text-text-300 placeholder:text-text-400 outline-none"
                     />
                 </div>
             </div>
 
             <div className="flex items-center gap-4">
                 <button className="relative flex items-center justify-center rounded-lg p-2 transition hover:bg-bg-200">
-                    <Bell size={20} className="text-text-300" />
+                    <Bell size={20} className="text-text-400" />
                 </button>
 
                 <div className="h-6 w-px bg-bg-300" />
