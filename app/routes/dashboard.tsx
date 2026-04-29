@@ -132,8 +132,8 @@ export default function Dashboard() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
                     {isLoadingGames && (
-                        <div className="col-span-full flex min-h-56 w-full items-center justify-center text-center">
-                            <p className="text-sm text-text-400">Cargando tus juegos...</p>
+                        <div className="col-span-full flex min-h-56 w-full flex-col items-center justify-center gap-3 text-center">
+                            <div className="h-12 w-12 animate-spin rounded-full border-2 border-text-400 border-t-transparent"></div>
                         </div>
                     )}
 
