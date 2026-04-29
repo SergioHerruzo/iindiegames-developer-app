@@ -24,7 +24,6 @@ export default function Dashboard() {
         const timeoutId = window.setTimeout(() => {
             setDebouncedSearch(search.trim());
         }, 350);
-
         return () => window.clearTimeout(timeoutId);
     }, [search]);
 
@@ -34,10 +33,8 @@ export default function Dashboard() {
         async function fetchCreatedGames() {
             setIsLoadingGames(true);
             setGamesError(null);
-
             try {
                 const title = debouncedSearch.trim();
-
                 const response = await httpClient.get<PaginatedResponse<CreatedGame>>('/users/me/created-games', {
                     params: {
                         ...(title ? { title } : {}),
@@ -46,7 +43,6 @@ export default function Dashboard() {
                     },
                     signal: controller.signal,
                 });
-
                 const items = response.data.items ?? [];
                 setCreatedGames(items);
                 setTotalGames(response.data.totalItemCount ?? items.length);
@@ -59,7 +55,6 @@ export default function Dashboard() {
         }
 
         fetchCreatedGames();
-
         return () => controller.abort();
     }, [debouncedSearch, retryCount]);
 
@@ -71,49 +66,60 @@ export default function Dashboard() {
         <>
             <TopBar />
             <div className="flex flex-col items-start justify-start w-full py-2 px-6 gap-8">
+                {/* Header */}
                 <div className="flex items-start justify-between w-full gap-4">
-                    <div className="flex flex-col items-start justify-start gap-2">
-                        <h1 className="text-4xl text-text-200">Mis juegos</h1>
-                        <h3 className="text-sm text-text-300">Gestiona tus juegos, compilaciones y análisis.</h3>
+                    <div className="flex flex-col items-start justify-start gap-1">
+                        <h1 className="text-4xl font-semibold text-slate-800">Mis juegos</h1>
+                        <p className="text-sm text-slate-400">Gestiona tus juegos, compilaciones y análisis.</p>
                     </div>
-                    <Link to="/create-game" className="text-sm self-center inline-flex items-center justify-center px-4 py-2 bg-primary-500 text-text-100 rounded-full cursor-pointer transition-transform">
-                        <Plus className="w-6 h-6 mr-2" />
+                    <Link
+                        to="/create-game"
+                        className="text-sm self-center inline-flex items-center justify-center px-5 py-2.5 bg-emerald-600/90 hover:bg-emerald-600 backdrop-blur-sm text-white rounded-full transition-all duration-200 border border-emerald-500/40 shadow-sm hover:shadow-md hover:shadow-emerald-200/50"
+                    >
+                        <Plus className="w-4 h-4 mr-2" />
                         Agregar juego
                     </Link>
                 </div>
+
+                {/* Stats cards */}
                 <div className="grid w-full gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                     <GameCardStats title="Vendidos" description="1,247" change="+12% este mes" icon={ShoppingCart} />
                     <GameCardStats title="Total" description={totalGames.toLocaleString('es-ES')} change="+5 añadidos" icon={GamepadDirectional} />
                     <GameCardStats title="Juegos publicados" description="47" change="+2 esta semana" icon={CircleCheck} />
                     <GameCardStats title="Juegos con incidencias" description="0" change="Sin incidencias" icon={TriangleAlert} />
                 </div>
+
+                {/* Games grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
                     {isLoadingGames && (
                         <div className="col-span-full flex min-h-56 w-full flex-col items-center justify-center gap-3 text-center">
-                            <div className="h-12 w-12 animate-spin rounded-full border-2 border-text-400 border-t-transparent"></div>
+                            <div className="h-10 w-10 animate-spin rounded-full border-2 border-emerald-400 border-t-transparent" />
                         </div>
                     )}
+
                     {hasGamesError && (
                         <div className="col-span-full flex min-h-56 w-full flex-col items-center justify-center text-center gap-4">
-                            <TriangleAlert className="w-12 h-12 text-red-400/80" />
+                            <TriangleAlert className="w-10 h-10 text-rose-400/80" />
                             <div className="flex flex-col gap-1">
-                                <p className="text-xl text-text-200">No se pudieron cargar tus juegos</p>
-                                <p className="text-text-300">{gamesError}</p>
+                                <p className="text-xl font-medium text-slate-700">No se pudieron cargar tus juegos</p>
+                                <p className="text-sm text-slate-400">{gamesError}</p>
                             </div>
                             <button
                                 onClick={() => setRetryCount(prev => prev + 1)}
-                                className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-500 text-text-200 cursor-pointer"
+                                className="mt-2 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-emerald-600/90 hover:bg-emerald-600 text-white text-sm transition border border-emerald-500/40 cursor-pointer"
                             >
                                 Reintentar
                             </button>
                         </div>
                     )}
+
                     {hasNoGames && (
-                        <div className="col-span-full flex min-h-56 w-full flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-bg-100 px-6 py-12 text-center">
-                            <p className="text-xl text-text-300">Aún no has creado ningún juego.</p>
-                            <p className="mt-2 text-sm text-text-400">Empieza tu próxima aventura y publica tu primer título.</p>
+                        <div className="col-span-full flex min-h-56 w-full flex-col items-center justify-center rounded-2xl border border-dashed border-emerald-200/60 bg-white/30 backdrop-blur-sm px-6 py-12 text-center">
+                            <p className="text-lg text-slate-500">Aún no has creado ningún juego.</p>
+                            <p className="mt-2 text-sm text-slate-400">Empieza tu próxima aventura y publica tu primer título.</p>
                         </div>
                     )}
+
                     {shouldShowGames && createdGames.map((game) => (
                         <GameCard
                             key={game.id}
@@ -127,5 +133,5 @@ export default function Dashboard() {
                 </div>
             </div>
         </>
-    )
+    );
 }
