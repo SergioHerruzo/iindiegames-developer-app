@@ -88,7 +88,7 @@ export default function TopBar() {
             <div className="flex items-center gap-3">
                 <button
                     type="button"
-                    className="glass-icon-button relative flex cursor-pointer items-center justify-center rounded-xl p-2 transition bg-white/30 hover:bg-white/55 border border-white/50 backdrop-blur-sm"
+                    className="glass-icon-button relative flex cursor-pointer items-center justify-center rounded-xl p-2 transition backdrop-blur-sm"
                 >
                     <Bell size={18} strokeWidth={1.5} className="glass-icon text-slate-500" />
                 </button>
