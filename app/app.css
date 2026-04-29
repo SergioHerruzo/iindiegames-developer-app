@@ -84,14 +84,14 @@ body {
   background:
     radial-gradient(
       ellipse 250% 100% at 20% 0%,
-      rgba(127, 207, 162, 0.06) 0%,
-      transparent 55%
+      rgba(127, 207, 162, 0.14) 0%,
+      transparent 58%
     ),
     radial-gradient(
       ellipse 160% 120% at 50% 50%,
-      rgba(28, 32, 29, 1) 0%,
-      rgba(18, 20, 19, 1) 60%,
-      rgba(15, 16, 15, 1) 100%
+      rgba(36, 41, 37, 1) 0%,
+      rgba(24, 27, 25, 1) 60%,
+      rgba(19, 20, 19, 1) 100%
     );
 
   background-attachment: fixed;
