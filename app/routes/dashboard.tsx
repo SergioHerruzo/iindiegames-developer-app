@@ -77,7 +77,7 @@ export default function Dashboard() {
                 {/* HEADER */}
                 <div className="flex items-start justify-between w-full gap-4">
                     <div className="flex flex-col gap-1">
-                        <h1 className="page-title text-4xl font-semibold text-slate-800">Mis juegos</h1>
+                        <h1 className="page-title text-4xl text-slate-800">Mis juegos</h1>
                         <p className="page-subtitle text-sm text-slate-400">
                             Gestiona tus juegos, compilaciones y análisis.
                         </p>

@@ -77,7 +77,7 @@ export default function TopBar() {
                     <div className="brand-chip flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 backdrop-blur-sm border border-emerald-200/60 shadow-sm shadow-emerald-100/30">
                         <GamepadDirectional size={22} strokeWidth={1.5} className="brand-icon text-emerald-700" />
                     </div>
-                    <span className="brand-title text-2xl font-semibold tracking-tight text-slate-800">
+                    <span className="brand-title text-2xl font-light tracking-tight text-slate-800">
                         Indie Games
                     </span>
                 </Link>
