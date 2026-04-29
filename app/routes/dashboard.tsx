@@ -18,6 +18,7 @@ export default function Dashboard() {
     const [totalGames, setTotalGames] = useState(0);
     const [isLoadingGames, setIsLoadingGames] = useState(true);
     const [gamesError, setGamesError] = useState<string | null>(null);
+    const [retryCount, setRetryCount] = useState(0);
 
     useEffect(() => {
         const timeoutId = window.setTimeout(() => {
@@ -60,7 +61,7 @@ export default function Dashboard() {
         fetchCreatedGames();
 
         return () => controller.abort();
-    }, [debouncedSearch]);
+    }, [debouncedSearch, retryCount]);
 
     const hasGamesError = !isLoadingGames && !!gamesError;
     const hasNoGames = !isLoadingGames && !gamesError && createdGames.length === 0;
@@ -100,7 +101,7 @@ export default function Dashboard() {
                                 <p className="text-text-300">{gamesError}</p>
                             </div>
                             <button
-                                onClick={() => setDebouncedSearch(prev => prev)}
+                                onClick={() => setRetryCount(prev => prev + 1)}
                                 className="mt-2 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-600 text-text-200 cursor-pointer"
                             >
                                 Reintentar
