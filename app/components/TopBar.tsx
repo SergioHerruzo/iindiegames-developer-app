@@ -105,8 +105,8 @@ export default function TopBar() {
                         aria-expanded={isThemeMenuOpen}
                     >
                         <div className="flex flex-col items-end justify-center text-right leading-tight">
-                            <span className="user-name text-sm font-medium text-slate-700">{avatarLabel}</span>
-                            <span className="user-role text-xs text-slate-400">Developer</span>
+                            <span className="user-name text-sm text-slate-700">{avatarLabel}</span>
+                            <span className="user-role text-xs text-slate-500">Developer</span>
                         </div>
 
                         {avatarUrl ? (
@@ -116,7 +116,7 @@ export default function TopBar() {
                                 className="avatar-image h-9 w-9 rounded-full object-cover ring-1 ring-white/70 shadow-sm shadow-slate-200/40"
                             />
                         ) : (
-                            <div className="avatar-fallback flex h-9 w-9 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/70 text-sm font-semibold text-emerald-700 shadow-sm shadow-slate-200/40">
+                            <div className="avatar-fallback flex h-9 w-9 items-center border border-slate-300 justify-center rounded-full bg-white/70 ring-1 ring-white/70 text-sm text-emerald-700 shadow-sm shadow-slate-200/40">
                                 {avatarLabel.slice(0, 1).toUpperCase()}
                             </div>
                         )}
@@ -124,11 +124,10 @@ export default function TopBar() {
 
                     {/* Dropdown */}
                     <div
-                        className={`theme-dropdown absolute right-0 top-full z-20 mt-2 w-64 origin-top-right overflow-hidden rounded-2xl bg-white/70 backdrop-blur-xl border border-white/80 p-2 shadow-xl shadow-slate-200/60 transition-all duration-200 ease-out ${
-                            isThemeMenuOpen
-                                ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
-                                : "pointer-events-none translate-y-2 scale-[0.98] opacity-0"
-                        }`}
+                        className={`theme-dropdown absolute right-0 top-full z-20 mt-2 w-64 origin-top-right overflow-hidden rounded-2xl bg-white/70 backdrop-blur-xl border border-white/80 p-2 shadow-xl shadow-slate-200/60 transition-all duration-200 ease-out ${isThemeMenuOpen
+                            ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
+                            : "pointer-events-none translate-y-2 scale-[0.98] opacity-0"
+                            }`}
                         aria-hidden={!isThemeMenuOpen}
                     >
                         <button
@@ -140,29 +139,38 @@ export default function TopBar() {
                             className="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left transition"
                         >
                             <span className="flex items-center gap-2.5">
-                                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100/80 text-slate-500">
+                                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100/80 text-slate-600">
                                     {isDarkTheme ? <Moon size={14} /> : <Sun size={14} />}
                                 </span>
-                                <span className="text-xs font-medium text-slate-600">
+                                <span className="text-xs text-slate-600">
                                     {isDarkTheme ? "Modo oscuro" : "Modo claro"}
                                 </span>
                             </span>
 
                             {/* Toggle pill */}
-                            <span className={`relative flex h-6 w-11 items-center rounded-full border transition-colors duration-300 ${
-                                isDarkTheme
-                                    ? "border-slate-300/60 bg-slate-200/60"
-                                    : "border-emerald-300/60 bg-emerald-100/60"
-                            }`}>
-                                <span className={`absolute left-0.5 top-0.5 flex h-5 w-5 items-center justify-center rounded-full shadow transition-transform duration-300 ease-out ${
-                                    isDarkTheme
-                                        ? "translate-x-5 bg-slate-600 text-slate-200"
-                                        : "translate-x-0 bg-white text-emerald-600"
-                                }`}>
-                                    <span className={`absolute transition-all duration-300 ${isDarkTheme ? "scale-100 opacity-100" : "scale-75 opacity-0"}`}>
+                            <span
+                                className={`relative flex h-6 w-11 items-center rounded-full border transition-colors duration-300 ${isDarkTheme
+                                        ? "border-slate-300/60 bg-slate-200/60"
+                                        : "border-emerald-300/60 bg-emerald-100/60"
+                                    }`}
+                            >
+                                <span
+                                    className={`absolute top-1/2 -translate-y-1/2 flex h-5 w-5 items-center justify-center rounded-full shadow transition-all duration-300 ease-out ${isDarkTheme
+                                            ? "left-[calc(100%-1.25rem-0.125rem)] bg-slate-600 text-slate-200"
+                                            : "left-0.5 bg-white text-emerald-600"
+                                        }`}
+                                >
+                                    <span
+                                        className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${isDarkTheme ? "scale-100 opacity-100" : "scale-75 opacity-0"
+                                            }`}
+                                    >
                                         <Moon size={11} />
                                     </span>
-                                    <span className={`absolute transition-all duration-300 ${!isDarkTheme ? "scale-100 opacity-100" : "scale-75 opacity-0"}`}>
+
+                                    <span
+                                        className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${!isDarkTheme ? "scale-100 opacity-100" : "scale-75 opacity-0"
+                                            }`}
+                                    >
                                         <Sun size={11} />
                                     </span>
                                 </span>
