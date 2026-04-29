@@ -116,7 +116,7 @@ export default function TopBar() {
                                 className="avatar-image h-9 w-9 rounded-full object-cover ring-1 ring-white/70 shadow-sm shadow-slate-200/40"
                             />
                         ) : (
-                            <div className="avatar-fallback flex h-9 w-9 items-center border border-slate-300 justify-center rounded-full bg-white/70 ring-1 ring-white/70 text-sm text-emerald-700 shadow-sm shadow-slate-200/40">
+                            <div className="avatar-fallback flex h-9 w-9 items-center border border-slate-200 justify-center rounded-full bg-white/70 ring-1 ring-white/70 text-sm text-emerald-700 shadow-sm shadow-slate-200/40">
                                 {avatarLabel.slice(0, 1).toUpperCase()}
                             </div>
                         )}
