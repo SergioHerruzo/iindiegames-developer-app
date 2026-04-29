@@ -77,8 +77,8 @@ export default function Dashboard() {
                 {/* HEADER */}
                 <div className="flex items-start justify-between w-full gap-4">
                     <div className="flex flex-col gap-1">
-                        <h1 className="text-4xl font-semibold text-slate-800">Mis juegos</h1>
-                        <p className="text-sm text-slate-400">
+                        <h1 className="page-title text-4xl font-semibold text-slate-800">Mis juegos</h1>
+                        <p className="page-subtitle text-sm text-slate-400">
                             Gestiona tus juegos, compilaciones y análisis.
                         </p>
                     </div>
@@ -86,6 +86,7 @@ export default function Dashboard() {
                     <Link
                         to="/create-game"
                         className="
+                            glass-action
                             inline-flex items-center justify-center gap-2
                             px-5 py-2.5 rounded-full text-sm text-emerald-700
 
@@ -133,10 +134,10 @@ export default function Dashboard() {
                             <TriangleAlert className="w-10 h-10 text-rose-400/80" />
 
                             <div className="flex flex-col gap-1">
-                                <p className="text-xl font-medium text-slate-700">
+                                <p className="error-title text-xl font-medium text-slate-700">
                                     No se pudieron cargar tus juegos
                                 </p>
-                                <p className="text-sm text-slate-600">
+                                <p className="error-subtitle text-sm text-slate-600">
                                     {gamesError}
                                 </p>
                             </div>
@@ -144,6 +145,7 @@ export default function Dashboard() {
                             <button
                                 onClick={() => setRetryCount(prev => prev + 1)}
                                 className="
+                                    glass-action
                                     inline-flex items-center gap-2
                                     px-5 py-2 rounded-full text-sm text-emerald-700
 
@@ -166,6 +168,7 @@ export default function Dashboard() {
                     {/* EMPTY */}
                     {hasNoGames && (
                         <div className="
+                            empty-state
                             col-span-full flex min-h-56 w-full flex-col items-center justify-center
                             rounded-2xl px-6 py-12 text-center
 
@@ -173,10 +176,10 @@ export default function Dashboard() {
                             border border-white/30
                             shadow-sm
                         ">
-                            <p className="text-lg text-slate-500">
+                            <p className="empty-title text-lg text-slate-500">
                                 Aún no has creado ningún juego.
                             </p>
-                            <p className="mt-2 text-sm text-slate-400">
+                            <p className="empty-subtitle mt-2 text-sm text-slate-400">
                                 Empieza tu próxima aventura y publica tu primer título.
                             </p>
                         </div>

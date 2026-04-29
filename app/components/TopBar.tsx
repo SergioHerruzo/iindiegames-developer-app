@@ -74,10 +74,10 @@ export default function TopBar() {
             {/* Logo */}
             <div className="flex items-center gap-3">
                 <Link to="/dashboard" className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 backdrop-blur-sm border border-emerald-200/60 shadow-sm shadow-emerald-100/30">
-                        <GamepadDirectional size={22} strokeWidth={1.5} className="text-emerald-700" />
+                    <div className="brand-chip flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 backdrop-blur-sm border border-emerald-200/60 shadow-sm shadow-emerald-100/30">
+                        <GamepadDirectional size={22} strokeWidth={1.5} className="brand-icon text-emerald-700" />
                     </div>
-                    <span className="text-2xl font-semibold tracking-tight text-slate-800">
+                    <span className="brand-title text-2xl font-semibold tracking-tight text-slate-800">
                         Indie Games
                     </span>
                 </Link>
@@ -88,9 +88,9 @@ export default function TopBar() {
             <div className="flex items-center gap-3">
                 <button
                     type="button"
-                    className="relative flex cursor-pointer items-center justify-center rounded-xl p-2 transition bg-white/30 hover:bg-white/55 border border-white/50 backdrop-blur-sm"
+                    className="glass-icon-button relative flex cursor-pointer items-center justify-center rounded-xl p-2 transition bg-white/30 hover:bg-white/55 border border-white/50 backdrop-blur-sm"
                 >
-                    <Bell size={18} strokeWidth={1.5} className="text-slate-500" />
+                    <Bell size={18} strokeWidth={1.5} className="glass-icon text-slate-500" />
                 </button>
 
                 <div className="h-5 w-px bg-slate-200/80" />
@@ -105,18 +105,18 @@ export default function TopBar() {
                         aria-expanded={isThemeMenuOpen}
                     >
                         <div className="flex flex-col items-end justify-center text-right leading-tight">
-                            <span className="text-sm font-medium text-slate-700">{avatarLabel}</span>
-                            <span className="text-xs text-slate-400">Developer</span>
+                            <span className="user-name text-sm font-medium text-slate-700">{avatarLabel}</span>
+                            <span className="user-role text-xs text-slate-400">Developer</span>
                         </div>
 
                         {avatarUrl ? (
                             <img
                                 src={avatarUrl}
                                 alt={avatarLabel}
-                                className="h-9 w-9 rounded-full object-cover ring-1 ring-white/70 shadow-sm shadow-slate-200/40"
+                                className="avatar-image h-9 w-9 rounded-full object-cover ring-1 ring-white/70 shadow-sm shadow-slate-200/40"
                             />
                         ) : (
-                            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/70 text-sm font-semibold text-emerald-700 shadow-sm shadow-slate-200/40">
+                            <div className="avatar-fallback flex h-9 w-9 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/70 text-sm font-semibold text-emerald-700 shadow-sm shadow-slate-200/40">
                                 {avatarLabel.slice(0, 1).toUpperCase()}
                             </div>
                         )}
@@ -124,7 +124,7 @@ export default function TopBar() {
 
                     {/* Dropdown */}
                     <div
-                        className={`absolute right-0 top-full z-20 mt-2 w-64 origin-top-right overflow-hidden rounded-2xl bg-white/70 backdrop-blur-xl border border-white/80 p-2 shadow-xl shadow-slate-200/60 transition-all duration-200 ease-out ${
+                        className={`theme-dropdown absolute right-0 top-full z-20 mt-2 w-64 origin-top-right overflow-hidden rounded-2xl bg-white/70 backdrop-blur-xl border border-white/80 p-2 shadow-xl shadow-slate-200/60 transition-all duration-200 ease-out ${
                             isThemeMenuOpen
                                 ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
                                 : "pointer-events-none translate-y-2 scale-[0.98] opacity-0"
