@@ -74,38 +74,23 @@ export default function TopBar() {
             {/* Logo */}
             <div className="flex items-center gap-3">
                 <Link to="/dashboard" className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100/80 backdrop-blur-sm border border-emerald-200/60">
-                        <GamepadDirectional size={22} className="text-emerald-700" />
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 backdrop-blur-sm border border-emerald-200/60 shadow-sm shadow-emerald-100/30">
+                        <GamepadDirectional size={22} strokeWidth={1.5} className="text-emerald-700" />
                     </div>
-                    <span className="text-2xl font-semibold tracking-tight text-slate-700">
+                    <span className="text-2xl font-semibold tracking-tight text-slate-800">
                         Indie Games
                     </span>
                 </Link>
             </div>
 
-            {/* Search — centrado */}
-            {location.pathname === "/dashboard" && (
-                <div className="pointer-events-none absolute left-1/2 -translate-x-1/2">
-                    <div className="pointer-events-auto flex items-center gap-2 rounded-xl border border-white/70 bg-white/50 backdrop-blur-md px-3 py-2 shadow-sm transition focus-within:bg-white/70 focus-within:border-emerald-300/70 focus-within:ring-1 focus-within:ring-emerald-300/40">
-                        <Search size={18} className="text-slate-400" />
-                        <input
-                            type="text"
-                            placeholder="Buscar"
-                            className="w-64 bg-transparent text-slate-700 placeholder:text-slate-400 outline-none text-sm"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
-                    </div>
-                </div>
-            )}
 
             {/* Right side */}
             <div className="flex items-center gap-3">
                 <button
                     type="button"
-                    className="relative flex cursor-pointer items-center justify-center rounded-xl p-2 transition bg-white/40 hover:bg-white/70 border border-white/60 backdrop-blur-sm"
+                    className="relative flex cursor-pointer items-center justify-center rounded-xl p-2 transition bg-white/30 hover:bg-white/55 border border-white/50 backdrop-blur-sm"
                 >
-                    <Bell size={18} className="text-slate-500" />
+                    <Bell size={18} strokeWidth={1.5} className="text-slate-500" />
                 </button>
 
                 <div className="h-5 w-px bg-slate-200/80" />
@@ -128,10 +113,10 @@ export default function TopBar() {
                             <img
                                 src={avatarUrl}
                                 alt={avatarLabel}
-                                className="h-9 w-9 rounded-full border-2 border-white/80 object-cover shadow-sm"
+                                className="h-9 w-9 rounded-full object-cover ring-1 ring-white/70 shadow-sm shadow-slate-200/40"
                             />
                         ) : (
-                            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 border-2 border-white/80 text-sm font-semibold text-emerald-700 shadow-sm">
+                            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/70 text-sm font-semibold text-emerald-700 shadow-sm shadow-slate-200/40">
                                 {avatarLabel.slice(0, 1).toUpperCase()}
                             </div>
                         )}
