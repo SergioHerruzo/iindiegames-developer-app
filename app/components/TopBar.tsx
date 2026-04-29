@@ -49,7 +49,7 @@ export default function TopBar() {
 
             {location.pathname === "/dashboard" && (
                 <div className="pointer-events-none absolute left-1/2 -translate-x-1/2">
-                    <div className="pointer-events-auto flex items-center gap-1.5 rounded-lg border border-border bg-bg-100/80 px-3 py-2 shadow-sm transition focus-within:ring-1 focus-within:ring-primary-500/60">
+                    <div className="pointer-events-auto flex items-center gap-1.5 rounded-lg border border-border bg-bg-100/60 px-3 py-2 shadow-sm transition focus-within:ring-1 focus-within:ring-primary-500/60">
                         <Search size={20} className="text-text-400" />
                         <input
                             type="text"
