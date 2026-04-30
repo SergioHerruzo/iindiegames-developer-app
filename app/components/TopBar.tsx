@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useLoaderData, useLocation } from "react-router";
-import { Bell, GamepadDirectional, Moon, Sun } from "lucide-react";
+import { Link, useLoaderData, useLocation, useNavigate } from "react-router";
+import { Bell, GamepadDirectional, LogOut, Moon, Sun } from "lucide-react";
 import type { CurrentUser } from "@models/CurrentUser";
+import { clearAuthStorage } from "@utils/auth";
 
 const THEME_STORAGE_KEY = "app.theme";
 
@@ -25,6 +26,7 @@ function applyTheme(theme: ThemeMode) {
 
 export default function TopBar() {
     const { currentUser } = useLoaderData<TopBarLoaderData>();
+    const navigate = useNavigate();
     const [search, setSearch] = useState("");
     const [theme, setTheme] = useState<ThemeMode>(() => readStoredTheme());
     const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
@@ -58,6 +60,12 @@ export default function TopBar() {
         const nextTheme: ThemeMode = isDarkTheme ? "light" : "dark";
         setTheme(nextTheme);
         window.localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+    };
+
+    const handleLogout = () => {
+        clearAuthStorage();
+        setIsThemeMenuOpen(false);
+        navigate("/landing");
     };
 
     return (
@@ -149,7 +157,7 @@ export default function TopBar() {
                             aria-checked={isDarkTheme}
                             aria-label={`Cambiar a tema ${isDarkTheme ? "claro" : "oscuro"}`}
                             onClick={toggleTheme}
-                            className="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left transition"
+                            className="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left transition cursor-pointer"
                         >
                             <span className="flex items-center gap-2.5">
                                 <span className="
@@ -185,6 +193,28 @@ export default function TopBar() {
                                     >
                                         <Sun size={11} />
                                     </span>
+                                </span>
+                            </span>
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={handleLogout}
+                            className="group flex w-full cursor-pointer items-center justify-between gap-3 rounded-xl border border-transparent px-3 py-2.5 text-left transition hover:border-rose-500/70 hover:bg-rose-500/15 hover:text-rose-600 dark:hover:border-rose-400/50 dark:hover:bg-rose-500/10 dark:hover:text-rose-300"
+                        >
+                            <span className="flex items-center gap-2.5">
+                                <span className="
+                                    flex h-7 w-7 items-center justify-center rounded-full
+                                    bg-slate-100/80 text-slate-600
+                                    dark:bg-white/[0.07] dark:text-white/50
+                                    transition-colors
+                                    group-hover:bg-rose-500/8 group-hover:text-rose-500
+                                    dark:group-hover:bg-rose-500/6 dark:group-hover:text-rose-300
+                                ">
+                                    <LogOut size={14} />
+                                </span>
+                                <span className="text-xs text-slate-600 transition-colors dark:text-white/50">
+                                    Cerrar sesión
                                 </span>
                             </span>
                         </button>
