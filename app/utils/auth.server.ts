@@ -12,6 +12,7 @@ type JwtUserPayload = {
 };
 
 const AUTH_ID_TOKEN_COOKIE = "auth.idToken";
+const AUTH_ACCESS_TOKEN_COOKIE = "auth.accessToken";
 const AUTH_USER_COOKIE = "auth.user";
 
 const DEFAULT_COOKIE_OPTIONS = {
@@ -60,10 +61,19 @@ export function getUserFromRequest(request: Request): CurrentUser | null {
     return getUserFromIdToken(idToken);
 }
 
-export function createAuthCookieHeaders(input: { idToken: string; currentUser?: CurrentUser | null }): string[] {
+export function getAccessTokenFromRequest(request: Request): string | null {
+    return getCookie(request, AUTH_ACCESS_TOKEN_COOKIE);
+}
+
+export function createAuthCookieHeaders(input: {
+    idToken: string;
+    accessToken: string;
+    currentUser?: CurrentUser | null;
+}): string[] {
     const headers: string[] = [];
 
     headers.push(serializeCookie(AUTH_ID_TOKEN_COOKIE, input.idToken, DEFAULT_COOKIE_OPTIONS));
+    headers.push(serializeCookie(AUTH_ACCESS_TOKEN_COOKIE, input.accessToken, DEFAULT_COOKIE_OPTIONS));
 
     if (input.currentUser) {
         headers.push(
@@ -81,6 +91,7 @@ export function createAuthCookieHeaders(input: { idToken: string; currentUser?: 
 export function createLogoutCookieHeaders(): string[] {
     return [
         clearCookie(AUTH_ID_TOKEN_COOKIE, DEFAULT_COOKIE_OPTIONS),
+        clearCookie(AUTH_ACCESS_TOKEN_COOKIE, DEFAULT_COOKIE_OPTIONS),
         clearCookie(AUTH_USER_COOKIE, DEFAULT_COOKIE_OPTIONS),
     ];
 }

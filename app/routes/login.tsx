@@ -35,7 +35,11 @@ export async function action({ request }: Route.ActionArgs) {
         const currentUser = getUserFromIdToken(tokens.idToken);
 
         const headers = new Headers();
-        createAuthCookieHeaders({ idToken: tokens.idToken, currentUser }).forEach((value) => {
+        createAuthCookieHeaders({
+            idToken: tokens.idToken,
+            accessToken: tokens.accessToken,
+            currentUser,
+        }).forEach((value) => {
             headers.append("Set-Cookie", value);
         });
 

@@ -2,29 +2,72 @@ import GameCardStats from '@components/GameCardStats'
 import GameCard from '@components/GameCard'
 import { Plus, CircleCheck, TriangleAlert, ShoppingCart, GamepadDirectional } from 'lucide-react'
 import TopBar from '@components/TopBar'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { httpClient } from '@services/http.client'
 import type { PaginatedResponse } from '@models/PaginatedResponse'
 import type { CreatedGame } from '@models/CreatedGame'
-import { Link } from 'react-router'
+import { Link, useLoaderData } from 'react-router'
 import type { Route } from './+types/dashboard'
-import { getUserFromRequest } from '@utils/auth.server'
+import { getAccessTokenFromRequest, getUserFromRequest } from '@utils/auth.server'
 
 const DEFAULT_PAGE_NUMBER = 1
 const DEFAULT_PAGE_SIZE = 10
 
-export async function loader({ request }: Route.LoaderArgs) {
-    return { currentUser: getUserFromRequest(request) }
+type LoaderData = {
+    currentUser: ReturnType<typeof getUserFromRequest>;
+    initialGames: CreatedGame[];
+    initialTotal: number;
+    initialError: string | null;
+};
+
+export async function loader({ request }: Route.LoaderArgs): Promise<LoaderData> {
+    const currentUser = getUserFromRequest(request)
+    const accessToken = getAccessTokenFromRequest(request)
+
+    if (!accessToken) {
+        return { currentUser, initialGames: [], initialTotal: 0, initialError: null }
+    }
+
+    try {
+        const apiBaseUrl = import.meta.env.VITE_BASE_URL
+        const url = new URL('/users/me/created-games', apiBaseUrl || 'http://localhost')
+        url.searchParams.set('pageNumber', String(DEFAULT_PAGE_NUMBER))
+        url.searchParams.set('pageSize', String(DEFAULT_PAGE_SIZE))
+
+        const response = await fetch(url.toString(), {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+            },
+        })
+
+        if (!response.ok) {
+            return { currentUser, initialGames: [], initialTotal: 0, initialError: 'No se han podido cargar tus juegos. Inténtalo de nuevo.' }
+        }
+
+        const data = (await response.json()) as PaginatedResponse<CreatedGame>
+        const items = data.items ?? []
+
+        return {
+            currentUser,
+            initialGames: items,
+            initialTotal: data.totalItemCount ?? items.length,
+            initialError: null,
+        }
+    } catch {
+        return { currentUser, initialGames: [], initialTotal: 0, initialError: 'No se han podido cargar tus juegos. Inténtalo de nuevo.' }
+    }
 }
 
 export default function Dashboard() {
+    const { initialGames, initialTotal, initialError } = useLoaderData<LoaderData>()
     const [search, setSearch] = useState("")
     const [debouncedSearch, setDebouncedSearch] = useState("")
-    const [createdGames, setCreatedGames] = useState<CreatedGame[]>([])
-    const [totalGames, setTotalGames] = useState(0)
-    const [isLoadingGames, setIsLoadingGames] = useState(true)
-    const [gamesError, setGamesError] = useState<string | null>(null)
+    const [createdGames, setCreatedGames] = useState<CreatedGame[]>(initialGames)
+    const [totalGames, setTotalGames] = useState(initialTotal)
+    const [isLoadingGames, setIsLoadingGames] = useState(false)
+    const [gamesError, setGamesError] = useState<string | null>(initialError)
     const [retryCount, setRetryCount] = useState(0)
+    const hasBootstrappedRef = useRef(false)
 
     useEffect(() => {
         const timeoutId = window.setTimeout(() => {
@@ -34,6 +77,11 @@ export default function Dashboard() {
     }, [search])
 
     useEffect(() => {
+        if (!hasBootstrappedRef.current) {
+            hasBootstrappedRef.current = true
+            if (!debouncedSearch && retryCount === 0) return
+        }
+
         const controller = new AbortController()
 
         async function fetchCreatedGames() {
