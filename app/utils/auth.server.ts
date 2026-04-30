@@ -1,3 +1,4 @@
+import { redirect } from "react-router";
 import type { CurrentUser } from "@models/CurrentUser";
 import { clearCookie, getCookie, serializeCookie } from "@utils/cookies.server";
 import { decodeJwtPayload } from "@utils/jwt";
@@ -33,6 +34,44 @@ const REFRESH_COOKIE_OPTIONS = {
 export type AuthLoaderData = {
     currentUser: CurrentUser | null;
 };
+
+type AuthRole = "developer" | "user";
+
+export function normalizeRole(role: string | null | undefined): string {
+    return String(role ?? "").trim().toLowerCase();
+}
+
+export function redirectIfAuthenticated(request: Request): void {
+    const currentUser = getUserFromRequest(request);
+    if (!currentUser) return;
+
+    const role = normalizeRole(currentUser.role);
+    if (role === "user") {
+        throw redirect("/developer-agreement");
+    }
+
+    throw redirect("/dashboard");
+}
+
+export function requireRole(request: Request, role: AuthRole): CurrentUser {
+    const currentUser = getUserFromRequest(request);
+
+    if (!currentUser) {
+        throw redirect("/login");
+    }
+
+    const normalizedRole = normalizeRole(currentUser.role);
+
+    if (role === "developer" && normalizedRole !== "developer") {
+        throw redirect("/developer-agreement");
+    }
+
+    if (role === "user" && normalizedRole !== "user") {
+        throw redirect("/dashboard");
+    }
+
+    return currentUser;
+}
 
 export function getUserFromIdToken(idToken: string): CurrentUser | null {
     const payload = decodeJwtPayload<JwtUserPayload>(idToken);

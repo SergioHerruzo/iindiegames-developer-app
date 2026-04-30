@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
-import { redirect, useLoaderData, useNavigate } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import type { Route } from "./+types/DeveloperAgreement";
 import { httpClient, setCurrentUser } from "@services/http.client";
 import type { CurrentUser } from "@models/CurrentUser";
-import { getUserFromRequest } from "@utils/auth.server";
+import { requireRole } from "@utils/auth.server";
 import TopBar from "@components/TopBar";
 
 const TERMS = [
@@ -39,18 +39,7 @@ type LoaderData = {
 };
 
 export async function loader({ request }: Route.LoaderArgs): Promise<LoaderData> {
-    const currentUser = getUserFromRequest(request);
-
-    if (!currentUser) {
-        throw redirect("/login");
-    }
-
-    const role = String(currentUser.role ?? "").toLowerCase();
-    if (role === "Developer") {
-        throw redirect("/dashboard");
-    }
-
-    return { currentUser };
+    return { currentUser: requireRole(request, "user") };
 }
 
 export default function DeveloperAgreement() {

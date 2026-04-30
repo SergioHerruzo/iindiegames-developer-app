@@ -5,7 +5,7 @@ import { loginWithCognito } from "@services/cognito.server";
 import { setAuthToken, setCurrentUser } from "@services/http.client";
 import type { CurrentUser } from "@models/CurrentUser";
 import type { Route } from "./+types/login";
-import { createAuthCookieHeaders, getUserFromIdToken } from "@utils/auth.server";
+import { createAuthCookieHeaders, getUserFromIdToken, redirectIfAuthenticated } from "@utils/auth.server";
 
 type ActionData = {
     ok?: true;
@@ -121,4 +121,9 @@ export default function Login() {
             </Form>
         </div>
     );
+}
+
+export function loader({ request }: Route.LoaderArgs) {
+    redirectIfAuthenticated(request);
+    return null;
 }

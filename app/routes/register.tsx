@@ -2,6 +2,13 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Lock, Mail, ShieldCheck, User } from "lucide-react";
 import { registerWithCognito } from "@services/cognito.client";
+import type { Route } from "./+types/register";
+import { redirectIfAuthenticated } from "@utils/auth.server";
+
+export function loader({ request }: Route.LoaderArgs) {
+    redirectIfAuthenticated(request);
+    return null;
+}
 
 export default function Register() {
     const navigate = useNavigate();

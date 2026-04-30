@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { httpClient } from '@services/http.client'
 import type { PaginatedResponse } from '@models/PaginatedResponse'
 import type { CreatedGame } from '@models/CreatedGame'
-import { Link, useLoaderData } from 'react-router'
+import { Link, redirect, useLoaderData } from 'react-router'
 import type { Route } from './+types/dashboard'
 import { refreshSessionWithCognito } from '@services/cognito.server'
 import {
@@ -15,6 +15,7 @@ import {
     getRefreshTokenFromRequest,
     getUserFromIdToken,
     getUserFromRequest,
+    normalizeRole,
 } from '@utils/auth.server'
 
 const DEFAULT_PAGE_NUMBER = 1
@@ -75,8 +76,12 @@ export async function loader({ request }: Route.LoaderArgs) {
         await refreshSession()
     }
 
-    if (!accessToken) {
-        return jsonResponse({ currentUser: resolvedUser, initialGames: [], initialTotal: 0, initialError: null })
+    if (!accessToken || !resolvedUser) {
+        throw redirect('/login')
+    }
+
+    if (normalizeRole(resolvedUser.role) !== 'developer') {
+        throw redirect('/developer-agreement')
     }
 
     try {
