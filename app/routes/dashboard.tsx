@@ -2,7 +2,7 @@ import GameCardStats from '@components/GameCardStats'
 import GameCard from '@components/GameCard'
 import { Plus, CircleCheck, TriangleAlert, ShoppingCart, GamepadDirectional } from 'lucide-react'
 import TopBar from '@components/TopBar'
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { httpClient } from '@services/http.client'
 import type { PaginatedResponse } from '@models/PaginatedResponse'
 import type { CreatedGame } from '@models/CreatedGame'
@@ -12,6 +12,13 @@ import { getAccessTokenFromRequest, getUserFromRequest } from '@utils/auth.serve
 
 const DEFAULT_PAGE_NUMBER = 1
 const DEFAULT_PAGE_SIZE = 10
+const GAME_FETCH_ERROR = 'No se han podido cargar tus juegos. Inténtalo de nuevo.'
+
+function getGameImageUrl(game: CreatedGame): string | null {
+    const fromArray = game.artworks?.find((artwork) => Boolean(artwork?.mediumImageUrl))
+    if (fromArray?.mediumImageUrl) return fromArray.mediumImageUrl
+    return game.artwork?.mediumImageUrl ?? null
+}
 
 type LoaderData = {
     currentUser: ReturnType<typeof getUserFromRequest>;
@@ -41,7 +48,7 @@ export async function loader({ request }: Route.LoaderArgs): Promise<LoaderData>
         })
 
         if (!response.ok) {
-            return { currentUser, initialGames: [], initialTotal: 0, initialError: 'No se han podido cargar tus juegos. Inténtalo de nuevo.' }
+            return { currentUser, initialGames: [], initialTotal: 0, initialError: GAME_FETCH_ERROR }
         }
 
         const data = (await response.json()) as PaginatedResponse<CreatedGame>
@@ -54,7 +61,7 @@ export async function loader({ request }: Route.LoaderArgs): Promise<LoaderData>
             initialError: null,
         }
     } catch {
-        return { currentUser, initialGames: [], initialTotal: 0, initialError: 'No se han podido cargar tus juegos. Inténtalo de nuevo.' }
+        return { currentUser, initialGames: [], initialTotal: 0, initialError: GAME_FETCH_ERROR }
     }
 }
 
@@ -64,10 +71,14 @@ export default function Dashboard() {
     const [debouncedSearch, setDebouncedSearch] = useState("")
     const [createdGames, setCreatedGames] = useState<CreatedGame[]>(initialGames)
     const [totalGames, setTotalGames] = useState(initialTotal)
-    const [isLoadingGames, setIsLoadingGames] = useState(false)
+    const [isLoadingGames, setIsLoadingGames] = useState(initialGames.length === 0)
     const [gamesError, setGamesError] = useState<string | null>(initialError)
     const [retryCount, setRetryCount] = useState(0)
     const hasBootstrappedRef = useRef(false)
+    const [hasLoadedOnce, setHasLoadedOnce] = useState(initialGames.length > 0)
+
+    const totalGamesLabel = useMemo(() => totalGames.toLocaleString('es-ES'), [totalGames])
+    const handleRetry = useCallback(() => setRetryCount((prev) => prev + 1), [])
 
     useEffect(() => {
         const timeoutId = window.setTimeout(() => {
@@ -79,7 +90,8 @@ export default function Dashboard() {
     useEffect(() => {
         if (!hasBootstrappedRef.current) {
             hasBootstrappedRef.current = true
-            if (!debouncedSearch && retryCount === 0) return
+            const shouldSkipInitialFetch = !debouncedSearch && retryCount === 0 && initialGames.length > 0
+            if (shouldSkipInitialFetch) return
         }
 
         const controller = new AbortController()
@@ -108,18 +120,21 @@ export default function Dashboard() {
                 setTotalGames(response.data.totalItemCount ?? items.length)
             } catch {
                 if (controller.signal.aborted) return
-                setGamesError('No se han podido cargar tus juegos. Inténtalo de nuevo.')
+                setGamesError(GAME_FETCH_ERROR)
             } finally {
-                if (!controller.signal.aborted) setIsLoadingGames(false)
+                if (!controller.signal.aborted) {
+                    setIsLoadingGames(false)
+                    setHasLoadedOnce(true)
+                }
             }
         }
 
         fetchCreatedGames()
         return () => controller.abort()
-    }, [debouncedSearch, retryCount])
+    }, [debouncedSearch, retryCount, initialGames.length])
 
     const hasGamesError = !isLoadingGames && !!gamesError
-    const hasNoGames = !isLoadingGames && !gamesError && createdGames.length === 0
+    const hasNoGames = hasLoadedOnce && !isLoadingGames && !gamesError && createdGames.length === 0
     const shouldShowGames = !isLoadingGames && !gamesError && createdGames.length > 0
 
     return (
@@ -169,7 +184,7 @@ export default function Dashboard() {
 
                 <div className="grid w-full gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                     <GameCardStats title="Vendidos" description="1,247" change="+12% este mes" icon={ShoppingCart} />
-                    <GameCardStats title="Total" description={totalGames.toLocaleString('es-ES')} change="+5 añadidos" icon={GamepadDirectional} />
+                    <GameCardStats title="Total" description={totalGamesLabel} change="+5 añadidos" icon={GamepadDirectional} />
                     <GameCardStats title="Juegos publicados" description="47" change="+2 esta semana" icon={CircleCheck} />
                     <GameCardStats title="Juegos con incidencias" description="0" change="Sin incidencias" icon={TriangleAlert} />
                 </div>
@@ -202,7 +217,7 @@ export default function Dashboard() {
                             </div>
 
                             <button
-                                onClick={() => setRetryCount(prev => prev + 1)}
+                                onClick={handleRetry}
                                 className="
                                     inline-flex items-center gap-2
                                     px-5 py-2 rounded-full text-sm text-emerald-700
@@ -254,7 +269,7 @@ export default function Dashboard() {
                             id={game.id}
                             title={game.title}
                             description={game.description}
-                            imageUrl={game.artwork.mediumImageUrl}
+                            imageUrl={getGameImageUrl(game)}
                             status={game.status}
                         />
                     ))}

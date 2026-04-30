@@ -5,5 +5,6 @@ export type CreatedGame = {
     title: string;
     description: string;
     status: string;
-    artwork: GameArtwork;
+    artwork?: GameArtwork;
+    artworks?: GameArtwork[];
 }

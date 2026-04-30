@@ -6,6 +6,7 @@ export default [
 	route("dashboard", "routes/dashboard.tsx"),
 	route("login", "routes/login.tsx"),
 	route("register", "routes/register.tsx"),
+	route("developer-agreement", "routes/DeveloperAgreement.tsx"),
 	route("create-game", "routes/create-game.tsx"),
 	route("game-details/:id", "routes/GameDetails.tsx"),
 ] satisfies RouteConfig;
