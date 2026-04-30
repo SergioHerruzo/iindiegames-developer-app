@@ -75,3 +75,26 @@ export async function loginWithCognito(input: LoginInput): Promise<CognitoTokens
         refreshToken: response.AuthenticationResult.RefreshToken ?? "",
     };
 }
+
+export async function refreshSessionWithCognito(refreshToken: string): Promise<Omit<CognitoTokens, "refreshToken">> {
+    validateConfig();
+
+    const response = await cognitoClient.send(
+        new InitiateAuthCommand({
+            AuthFlow: "REFRESH_TOKEN_AUTH",
+            ClientId: cognitoConfig.clientId,
+            AuthParameters: {
+                REFRESH_TOKEN: refreshToken,
+            },
+        })
+    );
+
+    if (!response.AuthenticationResult) {
+        throw new Error("No se pudo renovar la sesión.");
+    }
+
+    return {
+        idToken: response.AuthenticationResult.IdToken ?? "",
+        accessToken: response.AuthenticationResult.AccessToken ?? "",
+    };
+}

@@ -11,7 +11,6 @@ type ActionData = {
     ok?: true;
     error?: string;
     accessToken?: string;
-    refreshToken?: string;
     currentUser?: CurrentUser | null;
 };
 
@@ -38,6 +37,7 @@ export async function action({ request }: Route.ActionArgs) {
         createAuthCookieHeaders({
             idToken: tokens.idToken,
             accessToken: tokens.accessToken,
+            refreshToken: tokens.refreshToken,
             currentUser,
         }).forEach((value) => {
             headers.append("Set-Cookie", value);
@@ -47,7 +47,6 @@ export async function action({ request }: Route.ActionArgs) {
             {
                 ok: true,
                 accessToken: tokens.accessToken,
-                refreshToken: tokens.refreshToken,
                 currentUser,
             },
             { headers }
@@ -69,7 +68,6 @@ export default function Login() {
     useEffect(() => {
         if (!actionData?.ok) return;
         if (actionData.accessToken) setAuthToken(actionData.accessToken);
-        if (actionData.refreshToken) window.localStorage.setItem("auth.refreshToken", actionData.refreshToken);
         if (actionData.currentUser) setCurrentUser(actionData.currentUser);
         navigate("/dashboard");
     }, [actionData, navigate]);

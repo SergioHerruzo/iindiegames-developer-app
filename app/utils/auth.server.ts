@@ -13,6 +13,7 @@ type JwtUserPayload = {
 
 const AUTH_ID_TOKEN_COOKIE = "auth.idToken";
 const AUTH_ACCESS_TOKEN_COOKIE = "auth.accessToken";
+const AUTH_REFRESH_TOKEN_COOKIE = "auth.refreshToken";
 const AUTH_USER_COOKIE = "auth.user";
 
 const DEFAULT_COOKIE_OPTIONS = {
@@ -20,6 +21,13 @@ const DEFAULT_COOKIE_OPTIONS = {
     sameSite: "lax" as const,
     path: "/",
     secure: !import.meta.env.DEV,
+};
+
+const REFRESH_TOKEN_MAX_AGE_SECONDS = 30 * 24 * 60 * 60;
+
+const REFRESH_COOKIE_OPTIONS = {
+    ...DEFAULT_COOKIE_OPTIONS,
+    maxAge: REFRESH_TOKEN_MAX_AGE_SECONDS,
 };
 
 export type AuthLoaderData = {
@@ -65,15 +73,24 @@ export function getAccessTokenFromRequest(request: Request): string | null {
     return getCookie(request, AUTH_ACCESS_TOKEN_COOKIE);
 }
 
+export function getRefreshTokenFromRequest(request: Request): string | null {
+    return getCookie(request, AUTH_REFRESH_TOKEN_COOKIE);
+}
+
 export function createAuthCookieHeaders(input: {
     idToken: string;
     accessToken: string;
+    refreshToken?: string | null;
     currentUser?: CurrentUser | null;
 }): string[] {
     const headers: string[] = [];
 
     headers.push(serializeCookie(AUTH_ID_TOKEN_COOKIE, input.idToken, DEFAULT_COOKIE_OPTIONS));
     headers.push(serializeCookie(AUTH_ACCESS_TOKEN_COOKIE, input.accessToken, DEFAULT_COOKIE_OPTIONS));
+
+    if (input.refreshToken) {
+        headers.push(serializeCookie(AUTH_REFRESH_TOKEN_COOKIE, input.refreshToken, REFRESH_COOKIE_OPTIONS));
+    }
 
     if (input.currentUser) {
         headers.push(
@@ -92,6 +109,7 @@ export function createLogoutCookieHeaders(): string[] {
     return [
         clearCookie(AUTH_ID_TOKEN_COOKIE, DEFAULT_COOKIE_OPTIONS),
         clearCookie(AUTH_ACCESS_TOKEN_COOKIE, DEFAULT_COOKIE_OPTIONS),
+        clearCookie(AUTH_REFRESH_TOKEN_COOKIE, REFRESH_COOKIE_OPTIONS),
         clearCookie(AUTH_USER_COOKIE, DEFAULT_COOKIE_OPTIONS),
     ];
 }

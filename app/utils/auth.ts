@@ -1,4 +1,3 @@
-import { refreshSessionWithCognito } from "@services/cognito.client";
 import { setAuthToken, setCurrentUser } from "@services/http.client";
 
 const ACCESS_TOKEN_KEY = "auth.accessToken";
@@ -32,15 +31,23 @@ export async function bootstrapAuth(): Promise<void> {
         return;
     }
 
-    const refreshToken = window.localStorage.getItem(REFRESH_TOKEN_KEY);
-
-    if (!refreshToken) {
-        clearAuthStorage();
-        return;
-    }
-
     try {
-        await refreshSessionWithCognito(refreshToken);
+        const response = await fetch("/auth/refresh", {
+            method: "POST",
+        });
+
+        if (!response.ok) {
+            clearAuthStorage();
+            return;
+        }
+
+        const data = (await response.json()) as {
+            accessToken?: string;
+            currentUser?: unknown;
+        };
+
+        if (data.accessToken) setAuthToken(data.accessToken);
+        if (data.currentUser) setCurrentUser(data.currentUser as Parameters<typeof setCurrentUser>[0]);
     } catch {
         clearAuthStorage();
     }

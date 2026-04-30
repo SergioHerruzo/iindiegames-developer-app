@@ -8,7 +8,14 @@ import type { PaginatedResponse } from '@models/PaginatedResponse'
 import type { CreatedGame } from '@models/CreatedGame'
 import { Link, useLoaderData } from 'react-router'
 import type { Route } from './+types/dashboard'
-import { getAccessTokenFromRequest, getUserFromRequest } from '@utils/auth.server'
+import { refreshSessionWithCognito } from '@services/cognito.server'
+import {
+    createAuthCookieHeaders,
+    getAccessTokenFromRequest,
+    getRefreshTokenFromRequest,
+    getUserFromIdToken,
+    getUserFromRequest,
+} from '@utils/auth.server'
 
 const DEFAULT_PAGE_NUMBER = 1
 const DEFAULT_PAGE_SIZE = 10
@@ -27,12 +34,49 @@ type LoaderData = {
     initialError: string | null;
 };
 
-export async function loader({ request }: Route.LoaderArgs): Promise<LoaderData> {
+export async function loader({ request }: Route.LoaderArgs) {
     const currentUser = getUserFromRequest(request)
-    const accessToken = getAccessTokenFromRequest(request)
+    const refreshToken = getRefreshTokenFromRequest(request)
+    let accessToken = getAccessTokenFromRequest(request)
+    let resolvedUser = currentUser
+    let authHeaders: string[] = []
+
+    async function refreshSession(): Promise<boolean> {
+        if (!refreshToken) return false
+
+        try {
+            const tokens = await refreshSessionWithCognito(refreshToken)
+            accessToken = tokens.accessToken
+            resolvedUser = getUserFromIdToken(tokens.idToken)
+            authHeaders = createAuthCookieHeaders({
+                idToken: tokens.idToken,
+                accessToken: tokens.accessToken,
+                refreshToken,
+                currentUser: resolvedUser ?? undefined,
+            })
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    const jsonResponse = (data: LoaderData, init: ResponseInit = {}) => {
+        const headers = new Headers(init.headers)
+        headers.set('Content-Type', 'application/json; charset=utf-8')
+
+        authHeaders.forEach((value) => {
+            headers.append('Set-Cookie', value)
+        })
+
+        return new Response(JSON.stringify(data), { ...init, headers })
+    }
 
     if (!accessToken) {
-        return { currentUser, initialGames: [], initialTotal: 0, initialError: null }
+        await refreshSession()
+    }
+
+    if (!accessToken) {
+        return jsonResponse({ currentUser: resolvedUser, initialGames: [], initialTotal: 0, initialError: null })
     }
 
     try {
@@ -41,27 +85,35 @@ export async function loader({ request }: Route.LoaderArgs): Promise<LoaderData>
         url.searchParams.set('pageNumber', String(DEFAULT_PAGE_NUMBER))
         url.searchParams.set('pageSize', String(DEFAULT_PAGE_SIZE))
 
-        const response = await fetch(url.toString(), {
+        let response = await fetch(url.toString(), {
             headers: {
                 Authorization: `Bearer ${accessToken}`,
             },
         })
 
+        if (response.status === 401 && (await refreshSession()) && accessToken) {
+            response = await fetch(url.toString(), {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            })
+        }
+
         if (!response.ok) {
-            return { currentUser, initialGames: [], initialTotal: 0, initialError: GAME_FETCH_ERROR }
+            return jsonResponse({ currentUser: resolvedUser, initialGames: [], initialTotal: 0, initialError: GAME_FETCH_ERROR })
         }
 
         const data = (await response.json()) as PaginatedResponse<CreatedGame>
         const items = data.items ?? []
 
-        return {
-            currentUser,
+        return jsonResponse({
+            currentUser: resolvedUser,
             initialGames: items,
             initialTotal: data.totalItemCount ?? items.length,
             initialError: null,
-        }
+        })
     } catch {
-        return { currentUser, initialGames: [], initialTotal: 0, initialError: GAME_FETCH_ERROR }
+        return jsonResponse({ currentUser: resolvedUser, initialGames: [], initialTotal: 0, initialError: GAME_FETCH_ERROR })
     }
 }
 

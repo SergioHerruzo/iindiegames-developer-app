@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   isRouteErrorResponse,
   Links,
@@ -9,6 +10,7 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { initAuthClient } from "@utils/auth.client";
 
 const themeBootstrapScript = `
 (() => {
@@ -70,6 +72,10 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  useEffect(() => {
+    initAuthClient();
+  }, []);
+
   return <Outlet />;
 }
 
