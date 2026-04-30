@@ -14,7 +14,7 @@ export default function GameCardStats({ icon: Icon, title, description, change }
                 relative overflow-hidden
                 rounded-2xl p-6
                 bg-white/40 backdrop-blur-md
-                border border-black/20
+                border border-black/5
                 shadow-sm
                 dark:bg-white/1 dark:backdrop-blur-md
                 dark:border-white/8
