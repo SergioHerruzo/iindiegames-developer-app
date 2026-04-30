@@ -234,7 +234,7 @@ export default function Dashboard() {
                     )}
 
                     {hasGamesError && (
-                        <div className="col-span-full flex w-full flex-col items-center justify-center gap-4 text-center rounded-2xl px-6 py-12 flex-1 bg-white/40 backdrop-blur-md border-2 border-black/5 shadow-lg dark:bg-white/1 dark:border-white/8 dark:shadow-md dark:shadow-black/30">
+                        <div className="col-span-full flex w-full flex-col items-center justify-center gap-4 text-center rounded-2xl px-6 py-12 flex-1 bg-white/40 backdrop-blur-md borderC border-black/5 shadow-lg dark:bg-white/1 dark:border-white/8 dark:shadow-md dark:shadow-black/30">
                             <TriangleAlert className="w-10 h-10 text-rose-400/80 dark:text-rose-400/70" />
 
                             <div className="flex flex-col gap-1">
