@@ -27,12 +27,12 @@ export default function GameCard({ id, title, description, imageUrl, status }: G
                 bg-white/40 backdrop-blur-md
                 border border-black/5
                 shadow-sm
-                dark:bg-white/[0.03] dark:backdrop-blur-md
+                dark:bg-white/3 dark:backdrop-blur-md
                 dark:border-white/8
                 dark:shadow-md dark:shadow-black/30
                 transition-all duration-300 ease-out
                 hover:shadow-md hover:border-black/10
-                dark:hover:border-white/12 dark:hover:bg-white/[0.05]
+                dark:hover:border-white/12 dark:hover:bg-white/5
             "
         >
             {/* Image */}
@@ -46,7 +46,7 @@ export default function GameCard({ id, title, description, imageUrl, status }: G
                 ) : (
                     <div className="
                         flex h-full w-full items-center justify-center
-                        bg-slate-100/60 dark:bg-white/[0.03]
+                        bg-slate-100/60 dark:bg-white/3
                         border-b border-dashed border-slate-200/80 dark:border-white/8
                         text-xs tracking-[0.3em] font-light text-slate-300 dark:text-white/20
                     ">
