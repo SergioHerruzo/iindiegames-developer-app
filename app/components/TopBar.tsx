@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
-import { Bell, GamepadDirectional, Moon, Search, Sun } from "lucide-react";
+import { Bell, GamepadDirectional, Moon, Sun } from "lucide-react";
 import type { CurrentUser } from "@models/CurrentUser";
 
 const AUTH_CURRENT_USER_KEY = "auth.currentUser";
@@ -71,32 +71,35 @@ export default function TopBar() {
 
     return (
         <nav className="relative flex w-full items-center justify-between px-6 py-4">
-            {/* Logo */}
             <div className="flex items-center gap-3">
                 <Link to="/dashboard" className="flex items-center gap-3">
-                    <div className="brand-chip flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-500/15 backdrop-blur-sm border border-emerald-200/60 shadow-sm shadow-emerald-100/30">
-                        <GamepadDirectional size={22} strokeWidth={1.5} className="brand-icon text-emerald-700" />
+                    <div className="
+                        flex h-10 w-10 items-center justify-center rounded-xl
+                        bg-emerald-500/15 backdrop-blur-sm border border-emerald-200/60
+                        dark:bg-emerald-400/10 dark:border-emerald-400/15
+                    ">
+                        <GamepadDirectional size={22} strokeWidth={1.5} className="text-emerald-700 dark:text-emerald-500" />
                     </div>
-                    <span className="brand-title text-2xl font-light tracking-tight text-slate-800">
+                    <span className="
+                        text-2xl font-light tracking-tight text-slate-800
+                        dark:text-white/70
+                    ">
                         Indie Games
                     </span>
                 </Link>
             </div>
 
-
-            {/* Right side */}
             <div className="flex items-center gap-3">
                 <button
                     type="button"
-                    className="glass-icon-button relative flex cursor-pointer items-center justify-center rounded-xl p-2 transition backdrop-blur-sm"
+                    className="relative flex cursor-pointer items-center justify-center rounded-xl p-2 transition backdrop-blur-sm"
                 >
-                    <Bell size={18} strokeWidth={1.5} className="glass-icon text-slate-500" />
+                    <Bell size={18} strokeWidth={1.5} className="text-slate-500 dark:text-white/60" />
                 </button>
 
-                <div className="h-5 w-px bg-slate-200/80" />
+                <div className="h-5 w-px bg-neutral-300/80 dark:bg-white/10" />
 
                 <div ref={themeMenuRef} className="relative">
-                    {/* Trigger — sin hover bg */}
                     <button
                         type="button"
                         className="flex cursor-pointer items-center gap-3 px-2 py-1.5 rounded-xl transition"
@@ -105,29 +108,48 @@ export default function TopBar() {
                         aria-expanded={isThemeMenuOpen}
                     >
                         <div className="flex flex-col items-end justify-center text-right leading-tight">
-                            <span className="user-name text-sm text-slate-700">{avatarLabel}</span>
-                            <span className="user-role text-xs text-slate-500">Developer</span>
+                            <span className="user-name text-sm text-slate-700 dark:text-white/60">{avatarLabel}</span>
+                            <span className="user-role text-xs text-slate-500 dark:text-white/45">Developer</span>
                         </div>
 
                         {avatarUrl ? (
                             <img
                                 src={avatarUrl}
                                 alt={avatarLabel}
-                                className="avatar-image h-9 w-9 rounded-full object-cover ring-1 ring-white/70 shadow-sm shadow-slate-200/40"
+                                className="
+                                    avatar-image h-9 w-9 rounded-full object-cover
+                                    ring-1 ring-white/70 shadow-sm shadow-slate-200/40
+                                    dark:ring-white/10 dark:shadow-black/30
+                                "
                             />
                         ) : (
-                            <div className="avatar-fallback flex h-9 w-9 items-center border border-slate-200 justify-center rounded-full bg-white/70 ring-1 ring-white/70 text-sm text-emerald-700 shadow-sm shadow-slate-200/40">
+                            <div className="
+                                avatar-fallback flex h-9 w-9 items-center justify-center rounded-full
+                                border border-slate-200 bg-white/70 ring-1 ring-white/70
+                                text-sm text-emerald-700 shadow-sm shadow-slate-200/40
+                                dark:border-white/5 dark:bg-white/5 dark:ring-white/6
+                                dark:text-emerald-600 dark:shadow-black/30
+                            ">
                                 {avatarLabel.slice(0, 1).toUpperCase()}
                             </div>
                         )}
                     </button>
 
-                    {/* Dropdown */}
                     <div
-                        className={`theme-dropdown absolute right-0 top-full z-20 mt-2 w-64 origin-top-right overflow-hidden rounded-2xl bg-white/70 backdrop-blur-xl border border-white/80 p-2 shadow-xl shadow-slate-200/60 transition-all duration-200 ease-out ${isThemeMenuOpen
-                            ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
-                            : "pointer-events-none translate-y-2 scale-[0.98] opacity-0"
-                            }`}
+                        className={`
+                            theme-dropdown absolute right-0 top-full z-20 mt-2 w-64
+                            origin-top-right overflow-hidden rounded-2xl p-2
+                            bg-white/70 backdrop-blur-xl border border-white/80
+                            shadow-xl shadow-slate-200/60
+                            dark:bg-white/2 dark:backdrop-blur-xl
+                            dark:border-white/8
+                            dark:shadow-black/40
+                            transition-all duration-200 ease-out
+                            ${isThemeMenuOpen
+                                ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
+                                : "pointer-events-none translate-y-2 scale-[0.98] opacity-0"
+                            }
+                        `}
                         aria-hidden={!isThemeMenuOpen}
                     >
                         <button
@@ -139,37 +161,36 @@ export default function TopBar() {
                             className="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left transition"
                         >
                             <span className="flex items-center gap-2.5">
-                                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-slate-100/80 text-slate-600">
+                                <span className="
+                                    flex h-7 w-7 items-center justify-center rounded-full
+                                    bg-slate-100/80 text-slate-600
+                                    dark:bg-white/[0.07] dark:text-white/50
+                                ">
                                     {isDarkTheme ? <Moon size={14} /> : <Sun size={14} />}
                                 </span>
-                                <span className="text-xs text-slate-600">
+                                <span className="text-xs text-slate-600 dark:text-white/50">
                                     {isDarkTheme ? "Modo oscuro" : "Modo claro"}
                                 </span>
                             </span>
-
-                            {/* Toggle pill */}
                             <span
                                 className={`relative flex h-6 w-11 items-center rounded-full border transition-colors duration-300 ${isDarkTheme
-                                        ? "border-slate-300/60 bg-slate-200/60"
+                                        ? "border-white/10 bg-white/[0.07]"
                                         : "border-emerald-300/60 bg-emerald-100/60"
                                     }`}
                             >
                                 <span
                                     className={`absolute top-1/2 -translate-y-1/2 flex h-5 w-5 items-center justify-center rounded-full shadow transition-all duration-300 ease-out ${isDarkTheme
-                                            ? "left-[calc(100%-1.25rem-0.125rem)] bg-slate-600 text-slate-200"
+                                            ? "left-[calc(100%-1.25rem-0.125rem)] bg-white/15 text-white/60"
                                             : "left-0.5 bg-white text-emerald-600"
                                         }`}
                                 >
                                     <span
-                                        className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${isDarkTheme ? "scale-100 opacity-100" : "scale-75 opacity-0"
-                                            }`}
+                                        className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${isDarkTheme ? "scale-100 opacity-100" : "scale-75 opacity-0"}`}
                                     >
                                         <Moon size={11} />
                                     </span>
-
                                     <span
-                                        className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${!isDarkTheme ? "scale-100 opacity-100" : "scale-75 opacity-0"
-                                            }`}
+                                        className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${!isDarkTheme ? "scale-100 opacity-100" : "scale-75 opacity-0"}`}
                                     >
                                         <Sun size={11} />
                                     </span>

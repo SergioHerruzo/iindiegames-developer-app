@@ -12,23 +12,24 @@ import "./app.css";
 
 const themeBootstrapScript = `
 (() => {
-  const storageKey = "app.theme";
+  const key = "app.theme";
   const root = document.documentElement;
 
-  try {
-    const storedTheme = window.localStorage.getItem(storageKey);
-    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-    const theme = storedTheme === "light" || storedTheme === "dark" || storedTheme === "system"
-      ? storedTheme
-      : "system";
-    const resolvedTheme = theme === "system" ? systemTheme : theme;
+  const stored = localStorage.getItem(key);
+  const systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
-    root.dataset.theme = resolvedTheme;
-    root.style.colorScheme = resolvedTheme;
-  } catch {
-    root.dataset.theme = "dark";
-    root.style.colorScheme = "dark";
-  }
+  const theme =
+    stored === "light" || stored === "dark"
+      ? stored
+      : systemDark
+      ? "dark"
+      : "light";
+
+  root.dataset.theme = theme;
+  root.style.colorScheme = theme;
+
+  // ← Añade esto: sincroniza la clase "dark" que usa Tailwind
+  root.classList.toggle("dark", theme === "dark");
 })();
 `;
 

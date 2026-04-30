@@ -11,36 +11,41 @@ export default function GameCardStats({ icon: Icon, title, description, change }
     return (
         <div
             className="
-                glass-card relative overflow-hidden
+                relative overflow-hidden
                 rounded-2xl p-6
                 bg-white/40 backdrop-blur-md
-                border border-white/60
-                shadow-sm shadow-emerald-100/40
+                border border-black/20
+                shadow-sm
+                dark:bg-white/1 dark:backdrop-blur-md
+                dark:border-white/8
+                dark:shadow-md dark:shadow-black/30
             "
         >
-
             <div className="relative flex items-center gap-3 mb-4">
                 <div className="
-                    glass-chip
                     w-10 h-10 rounded-xl
-                    bg-emerald-500/15
-                    backdrop-blur-sm
+                    bg-emerald-500/10
                     flex items-center justify-center
-                    border border-emerald-200/60
+                    border border-emerald-500/20
+                    dark:bg-emerald-400/10
+                    dark:border-emerald-400/15
                 ">
-                    <Icon strokeWidth={1.5} className="glass-chip-icon w-5 h-5 text-emerald-700" />
+                    <Icon
+                        strokeWidth={1.5}
+                        className="w-5 h-5 text-emerald-600 dark:text-emerald-500"
+                    />
                 </div>
 
-                <p className="glass-title text-sm text-slate-700">
+                <p className="text-sm text-slate-500 dark:text-white/75">
                     {title}
                 </p>
             </div>
 
-            <h3 className="glass-value relative text-2xl font-semibold text-slate-800 mb-1">
+            <h3 className="text-2xl font-semibold text-slate-800 mb-1 dark:text-white/70">
                 {description}
             </h3>
 
-            <p className="glass-change relative text-xs text-slate-600">
+            <p className="text-xs text-slate-400 dark:text-white/65">
                 {change}
             </p>
         </div>
