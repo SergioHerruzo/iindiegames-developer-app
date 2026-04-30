@@ -15,7 +15,7 @@ export default function GameCardStats({ icon: Icon, title, description, change }
                 rounded-2xl p-6
                 bg-white/40 backdrop-blur-md
                 border border-black/5
-                shadow-sm
+                shadow-xs
                 dark:bg-white/1 dark:backdrop-blur-md
                 dark:border-white/8
                 dark:shadow-md dark:shadow-black/30
