@@ -170,15 +170,14 @@ export default function Dashboard() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full flex-1 min-h-0 overflow-auto">
-
                     {isLoadingGames && (
-                        <div className="col-span-full flex w-full flex-col items-center justify-center gap-3 rounded-2xl px-6 py-12 flex-1 bg-white/25 backdrop-blur-md border border-white/30 shadow-sm dark:bg-white/3 dark:border-white/[0.07]">
+                        <div className="col-span-full flex w-full flex-col items-center justify-center gap-3 rounded-2xl px-6 py-12 flex-1 bg-white/40 backdrop-blur-md border border-black/5 shadow-sm dark:bg-white/1 dark:border-white/[0.08] dark:shadow-md dark:shadow-black/30">
                             <div className="h-10 w-10 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
                         </div>
                     )}
 
                     {hasGamesError && (
-                        <div className="col-span-full flex w-full flex-col items-center justify-center gap-4 text-center rounded-2xl px-6 py-12 flex-1 bg-white/25 backdrop-blur-md border border-white/30 shadow-sm dark:bg-white/3 dark:border-white/[0.07]">
+                        <div className="col-span-full flex w-full flex-col items-center justify-center gap-4 text-center rounded-2xl px-6 py-12 flex-1 bg-white/40 backdrop-blur-md border border-black/5 shadow-sm dark:bg-white/1 dark:border-white/[0.08] dark:shadow-md dark:shadow-black/30">
                             <TriangleAlert className="w-10 h-10 text-rose-400/80 dark:text-rose-400/70" />
 
                             <div className="flex flex-col gap-1">
@@ -209,17 +208,6 @@ export default function Dashboard() {
                             </p>
                         </div>
                     )}
-
-                    {shouldShowGames && createdGames.map((game) => (
-                        <GameCard
-                            key={game.id}
-                            id={game.id}
-                            title={game.title}
-                            description={game.description}
-                            imageUrl={getGameImageUrl(game)}
-                            status={game.status}
-                        />
-                    ))}
                 </div>
             </div>
         </div>
