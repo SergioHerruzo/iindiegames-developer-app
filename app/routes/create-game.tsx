@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ChangeEvent, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type ChangeEvent, type SubmitEvent } from "react";
 import { ArrowLeft, Check, Loader2, Plus, Search, X } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import TopBar from "~/components/TopBar";
@@ -170,7 +170,7 @@ export default function CreateGame() {
     const hasMinimumGenres = selectedGenres.length >= 1;
     const isFormValid = isTitleValid && isDescriptionValid && isPriceValid && isArtworkValid && hasMinimumGenres;
 
-    async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
         event.preventDefault();
         if (!isTitleValid) return setFormError("El título debe tener entre 1 y 24 caracteres.");
         if (!isDescriptionValid) return setFormError("La descripción debe tener entre 4 y 4096 caracteres.");

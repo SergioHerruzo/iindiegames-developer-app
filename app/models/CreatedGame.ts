@@ -1,6 +1,9 @@
+import type { GameArtwork } from "@models/GameArtwork";
+
 export type CreatedGame = {
     id: string;
     title: string;
     description: string;
-    pictureUrl?: string | null;
+    status: string;
+    artwork: GameArtwork;
 }

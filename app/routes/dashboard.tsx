@@ -200,8 +200,8 @@ export default function Dashboard() {
                             id={game.id}
                             title={game.title}
                             description={game.description}
-                            imageUrl={game.pictureUrl}
-                            status="NotPublished"
+                            imageUrl={game.artwork.mediumImageUrl}
+                            status={game.status}
                         />
                     ))}
                 </div>

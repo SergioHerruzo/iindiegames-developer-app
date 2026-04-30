@@ -1,9 +1,7 @@
 import { Circle } from "lucide-react"
 import { Link } from "react-router";
 
-type GameStatus = "Published" | "NotPublished" | "Deleting" | "Failed";
-
-const statusConfig: Record<GameStatus, { color: string; label: string }> = {
+const statusConfig: Record<string, { color: string; label: string }> = {
     "Published": { color: "text-green-600 fill-green-600", label: "Publicado" },
     "NotPublished": { color: "text-gray-600 fill-gray-600", label: "No publicado" },
     "Deleting": { color: "text-red-500 fill-red-500", label: "Eliminando" },
@@ -15,7 +13,7 @@ type GameCardProps = {
     title: string;
     description: string;
     imageUrl?: string | null;
-    status: GameStatus;
+    status: string;
 }
 
 export default function GameCard({ id, title, description, imageUrl, status }: GameCardProps) {
