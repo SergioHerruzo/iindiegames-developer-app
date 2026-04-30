@@ -20,6 +20,8 @@ import {
 import { httpClient } from "@services/http.client";
 import type { DeveloperGameResponse } from "@models/DeveloperGame";
 import { validateAllForPublish } from "@utils/gameValidation";
+import type { Route } from "./+types/GameDetails";
+import { getUserFromRequest } from "@utils/auth.server";
 
 type SectionKey = "info" | "images" | "stats" | "versions";
 type ArtworkField = "capsule" | "header" | "main";
@@ -69,6 +71,10 @@ const createEmptyStoreImageSlot = (index: number): StoreImageSlot => ({
     previewUrl: null,
     label: `Captura ${index}`,
 });
+
+export async function loader({ request }: Route.LoaderArgs) {
+    return { currentUser: getUserFromRequest(request) };
+}
 
 type GameData = {
     title: string;

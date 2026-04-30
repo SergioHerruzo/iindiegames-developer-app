@@ -6,6 +6,8 @@ import { httpClient } from "@services/http.client";
 import type { Genre } from "@models/Genre";
 import type { PaginatedResponse } from "@models/PaginatedResponse";
 import type { CreateGameBody } from "@models/CreateGameBody";
+import type { Route } from "./+types/create-game";
+import { getUserFromRequest } from "@utils/auth.server";
 
 type GenreOption = Genre;
 type ArtworkField = "capsule" | "header" | "main";
@@ -15,6 +17,10 @@ type ArtworkState = {
 };
 
 const DEFAULT_GENRE_PAGE_SIZE = 12;
+
+export async function loader({ request }: Route.LoaderArgs) {
+    return { currentUser: getUserFromRequest(request) };
+}
 
 const ARTWORK_LABELS: Record<ArtworkField, { title: string; description: string }> = {
     capsule: {

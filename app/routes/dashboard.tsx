@@ -7,9 +7,15 @@ import { httpClient } from '@services/http.client'
 import type { PaginatedResponse } from '@models/PaginatedResponse'
 import type { CreatedGame } from '@models/CreatedGame'
 import { Link } from 'react-router'
+import type { Route } from './+types/dashboard'
+import { getUserFromRequest } from '@utils/auth.server'
 
 const DEFAULT_PAGE_NUMBER = 1
 const DEFAULT_PAGE_SIZE = 10
+
+export async function loader({ request }: Route.LoaderArgs) {
+    return { currentUser: getUserFromRequest(request) }
+}
 
 export default function Dashboard() {
     const [search, setSearch] = useState("")

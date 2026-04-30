@@ -1,23 +1,14 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useLocation } from "react-router";
+import { Link, useLoaderData, useLocation } from "react-router";
 import { Bell, GamepadDirectional, Moon, Sun } from "lucide-react";
 import type { CurrentUser } from "@models/CurrentUser";
 
-const AUTH_CURRENT_USER_KEY = "auth.currentUser";
 const THEME_STORAGE_KEY = "app.theme";
 
 type ThemeMode = "light" | "dark";
-
-function readStoredCurrentUser(): CurrentUser | null {
-    if (typeof window === "undefined") return null;
-    const storedUser = window.localStorage.getItem(AUTH_CURRENT_USER_KEY);
-    if (!storedUser) return null;
-    try {
-        return JSON.parse(storedUser) as CurrentUser;
-    } catch {
-        return null;
-    }
-}
+type TopBarLoaderData = {
+    currentUser: CurrentUser | null;
+};
 
 function readStoredTheme(): ThemeMode {
     if (typeof window === "undefined") return "light";
@@ -33,7 +24,7 @@ function applyTheme(theme: ThemeMode) {
 }
 
 export default function TopBar() {
-    const [currentUser, setCurrentUser] = useState<CurrentUser | null>(() => readStoredCurrentUser());
+    const { currentUser } = useLoaderData<TopBarLoaderData>();
     const [search, setSearch] = useState("");
     const [theme, setTheme] = useState<ThemeMode>(() => readStoredTheme());
     const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
@@ -59,7 +50,7 @@ export default function TopBar() {
         };
     }, [isThemeMenuOpen]);
 
-    const avatarUrl = currentUser?.profilePicture.smallPictureUrl;
+    const avatarUrl = currentUser?.profilePicture?.smallPictureUrl;
     const avatarLabel = currentUser?.displayName ?? "Usuario";
     const isDarkTheme = theme === "dark";
 
