@@ -1,5 +1,3 @@
-/** Validations for game metadata and publishing constraints */
-
 export const VALIDATION_RULES = {
     TITLE_MIN_LENGTH: 1,
     TITLE_MAX_LENGTH: 64,
