@@ -216,14 +216,13 @@ export default function CreateGame() {
         }
     }
 
-    // ─── Shared input classes ────────────────────────────────────────────────
     const inputBase = `
-        w-full text-sm rounded-xl border
+        w-full text-sm rounded-lg border
         bg-white/50 backdrop-blur-sm
         border-black/8
         placeholder:text-slate-400
         text-slate-800
-        py-3 px-4 outline-none
+        py-3 px-3 outline-none
         transition-colors
         focus:border-emerald-400/60 focus:bg-white/70
         dark:bg-white/3 dark:border-white/8
@@ -233,7 +232,7 @@ export default function CreateGame() {
     `;
 
     const sectionCard = `
-        relative overflow-hidden rounded-2xl p-6
+        relative overflow-hidden rounded-lg px-6 py-4
         bg-white/40 backdrop-blur-md
         border border-black/5
         shadow-sm
@@ -241,7 +240,7 @@ export default function CreateGame() {
         dark:shadow-md dark:shadow-black/30
     `;
 
-    const labelClass = "block text-sm text-slate-600 dark:text-white/55 mb-2";
+    const labelClass = "block text-slate-600 dark:text-white/50 mb-4";
     const hintClass = "text-xs text-slate-400 dark:text-white/30";
 
     return (
@@ -249,36 +248,73 @@ export default function CreateGame() {
             <TopBar />
             <div className="flex flex-col items-start w-full min-h-screen py-8 px-6 gap-8">
 
-                {/* Back + title */}
                 <div>
                     <Link
                         to="/dashboard"
-                        className="inline-flex items-center gap-2 text-sm text-slate-400 hover:text-slate-600 dark:text-white/40 dark:hover:text-white/60 transition-colors"
-                    >
-                        <ArrowLeft className="h-4 w-4" />
-                        Volver al dashboard
+                        className="
+                            group relative inline-flex items-center
+                            text text-slate-400
+                            dark:text-white/50
+                            transition-colors duration-300
+                        ">
+                        <ArrowLeft
+                            className="
+                            absolute left-0
+                            h-4 w-4
+                            -translate-x-2 opacity-0
+                            transition-all duration-300 ease-out
+                            group-hover:translate-x-0 group-hover:opacity-100
+                            text-slate-400 dark:text-white/40
+                            group-hover:text-emerald-600 dark:group-hover:text-emerald-400"/>
+
+                        <span className="
+                            pl-0 transition-all duration-300
+                            group-hover:pl-5
+                            group-hover:text-emerald-600 dark:group-hover:text-emerald-400
+                        ">
+                            Volver al dashboard
+                        </span>
                     </Link>
-                    <h1 className="text-3xl font-light tracking-tight text-slate-800 dark:text-white/70 mt-3">
+
+                    <h1 className="text-4xl font-light tracking-tight text-slate-800 dark:text-white/60 mt-3">
                         Crear juego
                     </h1>
                 </div>
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full">
+                    <div className="grid w-full gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+                        <div className={sectionCard}>
+                            <label className={labelClass} htmlFor="title">Título del juego</label>
+                            <input
+                                id="title"
+                                value={title}
+                                onChange={(e) => setTitle(e.target.value)}
+                                placeholder="Introduce el título de tu juego"
+                                maxLength={24}
+                                className={inputBase}
+                            />
+                            <div className={`flex items-center justify-between mt-4 ${hintClass}`}>
+                                <span>{titleLength}/24</span>
+                                <span>Mínimo 1 carácter</span>
+                            </div>
+                        </div>
 
-                    {/* Title */}
-                    <div className={sectionCard}>
-                        <label className={labelClass} htmlFor="title">Título del juego</label>
-                        <input
-                            id="title"
-                            value={title}
-                            onChange={(e) => setTitle(e.target.value)}
-                            placeholder="Introduce el título de tu juego"
-                            maxLength={24}
-                            className={inputBase}
-                        />
-                        <div className={`flex items-center justify-between mt-2 ${hintClass}`}>
-                            <span>{titleLength}/24</span>
-                            <span>Mínimo 1 carácter</span>
+                        <div className={sectionCard}>
+                            <label className={labelClass} htmlFor="price">Precio</label>
+                            <div className="relative">
+                                <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400 dark:text-white/30">€</span>
+                                <input
+                                    id="price"
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    value={price}
+                                    onChange={(e) => setPrice(e.target.value)}
+                                    placeholder="0.00"
+                                    className={`${inputBase} pl-8`}
+                                />
+                            </div>
+                            <p className={`mt-2 ${hintClass}`}>Introduce el precio final del juego.</p>
                         </div>
                     </div>
 
@@ -299,25 +335,6 @@ export default function CreateGame() {
                         </div>
                     </div>
 
-                    {/* Price */}
-                    <div className={sectionCard}>
-                        <label className={labelClass} htmlFor="price">Precio</label>
-                        <div className="relative max-w-xs">
-                            <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400 dark:text-white/30">€</span>
-                            <input
-                                id="price"
-                                type="number"
-                                min="0"
-                                step="0.01"
-                                value={price}
-                                onChange={(e) => setPrice(e.target.value)}
-                                placeholder="0.00"
-                                className={`${inputBase} pl-8`}
-                            />
-                        </div>
-                        <p className={`mt-2 ${hintClass}`}>Introduce el precio final del juego.</p>
-                    </div>
-
                     {/* Artwork */}
                     <div className={sectionCard}>
                         <p className="text-xs uppercase tracking-[0.35em] text-slate-400 dark:text-white/35 mb-1">Assets</p>
@@ -333,7 +350,7 @@ export default function CreateGame() {
                                     <div
                                         key={field}
                                         className="
-                                            overflow-hidden rounded-2xl
+                                            overflow-hidden rounded-lg
                                             bg-white/30 backdrop-blur-sm
                                             border border-black/5
                                             dark:bg-white/2 dark:border-white/8
@@ -353,7 +370,7 @@ export default function CreateGame() {
                                                     onChange={(e) => handleArtworkChange(field, e)}
                                                 />
                                                 <div className="
-                                                    relative flex min-h-44 items-center justify-center overflow-hidden rounded-xl
+                                                    relative flex min-h-44 items-center justify-center overflow-hidden rounded-lg
                                                     border border-dashed border-black/10
                                                     bg-white/40
                                                     transition-colors
