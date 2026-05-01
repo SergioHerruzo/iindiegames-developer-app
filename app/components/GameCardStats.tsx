@@ -41,7 +41,7 @@ export default function GameCardStats({ icon: Icon, title, description, change }
                 </p>
             </div>
 
-            <h3 className="text-2xl font-semibold text-slate-800 mb-1 dark:text-white/70">
+            <h3 className="text-2xl font-semibold text-slate-700 mb-1 dark:text-white/70">
                 {description}
             </h3>
 
