@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ChangeEvent, type SubmitEvent } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent, type SubmitEvent } from "react";
 import { ArrowLeft, Check, Loader2, Plus, Search, X } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import TopBar from "~/components/TopBar";
@@ -17,6 +17,34 @@ type ArtworkState = {
 };
 
 const DEFAULT_GENRE_PAGE_SIZE = 12;
+const ARTWORK_FIELDS: ArtworkField[] = ["capsule", "header", "main"];
+
+const inputBase = `
+    w-full text-sm rounded-lg border
+    bg-white/50 backdrop-blur-sm
+    border-black/8
+    placeholder:text-slate-400
+    text-slate-800
+    py-3 px-3 outline-none
+    transition-colors
+    focus:border-emerald-400/60 focus:bg-white/70
+    dark:bg-white/1.5 dark:border-white/6
+    dark:placeholder:text-white/35
+    dark:text-white/70
+    dark:focus:border-emerald-400/30 dark:focus:bg-white/5
+`;
+
+const sectionCard = `
+    relative overflow-hidden rounded-lg px-6 py-4
+    bg-white/40 backdrop-blur-md
+    border border-black/5
+    shadow-sm
+    dark:bg-white/1 dark:border-white/6
+    dark:shadow-md dark:shadow-black/30
+`;
+
+const labelClass = "block text-slate-600 dark:text-white/50 mb-4";
+const hintClass = "text-xs text-slate-400 dark:text-white/35";
 
 export async function loader({ request }: Route.LoaderArgs) {
     return { currentUser: requireRole(request, "developer") };
@@ -42,29 +70,30 @@ const createEmptyArtworkState = (): ArtworkState => ({
     previewUrl: null,
 });
 
-export default function CreateGame() {
-    const navigate = useNavigate();
-    const [selectedGenres, setSelectedGenres] = useState<GenreOption[]>([]);
-    const [isGenrePickerOpen, setIsGenrePickerOpen] = useState(false);
-    const [genreSearch, setGenreSearch] = useState("");
-    const [debouncedGenreSearch, setDebouncedGenreSearch] = useState("");
-    const [availableGenres, setAvailableGenres] = useState<GenreOption[]>([]);
-    const [genrePageNumber, setGenrePageNumber] = useState(1);
-    const [hasMoreGenres, setHasMoreGenres] = useState(true);
-    const [isLoadingGenres, setIsLoadingGenres] = useState(false);
-    const [genresError, setGenresError] = useState<string | null>(null);
-    const [isLoadingMoreGenres, setIsLoadingMoreGenres] = useState(false);
-    const [price, setPrice] = useState("");
+function useDebouncedValue(value: string, delayMs = 300) {
+    const [debouncedValue, setDebouncedValue] = useState(value);
+
+    useEffect(() => {
+        const id = window.setTimeout(() => setDebouncedValue(value), delayMs);
+        return () => window.clearTimeout(id);
+    }, [value, delayMs]);
+
+    return debouncedValue;
+}
+
+function useArtworkState() {
     const [artworks, setArtworks] = useState<Record<ArtworkField, ArtworkState>>({
         capsule: createEmptyArtworkState(),
         header: createEmptyArtworkState(),
         main: createEmptyArtworkState(),
     });
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [formError, setFormError] = useState<string | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const genreScrollRef = useRef<HTMLDivElement | null>(null);
+
+    const updateArtwork = useCallback((field: ArtworkField, file: File | null) => {
+        setArtworks((cur) => {
+            if (cur[field].previewUrl) URL.revokeObjectURL(cur[field].previewUrl);
+            return { ...cur, [field]: { file, previewUrl: file ? URL.createObjectURL(file) : null } };
+        });
+    }, []);
 
     useEffect(() => {
         return () => {
@@ -74,10 +103,61 @@ export default function CreateGame() {
         };
     }, [artworks]);
 
-    useEffect(() => {
-        const id = window.setTimeout(() => setDebouncedGenreSearch(genreSearch.trim()), 300);
-        return () => window.clearTimeout(id);
-    }, [genreSearch]);
+    return { artworks, updateArtwork };
+}
+
+function getValidationError({
+    isTitleValid,
+    isDescriptionValid,
+    isPriceValid,
+    isArtworkValid,
+    hasMinimumGenres,
+}: {
+    isTitleValid: boolean;
+    isDescriptionValid: boolean;
+    isPriceValid: boolean;
+    isArtworkValid: boolean;
+    hasMinimumGenres: boolean;
+}) {
+    if (!isTitleValid) return "El título debe tener entre 1 y 24 caracteres.";
+    if (!isDescriptionValid) return "La descripción debe tener entre 4 y 4096 caracteres.";
+    if (!isPriceValid) return "Debes indicar un precio válido.";
+    if (!isArtworkValid) return "Debes subir las tres imágenes de artwork.";
+    if (!hasMinimumGenres) return "Debes seleccionar al menos un género.";
+    return null;
+}
+
+function buildGameFormData(body: CreateGameBody) {
+    const formData = new FormData();
+    formData.append("Title", body.Title);
+    formData.append("Description", body.Description);
+    formData.append("Price", String(body.Price));
+    body.Genres.forEach((id) => formData.append("Genres", id));
+    formData.append("CapsulePicture", body.CapsulePicture);
+    formData.append("HeaderPicture", body.HeaderPicture);
+    formData.append("MainPicture", body.MainPicture);
+    return formData;
+}
+
+export default function CreateGame() {
+    const navigate = useNavigate();
+    const [selectedGenres, setSelectedGenres] = useState<GenreOption[]>([]);
+    const [isGenrePickerOpen, setIsGenrePickerOpen] = useState(false);
+    const [genreSearch, setGenreSearch] = useState("");
+    const debouncedGenreSearch = useDebouncedValue(genreSearch.trim());
+    const [availableGenres, setAvailableGenres] = useState<GenreOption[]>([]);
+    const [genrePageNumber, setGenrePageNumber] = useState(1);
+    const [hasMoreGenres, setHasMoreGenres] = useState(true);
+    const [isLoadingGenres, setIsLoadingGenres] = useState(false);
+    const [genresError, setGenresError] = useState<string | null>(null);
+    const [isLoadingMoreGenres, setIsLoadingMoreGenres] = useState(false);
+    const [price, setPrice] = useState("");
+    const { artworks, updateArtwork } = useArtworkState();
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [formError, setFormError] = useState<string | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const genreScrollRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         if (!isGenrePickerOpen) return;
@@ -101,7 +181,9 @@ export default function CreateGame() {
                 setAvailableGenres((cur) =>
                     isFirstPage ? items : [...cur, ...items.filter((g) => !cur.some((c) => c.id === g.id))]
                 );
-                setHasMoreGenres(Boolean(response.data.hastNextPage) || items.length === DEFAULT_GENRE_PAGE_SIZE);
+                const hasNextPage = (response.data as { hasNextPage?: boolean; hastNextPage?: boolean }).hasNextPage
+                    ?? (response.data as { hastNextPage?: boolean }).hastNextPage;
+                setHasMoreGenres(Boolean(hasNextPage) || items.length === DEFAULT_GENRE_PAGE_SIZE);
             } catch {
                 if (!controller.signal.aborted) setGenresError("No se pudieron cargar los géneros.");
             } finally {
@@ -118,7 +200,9 @@ export default function CreateGame() {
 
     useEffect(() => {
         if (!isGenrePickerOpen) return;
-        const handleKeyDown = (e: KeyboardEvent) => { if (e.key === "Escape") setIsGenrePickerOpen(false); };
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setIsGenrePickerOpen(false);
+        };
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
     }, [isGenrePickerOpen]);
@@ -126,7 +210,6 @@ export default function CreateGame() {
     useEffect(() => {
         if (!isGenrePickerOpen) {
             setGenreSearch("");
-            setDebouncedGenreSearch("");
             setAvailableGenres([]);
             setGenrePageNumber(1);
             setHasMoreGenres(true);
@@ -136,34 +219,31 @@ export default function CreateGame() {
 
     const selectedGenreIds = useMemo(() => new Set(selectedGenres.map((g) => g.id)), [selectedGenres]);
 
-    function addGenre(genre: GenreOption) {
-        setSelectedGenres((cur) => cur.some((g) => g.id === genre.id) ? cur : [...cur, genre]);
-    }
+    const addGenre = useCallback((genre: GenreOption) => {
+        setSelectedGenres((cur) => (cur.some((g) => g.id === genre.id) ? cur : [...cur, genre]));
+    }, []);
 
-    function removeGenre(id: string) {
+    const removeGenre = useCallback((id: string) => {
         setSelectedGenres((cur) => cur.filter((g) => g.id !== id));
-    }
+    }, []);
 
-    function handleGenreScroll(e: React.UIEvent<HTMLDivElement>) {
+    const handleGenreScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
         const t = e.currentTarget;
         if (!hasMoreGenres || isLoadingGenres || isLoadingMoreGenres || t.scrollTop + t.clientHeight < t.scrollHeight - 48) return;
         setGenrePageNumber((p) => p + 1);
-    }
+    }, [hasMoreGenres, isLoadingGenres, isLoadingMoreGenres]);
 
-    function handleGenreSearchChange(value: string) {
+    const handleGenreSearchChange = useCallback((value: string) => {
         setGenreSearch(value);
         setGenrePageNumber(1);
         setAvailableGenres([]);
         setHasMoreGenres(true);
-    }
+    }, []);
 
-    function handleArtworkChange(field: ArtworkField, event: ChangeEvent<HTMLInputElement>) {
+    const handleArtworkChange = useCallback((field: ArtworkField, event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0] ?? null;
-        setArtworks((cur) => {
-            if (cur[field].previewUrl) URL.revokeObjectURL(cur[field].previewUrl!);
-            return { ...cur, [field]: { file, previewUrl: file ? URL.createObjectURL(file) : null } };
-        });
-    }
+        updateArtwork(field, file);
+    }, [updateArtwork]);
 
     const titleLength = title.trim().length;
     const descriptionLength = description.trim().length;
@@ -178,11 +258,14 @@ export default function CreateGame() {
 
     async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
         event.preventDefault();
-        if (!isTitleValid) return setFormError("El título debe tener entre 1 y 24 caracteres.");
-        if (!isDescriptionValid) return setFormError("La descripción debe tener entre 4 y 4096 caracteres.");
-        if (!isPriceValid) return setFormError("Debes indicar un precio válido.");
-        if (!isArtworkValid) return setFormError("Debes subir las tres imágenes de artwork.");
-        if (!hasMinimumGenres) return setFormError("Debes seleccionar al menos un género.");
+        const validationError = getValidationError({
+            isTitleValid,
+            isDescriptionValid,
+            isPriceValid,
+            isArtworkValid,
+            hasMinimumGenres,
+        });
+        if (validationError) return setFormError(validationError);
 
         setFormError(null);
 
@@ -195,15 +278,7 @@ export default function CreateGame() {
             HeaderPicture: artworks.header.file!,
             MainPicture: artworks.main.file!,
         };
-
-        const formData = new FormData();
-        formData.append("Title", requestBody.Title);
-        formData.append("Description", requestBody.Description);
-        formData.append("Price", String(requestBody.Price));
-        requestBody.Genres.forEach((id) => formData.append("Genres", id));
-        formData.append("CapsulePicture", requestBody.CapsulePicture);
-        formData.append("HeaderPicture", requestBody.HeaderPicture);
-        formData.append("MainPicture", requestBody.MainPicture);
+        const formData = buildGameFormData(requestBody);
 
         setIsSubmitting(true);
         try {
@@ -216,33 +291,6 @@ export default function CreateGame() {
         }
     }
 
-    const inputBase = `
-        w-full text-sm rounded-lg border
-        bg-white/50 backdrop-blur-sm
-        border-black/8
-        placeholder:text-slate-400
-        text-slate-800
-        py-3 px-3 outline-none
-        transition-colors
-        focus:border-emerald-400/60 focus:bg-white/70
-        dark:bg-white/1.5 dark:border-white/6
-        dark:placeholder:text-white/35
-        dark:text-white/70
-        dark:focus:border-emerald-400/30 dark:focus:bg-white/5
-    `;
-
-    const sectionCard = `
-        relative overflow-hidden rounded-lg px-6 py-4
-        bg-white/40 backdrop-blur-md
-        border border-black/5
-        shadow-sm
-        dark:bg-white/1 dark:border-white/6
-        dark:shadow-md dark:shadow-black/30
-    `;
-
-    const labelClass = "block text-slate-600 dark:text-white/50 mb-4";
-    const hintClass = "text-xs text-slate-400 dark:text-white/35";
-
     return (
         <>
             <TopBar />
@@ -253,7 +301,7 @@ export default function CreateGame() {
                         to="/dashboard"
                         className="
                             group relative inline-flex items-center
-                            text text-slate-400
+                            text text-slate-600
                             dark:text-white/50
                             transition-colors duration-300
                         ">
@@ -264,7 +312,6 @@ export default function CreateGame() {
                             -translate-x-2 opacity-0
                             transition-all duration-300 ease-out
                             group-hover:translate-x-0 group-hover:opacity-100
-                            text-slate-400 dark:text-white/40
                             group-hover:text-emerald-600 dark:group-hover:text-emerald-400"/>
 
                         <span className="
@@ -272,7 +319,7 @@ export default function CreateGame() {
                             group-hover:pl-5
                             group-hover:text-emerald-600 dark:group-hover:text-emerald-400
                         ">
-                            Volver al dashboard
+                            Volver
                         </span>
                     </Link>
 
@@ -342,7 +389,7 @@ export default function CreateGame() {
                         <p className={`mb-6 ${hintClass}`}>Sube las tres variantes para que el juego se vea completo.</p>
 
                         <div className="grid gap-4 lg:grid-cols-3">
-                            {(Object.keys(ARTWORK_LABELS) as ArtworkField[]).map((field) => {
+                            {ARTWORK_FIELDS.map((field) => {
                                 const artwork = artworks[field];
                                 const label = ARTWORK_LABELS[field];
 
@@ -413,7 +460,7 @@ export default function CreateGame() {
 
                     {/* Genres */}
                     <div className={sectionCard}>
-                        <div className="flex items-center justify-between gap-4 mb-3">
+                        <div className="flex items-center justify-between gap-4">
                             <label className={labelClass}>Géneros</label>
                             <span className={hintClass}>Selecciona uno o varios</span>
                         </div>
@@ -435,7 +482,7 @@ export default function CreateGame() {
                                         px-4 py-2 text-sm text-slate-500 dark:text-white/40
                                         hover:border-emerald-400/50 hover:text-emerald-700
                                         dark:hover:border-emerald-400/25 dark:hover:text-emerald-400
-                                        transition-colors
+                                        transition-colors cursor-pointer
                                     "
                                 >
                                     <Plus className="h-4 w-4" />
@@ -490,7 +537,7 @@ export default function CreateGame() {
                                 </>
                             )}
                         </div>
-                        <p className={`mt-2 ${hintClass}`}>Seleccionados: {selectedGenres.length}</p>
+                        <p className={`mt-4 ${hintClass}`}>Seleccionados: {selectedGenres.length}</p>
                     </div>
 
                     {/* Error + Submit */}

@@ -205,7 +205,7 @@ export default function Dashboard() {
                         <h1 className="page-title text-4xl text-slate-700 dark:text-white/70">
                             Mis juegos
                         </h1>
-                        <p className="page-subtitle text-sm text-slate-400 dark:text-white/60">
+                        <p className="page-subtitle text-sm text-slate-600 dark:text-white/60">
                             Gestiona tus juegos, compilaciones y análisis.
                         </p>
                     </div>

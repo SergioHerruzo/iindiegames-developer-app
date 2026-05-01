@@ -36,7 +36,7 @@ export default function GameCardStats({ icon: Icon, title, description, change }
                     />
                 </div>
 
-                <p className="text-sm text-slate-700 dark:text-white/75">
+                <p className="text-sm text-slate-600 dark:text-white/75 tracking-wider">
                     {title}
                 </p>
             </div>
@@ -45,7 +45,7 @@ export default function GameCardStats({ icon: Icon, title, description, change }
                 {description}
             </h3>
 
-            <p className="text-xs text-slate-500 dark:text-white/65">
+            <p className="text-xs text-slate-500 dark:text-white/65 tracking-wider">
                 {change}
             </p>
         </div>
