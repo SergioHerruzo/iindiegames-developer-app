@@ -225,8 +225,8 @@ export default function CreateGame() {
         py-3 px-3 outline-none
         transition-colors
         focus:border-emerald-400/60 focus:bg-white/70
-        dark:bg-white/3 dark:border-white/8
-        dark:placeholder:text-white/30
+        dark:bg-white/1.5 dark:border-white/6
+        dark:placeholder:text-white/35
         dark:text-white/70
         dark:focus:border-emerald-400/30 dark:focus:bg-white/5
     `;
@@ -236,12 +236,12 @@ export default function CreateGame() {
         bg-white/40 backdrop-blur-md
         border border-black/5
         shadow-sm
-        dark:bg-white/1 dark:border-white/8
+        dark:bg-white/1 dark:border-white/6
         dark:shadow-md dark:shadow-black/30
     `;
 
     const labelClass = "block text-slate-600 dark:text-white/50 mb-4";
-    const hintClass = "text-xs text-slate-400 dark:text-white/30";
+    const hintClass = "text-xs text-slate-400 dark:text-white/35";
 
     return (
         <>
@@ -314,7 +314,7 @@ export default function CreateGame() {
                                     className={`${inputBase} pl-8`}
                                 />
                             </div>
-                            <p className={`mt-2 ${hintClass}`}>Introduce el precio final del juego.</p>
+                            <p className={`mt-4 ${hintClass}`}>Introduce el precio final del juego.</p>
                         </div>
                     </div>
 
@@ -329,7 +329,7 @@ export default function CreateGame() {
                             maxLength={4096}
                             className={`${inputBase} resize-none h-32`}
                         />
-                        <div className={`flex items-center justify-between mt-2 ${hintClass}`}>
+                        <div className={`flex items-center justify-between mt-4 ${hintClass}`}>
                             <span>{descriptionLength}/4096</span>
                             <span>Mínimo 4 caracteres</span>
                         </div>
