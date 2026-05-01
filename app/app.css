@@ -11,7 +11,7 @@
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
-:root,
+/*:root,
 html[data-theme="dark"] {
   color-scheme: dark;
 
@@ -32,7 +32,7 @@ html[data-theme="dark"] {
       rgba(13, 17, 15, 0.97) 60%,
       rgba(10, 12, 11, 1) 100%
     );
-}
+}*/
 
 html[data-theme="light"] {
   color-scheme: light;
