@@ -23,13 +23,7 @@ export default function GameCard({ id, title, description, imageUrl, status }: G
         <Link
             to={`/game-details/${id}`}
             className="
-                group flex h-full flex-col overflow-hidden rounded-2xl cursor-pointer
-                bg-white/40 backdrop-blur-md
-                border border-black/5
-                shadow-sm
-                dark:bg-white/3 dark:backdrop-blur-md
-                dark:border-white/8
-                dark:shadow-md dark:shadow-black/30
+                ui-card group flex h-full flex-col overflow-hidden cursor-pointer
                 transition-all duration-300 ease-out
                 hover:shadow-md hover:border-black/10
                 dark:hover:border-white/12 dark:hover:bg-white/5

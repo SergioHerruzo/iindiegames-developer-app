@@ -11,6 +11,56 @@
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 }
 
+@layer components {
+  .page-title {
+    @apply text-3xl sm:text-4xl font-semibold tracking-tight text-slate-800 dark:text-white/75;
+  }
+
+  .page-subtitle {
+    @apply text-sm text-slate-600 dark:text-white/55;
+  }
+
+  .ui-card {
+    @apply rounded-2xl border border-black/5 bg-white/40 backdrop-blur-md shadow-sm dark:border-white/8 dark:bg-white/3;
+  }
+
+  .ui-section {
+    @apply relative overflow-hidden rounded-2xl border border-black/5 bg-white/40 backdrop-blur-md p-6 shadow-sm dark:border-white/6 dark:bg-white/1;
+  }
+
+  .ui-section-kicker {
+    @apply text-xs uppercase tracking-[0.35em] text-slate-400 dark:text-white/35;
+  }
+
+  .ui-section-title {
+    @apply text-lg font-light text-slate-800 dark:text-white/70;
+  }
+
+  .ui-section-subtitle {
+    @apply text-sm text-slate-500 dark:text-white/40;
+  }
+
+  .ui-label {
+    @apply block text-slate-600 dark:text-white/50 mb-3;
+  }
+
+  .ui-hint {
+    @apply text-xs text-slate-400 dark:text-white/35;
+  }
+
+  .ui-input {
+    @apply w-full text-sm rounded-lg border bg-white/50 backdrop-blur-sm border-black/8 placeholder:text-slate-400 text-slate-800 py-3 px-3 outline-none transition-colors focus:border-emerald-400/60 focus:bg-white/70 dark:bg-white/1.5 dark:border-white/6 dark:placeholder:text-white/35 dark:text-white/70 dark:focus:border-emerald-400/30 dark:focus:bg-white/5;
+  }
+
+  .ui-button-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm text-emerald-700 bg-emerald-500/15 border border-emerald-200/60 backdrop-blur-md transition-all duration-300 ease-out hover:bg-emerald-500/25 hover:border-emerald-200/80 dark:text-emerald-400 dark:bg-emerald-400/10 dark:border-emerald-400/20 dark:hover:bg-emerald-400/15 dark:hover:border-emerald-400/30 cursor-pointer;
+  }
+
+  .ui-button-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2 text-sm text-slate-600 border border-black/10 bg-white/40 backdrop-blur-md transition-all duration-300 hover:text-emerald-600 hover:border-emerald-300/70 dark:text-white/55 dark:border-white/10 dark:bg-white/3 dark:hover:text-emerald-400 dark:hover:border-emerald-400/40;
+  }
+}
+
 /*:root,
 html[data-theme="dark"] {
   color-scheme: dark;

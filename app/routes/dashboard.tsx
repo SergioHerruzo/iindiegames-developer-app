@@ -2,6 +2,8 @@ import GameCardStats from '@components/GameCardStats'
 import GameCard from '@components/GameCard'
 import { Plus, CircleCheck, TriangleAlert, ShoppingCart, GamepadDirectional } from 'lucide-react'
 import TopBar from '@components/TopBar'
+import DashboardHeader from '@components/dashboard/DashboardHeader'
+import DashboardStateCard from '@components/dashboard/DashboardStateCard'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { httpClient } from '@services/http.client'
 import type { PaginatedResponse } from '@models/PaginatedResponse'
@@ -192,32 +194,22 @@ export default function Dashboard() {
 
     const hasGamesError = !isLoadingGames && !!gamesError
     const hasNoGames = hasLoadedOnce && !isLoadingGames && !gamesError && createdGames.length === 0
-    const shouldShowGames = !isLoadingGames && !gamesError && createdGames.length > 0
-
     return (
         <div className="flex flex-col h-screen overflow-hidden">
             <TopBar />
 
             <div className="flex flex-col flex-1 min-h-0 w-full py-8 px-6 gap-8 overflow-hidden">
 
-                <div className="flex items-start justify-between w-full gap-4">
-                    <div className="flex flex-col gap-1">
-                        <h1 className="page-title text-4xl text-slate-700 dark:text-white/70">
-                            Mis juegos
-                        </h1>
-                        <p className="page-subtitle text-sm text-slate-600 dark:text-white/60">
-                            Gestiona tus juegos, compilaciones y análisis.
-                        </p>
-                    </div>
-
-                    <Link
-                        to="/create-game"
-                        className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm text-emerald-700 bg-emerald-500/15 backdrop-blur-md border border-emerald-200/60 transition-all duration-300 ease-out hover:bg-emerald-500/25 hover:border-emerald-200/80 font-light dark:bg-emerald-400/10 dark:border-emerald-400/20 dark:hover:bg-emerald-400/15 dark:hover:border-emerald-400/30 dark:text-emerald-400"
-                    >
-                        <Plus className="w-4 h-4" />
-                        Agregar juego
-                    </Link>
-                </div>
+                <DashboardHeader
+                    title="Mis juegos"
+                    subtitle="Gestiona tus juegos, compilaciones y análisis."
+                    action={
+                        <Link to="/create-game" className="ui-button-primary font-light">
+                            <Plus className="w-4 h-4" />
+                            Agregar juego
+                        </Link>
+                    }
+                />
 
                 <div className="grid w-full gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                     <GameCardStats title="Vendidos" description="1,247" change="+12% este mes" icon={ShoppingCart} />
@@ -228,13 +220,13 @@ export default function Dashboard() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full flex-1 min-h-0 overflow-auto">
                     {isLoadingGames && (
-                        <div className="col-span-full flex w-full flex-col items-center justify-center gap-3 rounded-2xl px-6 py-12 flex-1 bg-white/40 backdrop-blur-md border border-black/5 shadow-sm dark:bg-white/1 dark:border-white/8 dark:shadow-md dark:shadow-black/30">
+                        <DashboardStateCard className="col-span-full">
                             <div className="h-10 w-10 animate-spin rounded-full border-2 border-emerald-500 border-t-transparent" />
-                        </div>
+                        </DashboardStateCard>
                     )}
 
                     {hasGamesError && (
-                        <div className="col-span-full flex w-full flex-col items-center justify-center gap-4 text-center rounded-2xl px-6 py-12 flex-1 bg-white/40 backdrop-blur-md border border-black/5 shadow-lg dark:bg-white/1 dark:border-white/8 dark:shadow-md dark:shadow-black/30">
+                        <DashboardStateCard className="col-span-full">
                             <TriangleAlert className="w-10 h-10 text-rose-400/80 dark:text-rose-400/70" />
 
                             <div className="flex flex-col gap-1">
@@ -246,24 +238,21 @@ export default function Dashboard() {
                                 </p>
                             </div>
 
-                            <button
-                                onClick={handleRetry}
-                                className="inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm text-emerald-700 bg-emerald-500/15 backdrop-blur-md border border-emerald-200/60 transition-all duration-300 cursor-pointer hover:bg-emerald-500/25 font-light dark:bg-emerald-400/10 dark:border-emerald-400/20 dark:hover:bg-emerald-400/15 dark:text-emerald-400"
-                            >
+                            <button onClick={handleRetry} className="ui-button-primary font-light">
                                 Reintentar
                             </button>
-                        </div>
+                        </DashboardStateCard>
                     )}
 
                     {hasNoGames && (
-                        <div className="col-span-full flex w-full flex-col items-center justify-center rounded-2xl px-6 py-12 text-center flex-1 bg-white/40 backdrop-blur-md border border-black/5 shadow-sm dark:bg-white/1 dark:border-white/8 dark:shadow-md dark:shadow-black/30">
+                        <DashboardStateCard className="col-span-full">
                             <p className="text-lg text-slate-700 dark:text-white/40">
                                 Aún no has creado ningún juego.
                             </p>
                             <p className="mt-2 text-sm text-slate-500 dark:text-white/25">
                                 Empieza tu próxima aventura y publica tu primer título.
                             </p>
-                        </div>
+                        </DashboardStateCard>
                     )}
                 </div>
             </div>

@@ -9,18 +9,7 @@ type GameCardStatsProps = {
 
 export default function GameCardStats({ icon: Icon, title, description, change }: GameCardStatsProps) {
     return (
-        <div
-            className="
-                relative overflow-hidden
-                rounded-2xl p-6
-                bg-white/40 backdrop-blur-md
-                border border-black/5
-                shadow-xs
-                dark:bg-white/1 dark:backdrop-blur-md
-                dark:border-white/8
-                dark:shadow-md dark:shadow-black/30
-            "
-        >
+        <div className="ui-card relative overflow-hidden p-6">
             <div className="relative flex items-center gap-3 mb-4">
                 <div className="
                     w-10 h-10 rounded-xl

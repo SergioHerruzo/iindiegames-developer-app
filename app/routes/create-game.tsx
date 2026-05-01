@@ -2,6 +2,8 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent, ty
 import { ArrowLeft, Check, Loader2, Plus, Search, X } from "lucide-react";
 import { Link, useNavigate } from "react-router";
 import TopBar from "~/components/TopBar";
+import SectionCard from "@components/ui/SectionCard";
+import SectionHeader from "@components/ui/SectionHeader";
 import { httpClient } from "@services/http.client";
 import type { Genre } from "@models/Genre";
 import type { PaginatedResponse } from "@models/PaginatedResponse";
@@ -19,32 +21,7 @@ type ArtworkState = {
 const DEFAULT_GENRE_PAGE_SIZE = 12;
 const ARTWORK_FIELDS: ArtworkField[] = ["capsule", "header", "main"];
 
-const inputBase = `
-    w-full text-sm rounded-lg border
-    bg-white/50 backdrop-blur-sm
-    border-black/8
-    placeholder:text-slate-400
-    text-slate-800
-    py-3 px-3 outline-none
-    transition-colors
-    focus:border-emerald-400/60 focus:bg-white/70
-    dark:bg-white/1.5 dark:border-white/6
-    dark:placeholder:text-white/35
-    dark:text-white/70
-    dark:focus:border-emerald-400/30 dark:focus:bg-white/5
-`;
-
-const sectionCard = `
-    relative overflow-hidden rounded-lg px-6 py-4
-    bg-white/40 backdrop-blur-md
-    border border-black/5
-    shadow-sm
-    dark:bg-white/1 dark:border-white/6
-    dark:shadow-md dark:shadow-black/30
-`;
-
-const labelClass = "block text-slate-600 dark:text-white/50 mb-4";
-const hintClass = "text-xs text-slate-400 dark:text-white/35";
+const hintClass = "ui-hint";
 
 export async function loader({ request }: Route.LoaderArgs) {
     return { currentUser: requireRole(request, "developer") };
@@ -323,31 +300,31 @@ export default function CreateGame() {
                         </span>
                     </Link>
 
-                    <h1 className="text-4xl font-light tracking-tight text-slate-800 dark:text-white/60 mt-3">
+                    <h1 className="page-title font-space-grotesk mt-3">
                         Crear juego
                     </h1>
                 </div>
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full">
                     <div className="grid w-full gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
-                        <div className={sectionCard}>
-                            <label className={labelClass} htmlFor="title">Título del juego</label>
+                        <SectionCard>
+                            <label className="ui-label" htmlFor="title">Título del juego</label>
                             <input
                                 id="title"
                                 value={title}
                                 onChange={(e) => setTitle(e.target.value)}
                                 placeholder="Introduce el título de tu juego"
                                 maxLength={24}
-                                className={inputBase}
+                                className="ui-input"
                             />
                             <div className={`flex items-center justify-between mt-4 ${hintClass}`}>
                                 <span>{titleLength}/24</span>
                                 <span>Mínimo 1 carácter</span>
                             </div>
-                        </div>
+                        </SectionCard>
 
-                        <div className={sectionCard}>
-                            <label className={labelClass} htmlFor="price">Precio</label>
+                        <SectionCard>
+                            <label className="ui-label" htmlFor="price">Precio</label>
                             <div className="relative">
                                 <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-sm text-slate-400 dark:text-white/30">€</span>
                                 <input
@@ -358,37 +335,39 @@ export default function CreateGame() {
                                     value={price}
                                     onChange={(e) => setPrice(e.target.value)}
                                     placeholder="0.00"
-                                    className={`${inputBase} pl-8`}
+                                    className="ui-input pl-8"
                                 />
                             </div>
                             <p className={`mt-4 ${hintClass}`}>Introduce el precio final del juego.</p>
-                        </div>
+                        </SectionCard>
                     </div>
 
                     {/* Description */}
-                    <div className={sectionCard}>
-                        <label className={labelClass} htmlFor="description">Descripción</label>
+                    <SectionCard>
+                        <label className="ui-label" htmlFor="description">Descripción</label>
                         <textarea
                             id="description"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
                             placeholder="Escribe una descripción para tu juego"
                             maxLength={4096}
-                            className={`${inputBase} resize-none h-32`}
+                            className="ui-input resize-none h-32"
                         />
                         <div className={`flex items-center justify-between mt-4 ${hintClass}`}>
                             <span>{descriptionLength}/4096</span>
                             <span>Mínimo 4 caracteres</span>
                         </div>
-                    </div>
+                    </SectionCard>
 
                     {/* Artwork */}
-                    <div className={sectionCard}>
-                        <p className="text-xs uppercase tracking-[0.35em] text-slate-400 dark:text-white/35 mb-1">Assets</p>
-                        <h3 className="text-lg font-light text-slate-800 dark:text-white/70 mb-1">Artwork del juego</h3>
-                        <p className={`mb-6 ${hintClass}`}>Sube las tres variantes para que el juego se vea completo.</p>
+                    <SectionCard>
+                        <SectionHeader
+                            kicker="Assets"
+                            title="Artwork del juego"
+                            subtitle="Sube las tres variantes para que el juego se vea completo."
+                        />
 
-                        <div className="grid gap-4 lg:grid-cols-3">
+                        <div className="mt-6 grid gap-4 lg:grid-cols-3">
                             {ARTWORK_FIELDS.map((field) => {
                                 const artwork = artworks[field];
                                 const label = ARTWORK_LABELS[field];
@@ -398,13 +377,13 @@ export default function CreateGame() {
                                         key={field}
                                         className="
                                             overflow-hidden rounded-lg
-                                            bg-white/30 backdrop-blur-sm
+                                            bg-white/30
                                             border border-black/5
                                             dark:bg-white/2 dark:border-white/8
                                         "
                                     >
                                         <div className="border-b border-black/5 dark:border-white/6 px-4 py-4">
-                                            <p className="text-xs uppercase tracking-[0.35em] text-slate-400 dark:text-white/35">Artwork</p>
+                                            <p className="ui-section-kicker">Artwork</p>
                                             <h4 className="mt-1 text-base font-light text-slate-700 dark:text-white/65">{label.title}</h4>
                                             <p className={`mt-1 text-sm ${hintClass}`}>{label.description}</p>
                                         </div>
@@ -420,8 +399,8 @@ export default function CreateGame() {
                                                     relative flex min-h-44 items-center justify-center overflow-hidden rounded-lg
                                                     border border-dashed border-black/10
                                                     bg-white/40
-                                                    transition-colors
-                                                    group-hover:border-emerald-400/50 group-hover:bg-emerald-50/30
+                                                    transition-[border-color,background-color] duration-150 ease-out
+                                                    group-hover:border-emerald-400/50 group-hover:bg-emerald-50/20
                                                     dark:bg-white/2 dark:border-white/8
                                                     dark:group-hover:border-emerald-400/25 dark:group-hover:bg-emerald-400/5
                                                 ">
@@ -432,7 +411,7 @@ export default function CreateGame() {
                                                             className="h-full w-full object-cover"
                                                         />
                                                     ) : (
-                                                        <div className="flex flex-col items-center gap-2 px-6 py-8 text-center">
+                                                        <div className="flex flex-col items-center gap-2 px-6 py-8 text-center transition-transform duration-150 ease-out">
                                                             <div className="
                                                                 flex h-9 w-9 items-center justify-center rounded-xl
                                                                 bg-emerald-500/10 border border-emerald-500/20
@@ -456,12 +435,12 @@ export default function CreateGame() {
                                 );
                             })}
                         </div>
-                    </div>
+                    </SectionCard>
 
                     {/* Genres */}
-                    <div className={sectionCard}>
+                    <SectionCard>
                         <div className="flex items-center justify-between gap-4">
-                            <label className={labelClass}>Géneros</label>
+                            <label className="ui-label">Géneros</label>
                             <span className={hintClass}>Selecciona uno o varios</span>
                         </div>
                         <div className="
@@ -538,7 +517,7 @@ export default function CreateGame() {
                             )}
                         </div>
                         <p className={`mt-4 ${hintClass}`}>Seleccionados: {selectedGenres.length}</p>
-                    </div>
+                    </SectionCard>
 
                     {/* Error + Submit */}
                     {formError && (
@@ -549,20 +528,7 @@ export default function CreateGame() {
                         <button
                             type="submit"
                             disabled={!isFormValid || isSubmitting}
-                            className="
-                                inline-flex items-center gap-2
-                                px-6 py-2.5 rounded-full text-sm
-                                bg-emerald-500/15 backdrop-blur-md
-                                border border-emerald-200/60
-                                text-emerald-700
-                                hover:bg-emerald-500/25 hover:border-emerald-200/80
-                                dark:bg-emerald-400/10 dark:border-emerald-400/20
-                                dark:hover:bg-emerald-400/15 dark:hover:border-emerald-400/30
-                                dark:text-emerald-400
-                                transition-all duration-300
-                                disabled:cursor-not-allowed disabled:opacity-40
-                                font-light
-                            "
+                            className="ui-button-primary font-light disabled:cursor-not-allowed disabled:opacity-40"
                         >
                             {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
                             {isSubmitting ? "Creando..." : "Crear juego"}
@@ -585,7 +551,6 @@ export default function CreateGame() {
                             shadow-2xl shadow-slate-200/60
                             dark:bg-white/4 dark:backdrop-blur-xl
                             dark:border-white/8
-                            dark:shadow-black/50
                         "
                         onClick={(e) => e.stopPropagation()}
                     >
@@ -621,7 +586,7 @@ export default function CreateGame() {
                                     value={genreSearch}
                                     onChange={(e) => handleGenreSearchChange(e.target.value)}
                                     placeholder="Buscar género por nombre"
-                                    className={`${inputBase} pl-11`}
+                                    className="ui-input pl-11"
                                 />
                             </div>
                         </div>

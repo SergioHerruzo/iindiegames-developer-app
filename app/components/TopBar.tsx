@@ -79,10 +79,7 @@ export default function TopBar() {
                     ">
                         <GamepadDirectional size={22} strokeWidth={1.5} className="text-emerald-700 dark:text-emerald-500" />
                     </div>
-                    <span className="
-                        text-2xl font-light tracking-tight text-slate-800
-                        dark:text-white/70
-                    ">
+                    <span className="page-title text-2xl font-light">
                         Indie Games
                     </span>
                 </Link>
@@ -117,17 +114,17 @@ export default function TopBar() {
                                 alt={avatarLabel}
                                 className="
                                     avatar-image h-9 w-9 rounded-full object-cover
-                                    ring-1 ring-white/70 shadow-sm shadow-slate-200/40
-                                    dark:ring-white/10 dark:shadow-black/30
+                                    ring-1 ring-black/10
+                                    dark:ring-black/20
                                 "
                             />
                         ) : (
                             <div className="
                                 avatar-fallback flex h-9 w-9 items-center justify-center rounded-full
-                                border border-slate-200 bg-white/70 ring-1 ring-white/70
-                                text-sm text-emerald-700 shadow-sm shadow-slate-200/40
-                                dark:border-white/5 dark:bg-white/5 dark:ring-white/6
-                                dark:text-emerald-600 dark:shadow-black/30
+                                border border-slate-200 bg-white/70 ring-1 ring-black/10
+                                text-sm text-emerald-700
+                                dark:border-white/5 dark:bg-white/5 dark:ring-black/20
+                                dark:text-emerald-600
                             ">
                                 {avatarLabel.slice(0, 1).toUpperCase()}
                             </div>
@@ -136,13 +133,12 @@ export default function TopBar() {
 
                     <div
                         className={`
-                            theme-dropdown absolute right-0 top-full z-20 mt-2 w-64
+                            absolute right-0 top-full z-20 mt-2 w-64
                             origin-top-right overflow-hidden rounded-2xl p-2
                             bg-white/70 backdrop-blur-xl border border-white/80
                             shadow-xl shadow-slate-200/60
                             dark:bg-white/2 dark:backdrop-blur-xl
                             dark:border-white/8
-                            dark:shadow-black/40
                             transition-all duration-200 ease-out
                             ${isThemeMenuOpen
                                 ? "pointer-events-auto translate-y-0 scale-100 opacity-100"

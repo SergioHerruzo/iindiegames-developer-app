@@ -399,7 +399,7 @@ export default function GameDetails() {
                                 <button
                                     type="button"
                                     onClick={handleAttemptPublish}
-                                    className="inline-flex items-center justify-center gap-2 rounded-full bg-primary-400 px-4 py-2 text-sm font-medium text-text-100 transition-transform hover:-translate-y-0.5 hover:bg-primary-300"
+                                    className="ui-button-primary font-medium hover:-translate-y-0.5"
                                 >
                                     <CircleCheck className="h-4 w-4" />
                                     Intentar publicar
@@ -564,7 +564,7 @@ export default function GameDetails() {
                                 <button
                                     type="button"
                                     onClick={handleAddStoreImage}
-                                    className="inline-flex items-center gap-2 rounded-full border border-bg-300 bg-bg-100 px-4 py-2 text-sm text-text-200 transition-colors hover:border-primary-500 hover:text-text-100"
+                                    className="ui-button-outline"
                                 >
                                     <Plus className="h-4 w-4" />
                                     Añadir captura
@@ -731,8 +731,8 @@ export default function GameDetails() {
                     {uiState.isLoadingGame && (
                         <div className="flex min-h-96 items-center justify-center">
                             <div className="flex flex-col items-center gap-3">
-                                <Loader2 className="h-8 w-8 animate-spin text-primary-400" />
-                                <p className="text-sm text-text-400">Cargando información del juego...</p>
+                                <Loader2 className="h-8 w-8 animate-spin text-emerald-500" />
+                                <p className="text-sm text-slate-500 dark:text-white/45">Cargando información del juego...</p>
                             </div>
                         </div>
                     )}
@@ -752,46 +752,46 @@ export default function GameDetails() {
 
                     {!uiState.isLoadingGame && !uiState.gameLoadError && (
                         <>
-                            <div className="flex flex-col gap-4 rounded-4xl border border-bg-300 bg-bg-200/85 p-6 shadow-[0_24px_60px_rgba(0,0,0,0.28)] backdrop-blur lg:flex-row lg:items-end lg:justify-between">
-                        <div className="space-y-3">
-                            <Link to="/dashboard" className="inline-flex items-center gap-2 text-sm text-text-300 transition-colors hover:text-text-100">
-                                <ArrowLeft className="h-5 w-5" />
-                                Volver al dashboard
-                            </Link>
-                            <div>
-                                <p className="text-xs uppercase tracking-[0.45em] text-text-500">Detalles del juego</p>
-                                <h1 className="mt-2 text-4xl font-space-grotesk text-text-100">{gameData.title || "Cargando..."}</h1>
-                                <p className="mt-2 max-w-3xl text-sm leading-6 text-text-400">
-                                    Gestiona el contenido, las imágenes, las métricas futuras y el ciclo de vida de publicación desde una sola vista.
-                                </p>
-                            </div>
-                        </div>
+                            <div className="ui-section flex flex-col gap-4 rounded-4xl p-6 lg:flex-row lg:items-end lg:justify-between">
+                                <div className="space-y-3">
+                                    <Link to="/dashboard" className="inline-flex items-center gap-2 text-sm text-slate-600 transition-colors hover:text-emerald-600 dark:text-white/50 dark:hover:text-emerald-400">
+                                        <ArrowLeft className="h-5 w-5" />
+                                        Volver al dashboard
+                                    </Link>
+                                    <div>
+                                        <p className="ui-section-kicker">Detalles del juego</p>
+                                        <h1 className="mt-2 text-4xl font-space-grotesk text-slate-900 dark:text-white/85">{gameData.title || "Cargando..."}</h1>
+                                        <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600 dark:text-white/50">
+                                            Gestiona el contenido, las imágenes, las métricas futuras y el ciclo de vida de publicación desde una sola vista.
+                                        </p>
+                                    </div>
+                                </div>
 
-                        <div className="flex flex-wrap items-center gap-3">
-                            <div className="rounded-full border border-bg-300 bg-bg-100 px-4 py-2 text-sm text-text-300">
-                                ID: {id ?? "sin-id"}
+                                <div className="flex flex-wrap items-center gap-3">
+                                    <div className="rounded-full border border-black/10 bg-white/60 px-4 py-2 text-sm text-slate-600 dark:border-white/10 dark:bg-white/4 dark:text-white/50">
+                                        ID: {id ?? "sin-id"}
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={openDeleteModal}
+                                        className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm text-red-200 transition-colors hover:border-red-400 hover:bg-red-500/20"
+                                    >
+                                        <Trash2 className="h-4 w-4" />
+                                        Eliminar juego
+                                    </button>
+                                </div>
                             </div>
-                            <button
-                                type="button"
-                                onClick={openDeleteModal}
-                                className="inline-flex items-center gap-2 rounded-full border border-red-500/30 bg-red-500/10 px-4 py-2 text-sm text-red-200 transition-colors hover:border-red-400 hover:bg-red-500/20"
-                            >
-                                <Trash2 className="h-4 w-4" />
-                                Eliminar juego
-                            </button>
-                        </div>
-                    </div>
 
-                    <nav className="grid gap-3 rounded-4xl border border-bg-300 bg-bg-200/85 p-3 shadow-[0_18px_40px_rgba(0,0,0,0.22)] backdrop-blur xl:grid-cols-4">
+                    <nav className="ui-section grid gap-3 rounded-4xl p-3 xl:grid-cols-4">
                         {SECTION_ITEMS.map((section) => (
                             <button
                                 key={section.key}
                                 type="button"
                                 onClick={() => setUIState((prev) => ({ ...prev, activeSection: section.key }))}
-                                className={`flex flex-col items-start gap-1 rounded-2xl border px-4 py-3 text-left transition-all ${uiState.activeSection === section.key ? "border-primary-500 bg-primary-500/10 text-text-100 shadow-[0_12px_30px_rgba(37,111,70,0.18)]" : "border-bg-300 bg-bg-100 text-text-300 hover:border-primary-500/60 hover:text-text-100"}`}
+                                className={`flex flex-col items-start gap-1 rounded-2xl border px-4 py-3 text-left transition-all ${uiState.activeSection === section.key ? "border-emerald-400/60 bg-emerald-500/15 text-slate-900 shadow-[0_12px_30px_rgba(37,111,70,0.18)] dark:text-emerald-100" : "border-black/10 bg-white/60 text-slate-600 hover:border-emerald-400/60 hover:text-emerald-600 dark:border-white/10 dark:bg-white/4 dark:text-white/45 dark:hover:text-emerald-400"}`}
                             >
                                 <span className="text-sm font-medium">{section.label}</span>
-                                <span className="text-xs leading-5 text-text-500">{section.description}</span>
+                                <span className="text-xs leading-5 text-slate-400 dark:text-white/35">{section.description}</span>
                             </button>
                         ))}
                     </nav>
@@ -805,7 +805,7 @@ export default function GameDetails() {
                     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-8 backdrop-blur-sm">
                         <form
                             onSubmit={handleConfirmDelete}
-                            className="w-full max-w-2xl rounded-4xl border border-red-500/30 bg-bg-100 p-6 shadow-[0_30px_80px_rgba(0,0,0,0.55)]"
+                            className="ui-card w-full max-w-2xl rounded-4xl border border-red-500/30 bg-white/85 p-6 shadow-[0_30px_80px_rgba(0,0,0,0.55)] dark:bg-white/6"
                         >
                             <div className="flex items-start justify-between gap-4">
                                 <div className="flex items-start gap-3">
@@ -813,9 +813,9 @@ export default function GameDetails() {
                                         <ShieldAlert className="h-5 w-5" />
                                     </div>
                                     <div>
-                                        <p className="text-xs uppercase tracking-[0.4em] text-text-500">Acción destructiva</p>
-                                        <h2 className="mt-2 text-2xl font-space-grotesk text-text-100">Eliminar juego</h2>
-                                        <p className="mt-2 text-sm leading-6 text-text-400">
+                                        <p className="ui-section-kicker">Acción destructiva</p>
+                                        <h2 className="mt-2 text-2xl font-space-grotesk text-slate-900 dark:text-white/85">Eliminar juego</h2>
+                                        <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-white/50">
                                             Esta acción no se puede deshacer. Escribe el título exacto y confirma la casilla para continuar.
                                         </p>
                                     </div>
@@ -824,36 +824,36 @@ export default function GameDetails() {
                                 <button
                                     type="button"
                                     onClick={closeDeleteModal}
-                                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-bg-300 text-text-400 transition-colors hover:border-text-300 hover:text-text-100"
+                                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-black/10 text-slate-500 transition-colors hover:border-emerald-400/40 hover:text-emerald-600 dark:border-white/10 dark:text-white/40 dark:hover:text-emerald-400"
                                     aria-label="Cerrar modal"
                                 >
                                     <X className="h-4 w-4" />
                                 </button>
                             </div>
 
-                            <div className="mt-6 rounded-3xl border border-bg-300 bg-bg-200 p-4 text-sm text-text-300">
-                                <p className="text-text-200">Juego seleccionado</p>
-                                <p className="mt-1 text-text-400">{gameData.title}</p>
+                            <div className="ui-card mt-6 rounded-3xl p-4 text-sm text-slate-600 dark:text-white/50">
+                                <p className="text-slate-700 dark:text-white/60">Juego seleccionado</p>
+                                <p className="mt-1 text-slate-500 dark:text-white/45">{gameData.title}</p>
                             </div>
 
                             <div className="mt-5 grid gap-4">
                                 <label className="grid gap-2">
-                                    <span className="text-sm text-text-300">Escribe el título del juego</span>
+                                    <span className="ui-label mb-0 text-sm">Escribe el título del juego</span>
                                     <input
                                         ref={deleteTitleRef}
                                         value={deleteModalState.titleInput}
                                         onChange={(event) => setDeleteModalState((prev) => ({ ...prev, titleInput: event.target.value }))}
-                                        className="rounded-2xl border border-bg-300 bg-bg-200 px-4 py-3 text-sm text-text-100 outline-none transition-colors focus:border-red-400"
+                                        className="ui-input rounded-2xl focus:border-red-400"
                                         placeholder={gameData.title}
                                     />
                                 </label>
 
-                                <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-bg-300 bg-bg-200 px-4 py-4 text-sm text-text-300">
+                                <label className="ui-card flex cursor-pointer items-start gap-3 rounded-2xl px-4 py-4 text-sm text-slate-600 dark:text-white/50">
                                     <input
                                         type="checkbox"
                                         checked={deleteModalState.acknowledged}
                                         onChange={(event) => setDeleteModalState((prev) => ({ ...prev, acknowledged: event.target.checked }))}
-                                        className="mt-1 h-4 w-4 rounded border-bg-400 bg-bg-100 text-red-500 focus:ring-red-500"
+                                        className="mt-1 h-4 w-4 rounded border-black/20 bg-white/80 text-red-500 focus:ring-red-500 dark:border-white/15 dark:bg-white/5"
                                     />
                                     <span>Confirmo que entiendo que eliminar el juego borrará su información y contenido asociado.</span>
                                 </label>
@@ -870,14 +870,14 @@ export default function GameDetails() {
                                 <button
                                     type="button"
                                     onClick={closeDeleteModal}
-                                    className="rounded-full border border-bg-300 bg-bg-200 px-4 py-2 text-sm text-text-300 transition-colors hover:text-text-100"
+                                    className="ui-button-outline"
                                 >
                                     Cancelar
                                 </button>
                                 <button
                                     type="submit"
                                     disabled={deleteModalState.isProcessing}
-                                    className="inline-flex items-center gap-2 rounded-full bg-red-500 px-4 py-2 text-sm font-medium text-text-100 transition-colors hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-60"
+                                    className="inline-flex items-center gap-2 rounded-full bg-red-500 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-400 disabled:cursor-not-allowed disabled:opacity-60"
                                 >
                                     {deleteModalState.isProcessing ? "Eliminando..." : "Eliminar definitivamente"}
                                 </button>
