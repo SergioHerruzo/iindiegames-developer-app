@@ -13,7 +13,7 @@ export default function NewGame() {
     const [description, setDescription] = useState("");
 
     return (
-        <div className="p-6 flex flex-col gap-4">
+        <div className="px-6 py-4 flex flex-col gap-4">
             {/* Title */}
             <Link
                 to="/panel"

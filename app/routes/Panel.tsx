@@ -35,7 +35,7 @@ export default function Panel() {
     const navigate = useNavigate();
 
     return (
-        <div className="flex flex-col flex-1 h-full w-full p-6 gap-8">
+        <div className="flex flex-col flex-1 h-full w-full px-6 py-4 gap-8">
 
             {/* Header */}
             <header className="flex items-center justify-between w-full gap-4">
