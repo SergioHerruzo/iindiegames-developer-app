@@ -27,13 +27,12 @@ export default function GenreSelector({ selectedIds, onChange, error }: GenreSel
   return (
     <div className="flex flex-col gap-1">
       <label className="mb-1 text-badge-neutral-text">Géneros</label>
-      <button
-        type="button"
-        aria-label="Abrir selector de géneros"
-        className={`flex h-12 w-full rounded-lg border border-border-inside-card bg-input-inside-card px-3 py-2.5 text-left text-sm text-slate-600 dark:text-white/60 focus:border-primary-focus ${errorBorderClass}`}
+      <div
+        role="button"
+        tabIndex={0}
         onClick={() => setIsOpen(true)}
-        aria-haspopup="dialog"
-        aria-expanded={isOpen}
+        onKeyDown={(e) => e.key === 'Enter' && setIsOpen(true)}
+        className="cursor-pointer flex h-12 w-full rounded-lg border border-border-inside-card bg-input-inside-card px-3 py-2.5 ..."
       >
         <div className="flex h-full w-full items-center gap-2 overflow-x-auto flex-nowrap">
           {selectedGenres.length === 0 ? (
@@ -60,7 +59,7 @@ export default function GenreSelector({ selectedIds, onChange, error }: GenreSel
             ))
           )}
         </div>
-      </button>
+      </div>
       {error ? <span className="text-xs text-(--color-error-message) mt-2">{error}</span> : null}
 
       <GenreModal

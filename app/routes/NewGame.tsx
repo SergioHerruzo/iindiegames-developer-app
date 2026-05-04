@@ -77,9 +77,9 @@ export default function NewGame() {
                 }
                 throw new Error(errorMessage);
             }
-            
+
             navigate("/panel");
-            
+
         } catch (error) {
             setSubmitError(error instanceof Error
                 ? error.message
@@ -102,7 +102,7 @@ export default function NewGame() {
                 <span>Volver al Panel</span>
             </Link>
             <h2>Crear Juego</h2>
-            
+
             {/* Game Title And Price */}
             <Divider title="Información básica" />
             <div className="flex gap-4 mt-2">
@@ -142,7 +142,7 @@ export default function NewGame() {
                     />
                 </Card>
             </div>
-            
+
             {/* Description */}
             <Card>
                 <Input.Root
@@ -160,7 +160,7 @@ export default function NewGame() {
                     />
                 </Input.Root>
             </Card>
-            
+
             {/* ArtWork */}
             <Divider title="Artworks" />
             <div className="inline-flex gap-4">
@@ -204,7 +204,7 @@ export default function NewGame() {
                     />
                 </FileInput.Root>
             </div>
-            
+
             {/* Submit Section */}
             <Divider />
             <div className="flex flex-col gap-4">
@@ -213,10 +213,9 @@ export default function NewGame() {
                     juego. Podrás editar los detalles más adelante, pero esto puede tardar
                     un poco en actualizarse en la tienda.
                 </p>
-                
-                {/* Renderizado condicional del error de la API */}
+
                 {submitError && (
-                    <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                    <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
                         {submitError}
                     </div>
                 )}
