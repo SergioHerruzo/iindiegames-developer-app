@@ -19,14 +19,13 @@ const STAGGER_DELAY = ["[animation-delay:0ms]", "[animation-delay:150ms]", "[ani
 function SkeletonCard({ index }: { index: number }) {
     return (
         <div
-            className={`h-64 rounded-xl border border-border-default bg-card-bg overflow-hidden relative animate-pulse ${STAGGER_DELAY[index] ?? ""}`}
+            className={`h-64 rounded-xl border border-border-default bg-card-bg overflow-hidden relative ${STAGGER_DELAY[index] ?? ""}`}
         >
-            <div className="absolute inset-0 -translate-x-full animate-[shimmer_1.8s_ease-in-out_infinite] skeleton-shimmer" />
             <div className="p-4 flex flex-col gap-3 h-full">
                 <div className="h-36 rounded-lg skeleton-block" />
                 <div className="h-4 w-2/3 rounded skeleton-block" />
-                <div className="h-3 w-1/2 rounded skeleton-block-muted" />
-                <div className="mt-auto h-6 w-16 rounded-full skeleton-block-muted" />
+                <div className="h-3 w-1/2 rounded skeleton-block" />
+                <div className="mt-auto h-6 w-16 rounded-full skeleton-block" />
             </div>
         </div>
     );
@@ -124,10 +123,10 @@ export function CreatedGamesList({
                     />
                 </div>
                 <div className="space-y-1.5">
-                    <p className="text-base font-semibold text-primary">
+                    <p className="text-base font-semibold">
                         ¡Empieza a crear tus juegos!
                     </p>
-                    <p className="text-sm text-secondary">
+                    <p className="text-sm">
                         Aún no has creado ningún juego. Dale vida a tus ideas y compártelas con el mundo.
                     </p>
                 </div>
