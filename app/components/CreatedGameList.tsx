@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
-import { AlertTriangle, RefreshCw, Gamepad2 } from "lucide-react";
+import { useNavigate } from "react-router";
+import { AlertTriangle, RefreshCw, Plus } from "lucide-react";
 import type { PaginatedResponse } from "@models/PaginatedResponse";
 import type { CreatedGame } from "@models/CreatedGame";
 import PanelGameCard from "@components/PanelGameCard";
 import { apiClient } from "@services/ApiClient";
+import PrimaryButton from "@components/PrimaryButton";
 
 interface CreatedGamesListProps {
     title?: string;
@@ -36,6 +38,7 @@ export function CreatedGamesList({
     pageNumber,
     pageSize,
 }: CreatedGamesListProps) {
+    const navigate = useNavigate();
     const [data, setData] = useState<PaginatedResponse<CreatedGame> | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -116,19 +119,17 @@ export function CreatedGamesList({
         return (
             <div className={GRID_CLASS}>
                 <div className="col-span-full flex flex-col items-center gap-4 rounded-xl border border-border-default bg-card-bg px-6 py-14 text-center">
-                    <div className="flex size-14 items-center justify-center rounded-full border border-accent-border bg-accent-bg">
-                        <Gamepad2
-                            className="size-6 text-accent-icon"
-                            strokeWidth={1.5}
-                        />
-                    </div>
                     <div className="space-y-1.5">
-                        <p className="text-base font-semibold">
+                        <h3 className="font-semibold">
                             ¡Empieza a crear tus juegos!
-                        </p>
-                        <p className="text-sm">
+                        </h3>
+                        <h5 className="mt-2 mb-4">
                             Aún no has creado ningún juego. Dale vida a tus ideas y compártelas con el mundo.
-                        </p>
+                        </h5>
+                        <PrimaryButton onClick={() => navigate("/new-game")}>
+                            <PrimaryButton.Icon icon={Plus} />
+                            Crear juego
+                        </PrimaryButton>
                     </div>
                 </div>
             </div>
