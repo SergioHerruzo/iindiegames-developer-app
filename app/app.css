@@ -9,32 +9,32 @@
 
   --color-bg-default: rgba(250 250 250);
 
-  --color-card-bg: rgba(255 255 255 / 0.40);
-  --color-input-bg: rgba(255 255 255 / 0.40);
-  --color-input-inside-card: rgba(255 255 255 / 0.50);
+  --color-card-bg: rgba(255 255 255 / 0.4);
+  --color-input-bg: rgba(255 255 255 / 0.4);
+  --color-input-inside-card: rgba(255 255 255 / 0.5);
 
   --color-border-default: rgba(0 0 0 / 0.05);
   --color-border-image: rgba(0 0 0 / 0.05);
-  --color-border-inside-card: rgba(0 0 0 / 0.10);
+  --color-border-inside-card: rgba(0 0 0 / 0.1);
 
   --color-accent-bg: rgba(16 185 129 / 0.15);
   --color-accent-bg-hover: rgba(16 185 129 / 0.25);
-  --color-accent-border: rgba(167 243 208 / 0.60);
-  --color-accent-border-hover: rgba(167 243 208 / 0.80);
-  --color-accent-focus: rgba(52 211 153 / 0.60);
+  --color-accent-border: rgba(167 243 208 / 0.6);
+  --color-accent-border-hover: rgba(167 243 208 / 0.8);
+  --color-accent-focus: rgba(52 211 153 / 0.6);
   --color-accent-text: #047857;
   --color-accent-icon: #059669;
 
   --color-published-bg: rgba(16 185 129 / 0.15);
-  --color-published-border: rgba(16 185 129 / 0.20);
+  --color-published-border: rgba(16 185 129 / 0.2);
   --color-published-text: #047857;
 
-  --color-badge-neutral-bg: rgba(226 232 250 / 0.70);
-  --color-badge-neutral-border: rgba(226 232 250 / 0.60);
+  --color-badge-neutral-bg: rgba(226 232 250 / 0.7);
+  --color-badge-neutral-border: rgba(226 232 250 / 0.6);
   --color-badge-neutral-text: #475569;
 
   --color-error-bg: rgba(244 63 94 / 0.15);
-  --color-error-border: rgba(244 63 94 / 0.20);
+  --color-error-border: rgba(244 63 94 / 0.2);
   --color-error-text: #be123c;
   --color-error-input-border: #f87171;
   --color-error-input-focus: #ef4444;
@@ -210,7 +210,11 @@
   }
 
   @keyframes shimmer {
-    0%   { background-position: -100vw 0; }
-    100% { background-position:  100vw 0; }
+    0% {
+      background-position: -100vw 0;
+    }
+    100% {
+      background-position: 100vw 0;
+    }
   }
 }

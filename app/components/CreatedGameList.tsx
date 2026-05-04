@@ -85,27 +85,27 @@ export function CreatedGamesList({
         return (
             <div className={GRID_CLASS}>
                 <div className="col-span-full flex flex-col items-center gap-4 rounded-xl border border-error-border bg-error-bg px-6 py-10 text-center">
-                <div className="flex size-12 items-center justify-center rounded-full border border-error-border bg-error-bg">
-                    <AlertTriangle
-                        className="size-5 text-error-text"
-                        strokeWidth={1.5}
-                    />
-                </div>
-                <div className="space-y-1">
-                    <p className="font-medium text-error-text">
-                        No se pudieron cargar tus juegos
-                    </p>
-                    <p className="text-sm text-secondary">
-                        Algo ha salido mal al conectar con el servidor. Inténtalo de nuevo.
-                    </p>
-                </div>
-                <button
-                    onClick={fetchGames}
-                    className="mt-1 inline-flex items-center gap-2 rounded-lg border border-error-border bg-error-bg px-4 py-2 text-sm font-medium text-error-text transition-colors hover:bg-error-bg/80"
-                >
-                    <RefreshCw className="size-4" strokeWidth={1.5} />
-                    Reintentar
-                </button>
+                    <div className="flex size-12 items-center justify-center rounded-full border border-error-border bg-error-bg">
+                        <AlertTriangle
+                            className="size-5 text-error-text"
+                            strokeWidth={1.5}
+                        />
+                    </div>
+                    <div className="space-y-1">
+                        <p className="font-medium text-error-text">
+                            No se pudieron cargar tus juegos
+                        </p>
+                        <p className="text-sm text-secondary">
+                            Algo ha salido mal al conectar con el servidor. Inténtalo de nuevo.
+                        </p>
+                    </div>
+                    <button
+                        onClick={fetchGames}
+                        className="mt-1 inline-flex items-center gap-2 rounded-lg border border-error-border bg-error-bg px-4 py-2 text-sm font-medium text-error-text transition-colors hover:bg-error-bg/80"
+                    >
+                        <RefreshCw className="size-4" strokeWidth={1.5} />
+                        Reintentar
+                    </button>
                 </div>
             </div>
         );
@@ -116,20 +116,20 @@ export function CreatedGamesList({
         return (
             <div className={GRID_CLASS}>
                 <div className="col-span-full flex flex-col items-center gap-4 rounded-xl border border-border-default bg-card-bg px-6 py-14 text-center">
-                <div className="flex size-14 items-center justify-center rounded-full border border-accent-border bg-accent-bg">
-                    <Gamepad2
-                        className="size-6 text-accent-icon"
-                        strokeWidth={1.5}
-                    />
-                </div>
-                <div className="space-y-1.5">
-                    <p className="text-base font-semibold">
-                        ¡Empieza a crear tus juegos!
-                    </p>
-                    <p className="text-sm">
-                        Aún no has creado ningún juego. Dale vida a tus ideas y compártelas con el mundo.
-                    </p>
-                </div>
+                    <div className="flex size-14 items-center justify-center rounded-full border border-accent-border bg-accent-bg">
+                        <Gamepad2
+                            className="size-6 text-accent-icon"
+                            strokeWidth={1.5}
+                        />
+                    </div>
+                    <div className="space-y-1.5">
+                        <p className="text-base font-semibold">
+                            ¡Empieza a crear tus juegos!
+                        </p>
+                        <p className="text-sm">
+                            Aún no has creado ningún juego. Dale vida a tus ideas y compártelas con el mundo.
+                        </p>
+                    </div>
                 </div>
             </div>
         );
