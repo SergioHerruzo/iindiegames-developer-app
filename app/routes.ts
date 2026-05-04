@@ -9,8 +9,10 @@ export default [
     ]),
 
     layout("guards/DeveloperGuard.tsx", [
-        route("panel", "routes/Panel.tsx"),
-        route("new-game", "routes/NewGame.tsx"),
-        route("game/:gameId", "routes/Game.tsx"),
+        layout("Layout/TopBarLayout.tsx", [
+            route("panel", "routes/Panel.tsx"),
+            route("new-game", "routes/NewGame.tsx"),
+            route("game/:gameId", "routes/Game.tsx"),
+        ])
     ]),
 ] satisfies RouteConfig;
