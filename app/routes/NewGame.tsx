@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { ArrowLeft, Euro } from "lucide-react";
 import Card from "@components/Card";
 import { Input } from "@components/Input";
-import TopBar from "@components/TopBar";
+import TopBar from "@components/TopBar/TopBar";
 import PrimaryButton from "@components/PrimaryButton";
 import { FileInput } from "@components/FileInput";
 import { useState } from "react";

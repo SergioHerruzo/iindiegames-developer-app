@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router";
-import TopBar from "@components/TopBar";
+import TopBar from "@components/TopBar/TopBar";
 import { ArrowLeft } from "lucide-react";
 
 export default function Game() {

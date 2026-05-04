@@ -11,6 +11,7 @@ export default defineConfig({
       "@auth": "/app/auth",
       "@models": "/app/models",
       "@services": "/app/services",
+      "@theme": "/app/theme",
     }
   },
 });

@@ -20,6 +20,7 @@
       "@auth/*": ["./app/auth/*"],
       "@models/*": ["./app/models/*"],
       "@services/*": ["./app/services/*"],
+      "@theme/*": ["./app/theme/*"],
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,

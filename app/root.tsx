@@ -10,9 +10,10 @@ import {
 import type { Route } from "./+types/root";
 import "@/app.css";
 import { TitleManager } from "@components/TitleManager";
-import { configureAmplify } from "@auth/amplifyConfig";
+import { configureAmplify } from "@auth/AmplifyConfig";
 import { StrictMode } from "react";
 import { AuthProvider } from "@auth/AuthContext";
+import { ThemeProvider } from "@theme/ThemeContext";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -51,8 +52,10 @@ export default function App() {
   return (
     <StrictMode>
       <AuthProvider>
-        <TitleManager />
-        <Outlet />
+        <ThemeProvider>
+          <TitleManager />
+          <Outlet />
+        </ThemeProvider>
       </AuthProvider>
     </StrictMode>
   )

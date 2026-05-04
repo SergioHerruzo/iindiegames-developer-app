@@ -2,9 +2,8 @@ import { useNavigate } from "react-router";
 import PrimaryButton from "@components/PrimaryButton";
 import PanelStatsCard from "@components/PanelStatsCard";
 import PanelGameCard from "@components/PanelGameCard";
-import { Input } from "@components/Input";
-import TopBar from "@components/TopBar";
-import { CircleCheck, Plus, Search, ShoppingCart, TriangleAlert, User } from "lucide-react";
+import TopBar from "@components/TopBar/TopBar";
+import { CircleCheck, Plus, ShoppingCart, TriangleAlert, User } from "lucide-react";
 import { useState } from "react";
 
 const STATS_DATA = [
