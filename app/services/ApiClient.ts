@@ -4,17 +4,20 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 if (!BASE_URL)
     throw new Error("VITE_API_URL is not defined in environment variables");
 
-async function getHeaders() {
-    const token = await getAccessToken();
-    return {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-    };
-}
-
 async function request(path: string, init: RequestInit) {
     try {
-        const headers = await getHeaders();
+        const token = await getAccessToken();
+        const headers = new Headers(init.headers);
+
+        if (token && !headers.has("Authorization")) {
+            headers.set("Authorization", `Bearer ${token}`);
+        }
+        
+        const isFormData = init.body instanceof FormData;
+        if (!isFormData && !headers.has("Content-Type")) {
+            headers.set("Content-Type", "application/json");
+        }
+
         const response = await fetch(`${BASE_URL}${path}`, { ...init, headers });
 
         if (response.status === 401) {
@@ -29,8 +32,23 @@ async function request(path: string, init: RequestInit) {
 }
 
 export const apiClient = {
-    get: (path: string) => request(path, { method: "GET" }),
-    post: <T>(path: string, body: T) => request(path, { method: "POST", body: JSON.stringify(body) }),
-    put: <T>(path: string, body: T) => request(path, { method: "PUT", body: JSON.stringify(body) }),
-    delete: (path: string) => request(path, { method: "DELETE" }),
+    get: (path: string, headers?: Record<string, string>) => 
+        request(path, { method: "GET", headers }),
+        
+    post: <T>(path: string, body: T, headers?: Record<string, string>) => 
+        request(path, { 
+            method: "POST", 
+            body: body instanceof FormData ? body : JSON.stringify(body), 
+            headers 
+        }),
+        
+    put: <T>(path: string, body: T, headers?: Record<string, string>) => 
+        request(path, { 
+            method: "PUT", 
+            body: body instanceof FormData ? body : JSON.stringify(body), 
+            headers 
+        }),
+        
+    delete: (path: string, headers?: Record<string, string>) => 
+        request(path, { method: "DELETE", headers }),
 };
