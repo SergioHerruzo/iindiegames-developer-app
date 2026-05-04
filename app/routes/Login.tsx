@@ -5,7 +5,7 @@ import { useState, type SubmitEvent } from "react";
 import PrimaryButton from "@components/PrimaryButton";
 import { Link, useNavigate } from "react-router";
 import { login } from "@auth/AuthService";
-import { useAuth } from "@auth/useAuth";
+import { useAuth } from "@auth/UseAuth";
 
 function parseAuthError(err: unknown): string {
     if (err instanceof Error) {

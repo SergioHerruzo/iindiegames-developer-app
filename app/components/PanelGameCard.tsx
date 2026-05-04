@@ -2,9 +2,7 @@ import Card from "@components/Card";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 
-type GameStatus = "published" | "not published" | "with errors";
-
-const statusConfig: Record<GameStatus, { bg: string; text: string; border: string; label: string }> = {
+const statusConfig: Record<string, { bg: string; text: string; border: string; label: string }> = {
     "published": {
         bg: "bg-(--color-published-bg)",
         text: "text-(--color-published-text)",
@@ -30,7 +28,7 @@ export default function PanelGameCard({ id, title, description, imageUrl, status
     title: string;
     description: string;
     imageUrl?: string;
-    status: GameStatus;
+    status: string;
     isPublic?: boolean;
 }) {
     return (
