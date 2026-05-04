@@ -3,19 +3,19 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 
 const statusConfig: Record<string, { bg: string; text: string; border: string; label: string }> = {
-    "published": {
+    "Published": {
         bg: "bg-(--color-published-bg)",
         text: "text-(--color-published-text)",
         border: "border-(--color-published-border)",
         label: "Publicado"
     },
-    "not published": {
+    "NotPublished": {
         bg: "bg-(--color-badge-neutral-bg)",
         text: "text-(--color-badge-neutral-text)",
         border: "border-(--color-badge-neutral-border)",
         label: "No Publicado"
     },
-    "with errors": {
+    "WithErrors": {
         bg: "bg-(--color-error-bg)",
         text: "text-(--color-error-text)",
         border: "border-(--color-error-border)",
