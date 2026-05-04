@@ -9,7 +9,7 @@ interface Props {
 export function AvatarButton({ displayName, pictureUrl, size = "sm" }: Props) {
     const [imgError, setImgError] = useState(false);
     const showFallback = !pictureUrl || imgError;
-    const dim = size === "lg" ? "h-9 w-9" : "h-8 w-8";
+    const dim = size === "lg" ? "h-10 w-10" : "h-9 w-9";
 
     return (
         <div className={`relative flex ${dim} items-center justify-center rounded-full ring-2 ring-accent-border hover:ring-accent-border-hover transition-all duration-300`}>

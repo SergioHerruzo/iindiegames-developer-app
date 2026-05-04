@@ -13,7 +13,7 @@ export function UserDropdown({ isOpen }: Props) {
     const { isDark, toggleTheme } = useTheme();
     const navigate = useNavigate();
 
-    const avatarLabel = profile?.displayName ?? "Usuario";
+    const displayName = profile?.displayName ?? "Usuario";
 
     const handleLogout = async () => {
         await logout();
@@ -38,18 +38,18 @@ export function UserDropdown({ isOpen }: Props) {
             <div className="flex items-center gap-3 px-3 py-2.5 mb-1 border-b border-(--color-divider)">
                 <div className="shrink-0">
                     <AvatarButton
-                        displayName={avatarLabel}
+                        displayName={displayName}
                         pictureUrl={profile?.profilePicture?.smallPictureUrl}
                         size="lg"
                     />
                 </div>
                 <div className="flex flex-col leading-tight min-w-0">
-                    <span className="text-sm font-medium text-badge-neutral-text truncate">
-                        {avatarLabel}
-                    </span>
-                    <span className="text-xs text-badge-neutral-text opacity-50 truncate">
+                    <h5 className="font-light">
+                        {displayName}
+                    </h5>
+                    <h6 className="text-xs font-light">
                         {profile?.role ?? "Developer"}
-                    </span>
+                    </h6>
                 </div>
             </div>
 

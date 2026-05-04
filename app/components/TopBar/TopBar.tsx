@@ -11,7 +11,7 @@ export default function TopBar() {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const avatarLabel = profile?.displayName ?? "Usuario";
+    const displayName = profile?.displayName ?? "Usuario";
 
     useEffect(() => { setIsDropdownOpen(false); }, [location.pathname]);
 
@@ -39,9 +39,9 @@ export default function TopBar() {
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-(--color-accent-bg) backdrop-blur-sm border border-accent-border">
                     <GamepadDirectional size={26} strokeWidth={1.5} className="text-accent-icon" />
                 </div>
-                <span className="text-2xl font-light tracking-tight text-badge-neutral-text">
+                <h2>
                     Indie Games
-                </span>
+                </h2>
             </Link>
 
             {/* Avatar + DropDown */}
@@ -54,15 +54,15 @@ export default function TopBar() {
                     className="flex items-center gap-3 rounded-xl px-2 py-1.5 cursor-pointer transition"
                 >
                     <div className="flex flex-col items-end justify-center leading-tight">
-                        <span className="text-sm text-badge-neutral-text">
-                            {avatarLabel}
-                        </span>
-                        <span className="text-xs text-badge-neutral-text opacity-50">
+                        <h5 className="font-light">
+                            {displayName}
+                        </h5>
+                        <h6 className="text-xs font-light">
                             {profile?.role ?? "Developer"}
-                        </span>
+                        </h6>
                     </div>
                     <AvatarButton
-                        displayName={avatarLabel}
+                        displayName={displayName}
                         pictureUrl={profile?.profilePicture?.smallPictureUrl}
                     />
                 </button>
