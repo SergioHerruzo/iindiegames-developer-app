@@ -95,7 +95,7 @@ export default function PanelGameCard({ id, title, description, imageUrl, status
                         <span className="text-sm font-medium leading-none">Administrar</span>
                         <ArrowRight
                             size={16}
-                            className="opacity-0 translate-x-0 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-1 flex-shrink-0"
+                            className="opacity-0 -translate-x-0.5 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0.5"
                         />
                     </div>
                 </div>
