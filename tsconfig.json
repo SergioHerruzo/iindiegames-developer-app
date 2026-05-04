@@ -17,7 +17,9 @@
       "~/*": ["./app/*"],
       "@/*": ["./app/*"],
       "@components/*": ["./app/components/*"],
-      "@auth/*": ["./app/auth/*"]
+      "@auth/*": ["./app/auth/*"],
+      "@models/*": ["./app/models/*"],
+      "@services/*": ["./app/services/*"],
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,

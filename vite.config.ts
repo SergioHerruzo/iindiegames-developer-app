@@ -9,6 +9,8 @@ export default defineConfig({
     alias: {
       "@components": "/app/components",
       "@auth": "/app/auth",
+      "@models": "/app/models",
+      "@services": "/app/services",
     }
   },
 });
