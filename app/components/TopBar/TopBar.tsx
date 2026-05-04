@@ -37,7 +37,7 @@ export default function TopBar() {
             {/* Logo */}
             <Link to="/panel" className="inline-flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-(--color-accent-bg) backdrop-blur-sm border border-accent-border">
-                    <GamepadDirectional size={24} strokeWidth={1.5} className="text-accent-icon" />
+                    <GamepadDirectional size={26} strokeWidth={1.5} className="text-accent-icon" />
                 </div>
                 <span className="text-2xl font-light tracking-tight text-badge-neutral-text">
                     Indie Games
