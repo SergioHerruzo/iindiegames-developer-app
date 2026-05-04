@@ -34,7 +34,6 @@ export default function PanelGameCard({ id, title, description, imageUrl, status
 }) {
     const [imageLoaded, setImageLoaded] = useState(false);
 
-    // Fallback de seguridad por si el status no coincide con las keys
     const config = statusConfig[status] ?? statusConfig["NotPublished"];
 
     return (
@@ -60,7 +59,7 @@ export default function PanelGameCard({ id, title, description, imageUrl, status
                         </>
                     ) : (
                         <div className="h-full w-full flex items-center justify-center bg-(--color-secondary-bg)">
-                            <h3 className="uppercase tracking-[0.2em] text-xs font-semibold text-(--color-secondary-text)">
+                            <h3 className="uppercase tracking-[0.2em] text-xs font-semibold text-secondary-text">
                                 Sin Artwork
                             </h3>
                         </div>
@@ -80,20 +79,20 @@ export default function PanelGameCard({ id, title, description, imageUrl, status
                         </span>
 
                         {!isPublic && (
-                            <span className="text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-full bg-(--color-badge-neutral-bg) text-(--color-badge-neutral-text) border border-(--color-badge-neutral-border)">
+                            <span className="text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-full bg-badge-neutral-bg text-badge-neutral-text border border-badge-neutral-border">
                                 Privado
                             </span>
                         )}
                     </div>
 
-                    <p className="text-sm font-light text-(--color-secondary-text) line-clamp-3">
+                    <p className="text-sm font-light text-secondary-text line-clamp-3">
                         {description}
                     </p>
                 </div>
 
                 {/* Footer Section */}
                 <div className="border-t border-(--color-border-image) p-4 mt-auto">
-                    <div className="inline-flex items-center gap-1 w-fit text-(--color-secondary-text) group-hover:text-(--color-primary-text) transition-colors duration-300">
+                    <div className="inline-flex items-center gap-1 w-fit text-secondary-text group-hover:text-(--color-primary-text) transition-colors duration-300">
                         <span className="text-sm font-medium">Administrar</span>
                         <ArrowRight
                             size={16}
