@@ -3,7 +3,6 @@ import PrimaryButton from "@components/PrimaryButton";
 import PanelStatsCard from "@components/PanelStatsCard";
 import { CreatedGamesList } from "@components/CreatedGameList";
 import { CircleCheck, Plus, ShoppingCart, TriangleAlert, User } from "lucide-react";
-import { useState } from "react";
 
 const STATS_DATA = [
     {
@@ -34,7 +33,6 @@ const STATS_DATA = [
 
 export default function Panel() {
     const navigate = useNavigate();
-    const [search, setSearch] = useState("");
 
     return (
         <div className="flex flex-col min-h-screen">
