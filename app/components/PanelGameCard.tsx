@@ -52,9 +52,8 @@ export default function PanelGameCard({ id, title, description, imageUrl, status
                                 src={imageUrl}
                                 alt={title}
                                 onLoad={() => setImageLoaded(true)}
-                                className={`h-full w-full object-cover transition-all duration-500 ease-out group-hover:scale-105 ${
-                                    imageLoaded ? "opacity-100" : "opacity-0"
-                                }`}
+                                className={`h-full w-full object-cover transition-all duration-500 ease-out group-hover:scale-105 ${imageLoaded ? "opacity-100" : "opacity-0"
+                                    }`}
                             />
                         </>
                     ) : (
@@ -69,17 +68,17 @@ export default function PanelGameCard({ id, title, description, imageUrl, status
                 {/* Content Section */}
                 <div className="flex flex-col gap-2 p-4 flex-1">
                     <h3 className="font-semibold text-slate-200">{title}</h3>
-                    
+
                     {/* Status Tags */}
                     <div className="inline-flex items-center gap-2">
                         <span
-                            className={`text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-full border ${config.bg} ${config.text} ${config.border}`}
+                            className={`text-sm font-light px-2.5 py-1 rounded-full border ${config.bg} ${config.text} ${config.border}`}
                         >
                             {config.label}
                         </span>
 
                         {!isPublic && (
-                            <span className="text-[10px] uppercase tracking-wider font-bold px-2.5 py-1 rounded-full bg-badge-neutral-bg text-badge-neutral-text border border-badge-neutral-border">
+                            <span className="text-sm font-light px-2.5 py-1 rounded-full bg-badge-neutral-bg text-badge-neutral-text border border-badge-neutral-border">
                                 Privado
                             </span>
                         )}
@@ -93,10 +92,10 @@ export default function PanelGameCard({ id, title, description, imageUrl, status
                 {/* Footer Section */}
                 <div className="border-t border-(--color-border-image) p-4 mt-auto">
                     <div className="inline-flex items-center gap-1 w-fit text-secondary-text group-hover:text-(--color-primary-text) transition-colors duration-300">
-                        <span className="text-sm font-medium">Administrar</span>
+                        <span className="text-sm font-medium leading-none">Administrar</span>
                         <ArrowRight
                             size={16}
-                            className="opacity-0 -translate-x-2 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-0"
+                            className="opacity-0 translate-x-0 transition-all duration-300 ease-out group-hover:opacity-100 group-hover:translate-x-1 flex-shrink-0"
                         />
                     </div>
                 </div>
