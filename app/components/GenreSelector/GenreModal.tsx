@@ -71,7 +71,7 @@ export default function GenreModal({
                             <h3 className="text-base text-white/90">Seleccionar géneros</h3>
                             <button
                                 type="button"
-                                className="inline-flex items-center justify-center rounded-full p-1 transition-colors cursor-pointer border border-(--color-secondary-border) bg-(--color-secondary-bg) text-(--color-secondary-icon) hover:bg-(--color-secondary-bg-hover) hover:border-(--color-secondary-border-hover) hover:text-(--color-secondary-text)"
+                                className="inline-flex items-center justify-center rounded-full p-1 transition-colors cursor-pointer border border-(--color-secondary-border) bg-(--color-secondary-bg) text-secondary-icon hover:bg-(--color-secondary-bg-hover) hover:border-(--color-secondary-border-hover) hover:text-secondary-text"
                                 aria-label="Cerrar"
                                 onClick={onClose}
                             >
