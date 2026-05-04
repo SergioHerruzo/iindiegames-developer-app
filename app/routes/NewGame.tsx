@@ -4,16 +4,31 @@ import Card from "@components/Card";
 import { Input } from "@components/Input";
 import PrimaryButton from "@components/PrimaryButton";
 import { FileInput } from "@components/FileInput";
-import { useState } from "react";
 import Divider from "@components/Divider";
+import GenreSelector from "@components/GenreSelector/GenreSelector";
+import useNewGameForm from "@/hooks/useNewGameForm";
 
 export default function NewGame() {
-    const [title, setTitle] = useState("");
-    const [price, setPrice] = useState("");
-    const [description, setDescription] = useState("");
+    const {
+        title,
+        price,
+        description,
+        genres,
+        errors,
+        setTitle,
+        setPrice,
+        setDescription,
+        setGenres,
+        setCapsuleFile,
+        setHeaderFile,
+        setMainFile,
+        handleSubmit,
+    } = useNewGameForm((data) => {
+        console.log(data);
+    });
 
     return (
-        <div className="px-6 py-4 flex flex-col gap-4">
+        <form className="px-6 py-4 flex flex-col gap-4" onSubmit={handleSubmit}>
             {/* Title */}
             <Link
                 to="/panel"
@@ -29,51 +44,113 @@ export default function NewGame() {
             <Divider title="Información básica" />
             <div className="flex gap-4 mt-2">
                 <Card className="flex-2">
-                    <Input.Root id="title" type="text" variant="inside card" value={title} onChange={setTitle}>
+                    <Input.Root
+                        id="title"
+                        type="text"
+                        variant="inside card"
+                        value={title}
+                        onChange={setTitle}
+                    >
                         <Input.Label>Título</Input.Label>
-                        <Input.Field placeholder="Ingresa el título de tu juego" />
+                        <Input.Field
+                            placeholder="Ingresa el título de tu juego"
+                            error={errors.title}
+                        />
+                        <Input.Helper>Entre 1 y 24 caracteres.</Input.Helper>
                     </Input.Root>
                 </Card>
                 <Card className="flex-1">
-                    <Input.Root id="price" type="number" variant="inside card" value={price} onChange={setPrice}>
+                    <Input.Root
+                        id="price"
+                        type="number"
+                        variant="inside card"
+                        value={price}
+                        onChange={setPrice}
+                    >
                         <Input.Label>Precio</Input.Label>
-                        <Input.Field placeholder="0" icon={Euro} />
+                        <Input.Field placeholder="0" icon={Euro} error={errors.price} />
                     </Input.Root>
                 </Card>
                 <Card className="flex-3">
-                    <Input.Root id="discount" type="text" variant="inside card">
-                        <Input.Label>Géneros</Input.Label>
-                        <Input.Field placeholder="Indica los géneros de tu juego" />
-                    </Input.Root>
+                    <GenreSelector
+                        selectedIds={genres}
+                        onChange={setGenres}
+                        error={errors.genres}
+                    />
                 </Card>
             </div>
             {/* Description */}
             <Card>
-                <Input.Root id="description" type="text" variant="inside card" size="large" value={description} onChange={setDescription}>
+                <Input.Root
+                    id="description"
+                    type="text"
+                    variant="inside card"
+                    size="large"
+                    value={description}
+                    onChange={setDescription}
+                >
                     <Input.Label>Descripción</Input.Label>
-                    <Input.Field placeholder="Explica brevemente tu juego, sus características y mecánicas." />
+                    <Input.Field
+                        placeholder="Explica brevemente tu juego, sus características y mecánicas."
+                        error={errors.description}
+                    />
                 </Input.Root>
             </Card>
             {/* ArtWork */}
             <Divider title="Artworks" />
             <div className="inline-flex gap-4">
-                <FileInput.Root id="capsule" accept="image/*" preview>
+                <FileInput.Root
+                    id="capsule"
+                    accept="image/*"
+                    preview
+                    onChange={(files) => setCapsuleFile(files?.[0] ?? null)}
+                >
                     <FileInput.Label>Capsule</FileInput.Label>
-                    <FileInput.Field placeholder="Añadir imagen" hint="" />
+                    <FileInput.Field
+                        placeholder="Añadir imagen"
+                        hint=""
+                        error={errors.capsule}
+                    />
                 </FileInput.Root>
-                <FileInput.Root id="header" accept="image/*" preview>
+                <FileInput.Root
+                    id="header"
+                    accept="image/*"
+                    preview
+                    onChange={(files) => setHeaderFile(files?.[0] ?? null)}
+                >
                     <FileInput.Label>Header</FileInput.Label>
-                    <FileInput.Field placeholder="Añadir imagen" hint="" />
+                    <FileInput.Field
+                        placeholder="Añadir imagen"
+                        hint=""
+                        error={errors.header}
+                    />
                 </FileInput.Root>
-                <FileInput.Root id="main" accept="image/*" preview>
+                <FileInput.Root
+                    id="main"
+                    accept="image/*"
+                    preview
+                    onChange={(files) => setMainFile(files?.[0] ?? null)}
+                >
                     <FileInput.Label>Main</FileInput.Label>
-                    <FileInput.Field placeholder="Añadir imagen" hint="" />
+                    <FileInput.Field
+                        placeholder="Añadir imagen"
+                        hint=""
+                        error={errors.main}
+                    />
                 </FileInput.Root>
             </div>
-            {/* Submit Button */}
-            <PrimaryButton className="self-end max-w-fit">
-                Crear Juego
-            </PrimaryButton>
-        </div>
-    )
+            {/* Submit Section */}
+            <Divider />
+            <div className="flex flex-col gap-4">
+                <p>
+                    Asegúrate de que toda la información sea correcta antes de crear tu
+                    juego. Podrás editar los detalles más adelante, pero esto puedo tardar
+                    un poco en actualizarse en la tienda.
+                </p>
+                <PrimaryButton className="max-w-fit" type="submit">
+                    Crear Juego
+                </PrimaryButton>
+            </div>
+        </form>
+    );
 }

@@ -17,13 +17,21 @@
   --color-border-image: rgba(0 0 0 / 0.05);
   --color-border-inside-card: rgba(0 0 0 / 0.1);
 
-  --color-accent-bg: rgba(16 185 129 / 0.15);
-  --color-accent-bg-hover: rgba(16 185 129 / 0.25);
-  --color-accent-border: rgba(167 243 208 / 0.6);
-  --color-accent-border-hover: rgba(167 243 208 / 0.8);
-  --color-accent-focus: rgba(52 211 153 / 0.6);
-  --color-accent-text: #047857;
-  --color-accent-icon: #059669;
+  --color-primary-bg: rgba(16 185 129 / 0.15);
+  --color-primary-bg-hover: rgba(16 185 129 / 0.25);
+  --color-primary-border: rgba(167 243 208 / 0.6);
+  --color-primary-border-hover: rgba(167 243 208 / 0.8);
+  --color-primary-focus: rgba(52 211 153 / 0.6);
+  --color-primary-text: #047857;
+  --color-primary-icon: #059669;
+
+  --color-secondary-bg: rgba(255 255 255 / 0.4);
+  --color-secondary-bg-hover: rgba(255 255 255 / 0.5);
+  --color-secondary-border: rgba(0 0 0 / 0.1);
+  --color-secondary-border-hover: rgba(0 0 0 / 0.2);
+  --color-secondary-focus: rgba(0 0 0 / 0.2);
+  --color-secondary-text: rgba(0 0 0 / 0.7);
+  --color-secondary-icon: rgba(0 0 0 / 0.5);
 
   --color-published-bg: rgba(16 185 129 / 0.15);
   --color-published-border: rgba(16 185 129 / 0.2);
@@ -71,13 +79,21 @@
 
     --color-divider: rgb(34 34 34);
 
-    --color-accent-bg: rgb(21 38 32);
-    --color-accent-bg-hover: rgb(23 46 38);
-    --color-accent-border: rgb(26 63 50);
-    --color-accent-border-hover: rgb(32 96 73);
-    --color-accent-focus: rgb(26 63 50);
-    --color-accent-text: rgb(35 197 153);
-    --color-accent-icon: rgb(17 156 109);
+    --color-primary-bg: rgb(21 38 32);
+    --color-primary-bg-hover: rgb(23 46 38);
+    --color-primary-border: rgb(26 63 50);
+    --color-primary-border-hover: rgb(32 96 73);
+    --color-primary-focus: rgb(26 63 50);
+    --color-primary-text: rgb(35 197 153);
+    --color-primary-icon: rgb(17 156 109);
+
+    --color-secondary-bg: rgb(25 25 25);
+    --color-secondary-bg-hover: rgb(28 28 28);
+    --color-secondary-border: rgb(30 30 30);
+    --color-secondary-border-hover: rgb(34 34 34);
+    --color-secondary-focus: rgb(34 34 34);
+    --color-secondary-text: rgb(160 160 160);
+    --color-secondary-icon: rgb(120 120 120);
 
     --color-published-bg: rgb(21 38 32);
     --color-published-border: rgb(26 63 50);

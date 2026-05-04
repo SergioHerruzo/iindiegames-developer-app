@@ -15,10 +15,10 @@ export default function PanelStatsCard({ icon: Icon, title, value, change }: {
                     flex items-center justify-center
                     w-10 h-10
                     rounded-xl
-                    bg-(--color-accent-bg)
-                    border border-accent-border
+                    bg-primary-bg
+                    border border-primary-border
                 ">
-                    <Icon strokeWidth={1.5} className="w-6 h-6 text-accent-icon" />
+                    <Icon strokeWidth={1.5} className="w-6 h-6 text-primary-icon" />
                 </div>
 
                 {/* Title */}

@@ -13,14 +13,14 @@ function Root({
             disabled={disabled}
             className={`
                 inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full text-sm font-light
-                text-primary-text
-                bg-primary-bg
+                text-secondary-text
+                bg-secondary-bg
                 backdrop-blur-md
-                border border-primary-border
+                border border-secondary-border
                 transition-all duration-200 ease-out
                 ${disabled
                     ? "opacity-50 cursor-not-allowed"
-                    : "cursor-pointer hover:bg-primary-bg-hover hover:border-primary-border-hover"
+                    : "cursor-pointer hover:bg-secondary-bg-hover hover:border-secondary-border-hover"
                 }
                 ${className}
             `}

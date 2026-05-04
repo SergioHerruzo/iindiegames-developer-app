@@ -53,15 +53,20 @@ function Field({
     hint = "Haz click o arrastra un archivo aquí",
     icon: Icon = Plus,
     minHeight = "min-h-44",
+    error,
 }: {
     placeholder?: string;
     hint?: string;
     icon?: LucideIcon;
     minHeight?: string;
+    error?: string | null;
 }) {
     const { id, onChange, accept, multiple, preview } = useFileInput();
     const [isDragging, setIsDragging] = useState(false);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const errorBorderClass = error
+        ? "border-[color:var(--color-error-input-border)] group-hover:border-[color:var(--color-error-input-border)]"
+        : "";
 
     function parseAcceptedTypes(accept?: string) {
         if (!accept) return null;
@@ -89,7 +94,7 @@ function Field({
     }
 
     const dropzoneClasses = isDragging
-        ? "border-(--color-accent-border-hover) bg-(--color-accent-bg-hover)"
+        ? "border-primary-border-hover bg-primary-bg-hover"
         : "border-(--color-border-inside-card) bg-(--color-input-inside-card)";
 
     return (
@@ -117,17 +122,18 @@ function Field({
                         items-center justify-center
                         overflow-hidden rounded-lg border border-dashed
                         transition-colors
-                        group-hover:border-accent-border-hover
-                        group-hover:bg-accent-bg-hover
+                        group-hover:border-primary-border-hover
+                        group-hover:bg-primary-bg-hover
                         ${dropzoneClasses}
+                        ${errorBorderClass}
                     `}
                 >
                     {previewUrl ? (
                         <img src={previewUrl} alt="preview" className="h-full w-full object-cover" />
                     ) : (
                         <div className="flex flex-col items-center justify-center gap-2 px-6 py-8 text-center h-full w-full">
-                            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-accent-border bg-accent-bg transition-colors group-hover:border-accent-border-hover group-hover:bg-accent-bg-hover">
-                                <Icon className="h-4 w-4 text-accent-icon" strokeWidth={1.75} />
+                            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-primary-border bg-primary-bg transition-colors group-hover:border-primary-border-hover group-hover:bg-primary-bg-hover">
+                                <Icon className="h-4 w-4 text-primary-icon" strokeWidth={1.75} />
                             </div>
                             <span className="text-sm text-badge-neutral-text opacity-90">{placeholder}</span>
                             <span className="text-xs text-badge-neutral-text opacity-70">{hint}</span>
@@ -135,6 +141,7 @@ function Field({
                     )}
                 </div>
             </label>
+            {error ? <ErrorMessage>{error}</ErrorMessage> : null}
         </div>
     );
 }
@@ -144,11 +151,11 @@ function Helper({ children }: { children: ReactNode }) {
 }
 
 function ErrorMessage({ children }: { children: ReactNode }) {
-    return <span className="text-xs text-(--color-error-message)">{children}</span>;
+    return <span className="text-xs text-(--color-error-message) mt-2">{children}</span>;
 }
 
 function SuccessMessage({ children }: { children: ReactNode }) {
-    return <span className="text-xs text-(--color-success-message)">{children}</span>;
+    return <span className="text-xs text-(--color-success-message) mt-2">{children}</span>;
 }
 
 export const FileInput = {

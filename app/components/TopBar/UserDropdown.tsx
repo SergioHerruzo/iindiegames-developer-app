@@ -62,7 +62,7 @@ export function UserDropdown({ isOpen }: Props) {
                 className="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 cursor-pointer transition"
             >
                 <span className="flex items-center gap-2.5">
-                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-(--color-accent-bg) text-accent-icon">
+                    <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary-bg text-primary-icon">
                         {isDark ? <Moon size={14} /> : <Sun size={14} />}
                     </span>
                     <span className="text-xs text-badge-neutral-text">
@@ -71,12 +71,12 @@ export function UserDropdown({ isOpen }: Props) {
                 </span>
 
                 <span className={`relative flex h-6 w-11 items-center rounded-full border transition-colors duration-300 ${isDark
-                    ? "border-accent-border bg-(--color-accent-bg)"
-                    : "border-accent-border-hover bg-accent-bg-hover"
+                    ? "border-primary-border bg-primary-bg"
+                    : "border-primary-border-hover bg-primary-bg-hover"
                     }`}>
                     <span className={`absolute top-1/2 -translate-y-1/2 flex h-5 w-5 items-center justify-center rounded-full transition-all duration-300 ease-out ${isDark
-                        ? "left-[calc(100%-1.375rem)] bg-(--color-accent-text) text-(--color-card-bg)"
-                        : "left-0.5 bg-(--color-card-bg) text-accent-icon"
+                        ? "left-[calc(100%-1.375rem)] bg-primary-text text-(--color-card-bg)"
+                        : "left-0.5 bg-(--color-card-bg) text-primary-icon"
                         }`}>
                         <span className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${isDark ? "scale-100 opacity-100" : "scale-75 opacity-0"}`}>
                             <Moon size={11} />
@@ -96,7 +96,7 @@ export function UserDropdown({ isOpen }: Props) {
             >
                 <span className="
                     flex h-7 w-7 items-center justify-center rounded-full
-                    bg-(--color-accent-bg) text-accent-icon
+                    bg-primary-bg text-primary-icon
                     ring-1 ring-transparent
                     transition-colors
                     group-hover:bg-error-bg group-hover:text-error-text

@@ -12,10 +12,10 @@ export function AvatarButton({ displayName, pictureUrl, size = "sm" }: Props) {
     const dim = size === "lg" ? "h-10 w-10" : "h-9 w-9";
 
     return (
-        <div className={`relative flex ${dim} items-center justify-center rounded-full ring-2 ring-accent-border hover:ring-accent-border-hover transition-all duration-300`}>
+        <div className={`relative flex ${dim} items-center justify-center rounded-full ring-2 ring-primary-border hover:ring-primary-border-hover transition-all duration-300`}>
             {showFallback ? (
-                <div className={`flex ${dim} items-center justify-center rounded-full bg-(--color-accent-bg)`}>
-                    <span className="text-sm font-light text-(--color-accent-text)">
+                <div className={`flex ${dim} items-center justify-center rounded-full bg-primary-bg`}>
+                    <span className="text-sm font-light text-primary-text">
                         {displayName[0].toUpperCase()}
                     </span>
                 </div>

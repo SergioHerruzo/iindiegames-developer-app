@@ -36,8 +36,8 @@ export default function TopBar() {
         <div className="relative flex w-full items-center justify-between px-6 py-4">
             {/* Logo */}
             <Link to="/panel" className="inline-flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-(--color-accent-bg) backdrop-blur-sm border border-accent-border">
-                    <GamepadDirectional size={26} strokeWidth={1.5} className="text-accent-icon" />
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-bg backdrop-blur-sm border border-primary-border">
+                    <GamepadDirectional size={26} strokeWidth={1.5} className="text-primary-icon" />
                 </div>
                 <h2>
                     Indie Games

@@ -5,6 +5,7 @@ import { Input } from "@components/Input";
 import PrimaryButton from "@components/PrimaryButton";
 import { KeyRound } from "lucide-react";
 import { confirmEmail } from "@auth/AuthService";
+import type { SubmitEvent } from "react";
 
 function parseAuthError(err: unknown): string {
     if (err instanceof Error) {
@@ -36,7 +37,7 @@ export default function ConfirmRegister() {
     const [error, setError] = useState<string | null>(null);
     const [isPending, setIsPending] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError(null);
 

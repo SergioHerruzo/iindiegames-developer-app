@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, type ReactNode } from "react";
 import type { LucideIcon } from "lucide-react";
 
 type InputVariant = "default" | "inside card" | "error" | "success";
@@ -34,12 +34,12 @@ function Root({
 }: React.PropsWithChildren<InputContextType>) {
   return (
     <InputContext.Provider value={{ id, value, onChange, maxLength, type, variant, size }}>
-      <div className="w-full flex flex-col gap-1">{children}</div>
+      <div className="w-full flex flex-col">{children}</div>
     </InputContext.Provider>
   );
 }
 
-function Label({ children }: { children: React.ReactNode }) {
+function Label({ children }: { children: ReactNode }) {
   const { id } = useInput();
 
   return (
@@ -62,7 +62,7 @@ function getFieldClasses(variant: InputVariant, hasIcon: boolean, size: InputSiz
   const sizeClasses = getSizeClasses(size);
 
   const base = `
-    w-full rounded-lg ${sizeClasses} px-3 py-2.5
+    block w-full rounded-lg ${sizeClasses} px-3 py-2.5
     backdrop-blur-sm transition-colors outline-none
     placeholder:text-(--color-badge-neutral-text) placeholder:opacity-80
     text-slate-600 dark:text-white/60
@@ -76,77 +76,98 @@ function getFieldClasses(variant: InputVariant, hasIcon: boolean, size: InputSiz
     case "success":
       return `${base} bg-(--color-input-bg) border border-[color:var(--color-success-input-border)] focus:border-[color:var(--color-success-input-focus)]`;
     case "inside card":
-      return `${base} bg-(--color-input-inside-card) border border-(--color-border-inside-card) focus:border-(--color-accent-focus)`;
+      return `${base} bg-(--color-input-inside-card) border border-(--color-border-inside-card) focus:border-primary-focus`;
     default:
-      return `${base} bg-(--color-input-bg) border border-(--color-border-default) focus:border-(--color-accent-focus)`;
+      return `${base} bg-(--color-input-bg) border border-(--color-border-default) focus:border-primary-focus`;
   }
 }
 
 function Field({
   placeholder,
   icon: Icon,
+  error,
 }: {
   placeholder?: string;
   icon?: LucideIcon;
+  error?: string | null;
 }) {
   const { id, value, onChange, maxLength, type, variant, size } = useInput();
   const isLarge = size === "large";
   const isNumber = type === "number";
+  const errorBorderClass = error
+    ? "border-[color:var(--color-error-input-border)] focus:border-[color:var(--color-error-input-focus)]"
+    : "";
 
   return (
-    <div className="relative w-full">
-      {Icon && (
-        <Icon
-          strokeWidth={1.5}
-          className={`absolute left-3 z-10 text-badge-neutral-text h-5 w-5 ${isLarge ? "top-3" : "top-1/2 -translate-y-1/2"
-            }`}
-        />
-      )}
+    <>
+      <div className="relative w-full">
+        {Icon && (
+          <Icon
+            strokeWidth={1.5}
+            className={`absolute left-3 z-10 text-badge-neutral-text h-5 w-5 ${isLarge ? "top-3" : "top-1/2 -translate-y-1/2"
+              }`}
+          />
+        )}
 
-      {isLarge ? (
-        <textarea
-          id={id}
-          value={value ?? ""}
-          onChange={(e) => onChange?.(e.target.value)}
-          placeholder={placeholder}
-          maxLength={maxLength}
-          className={`text-sm resize-none ${getFieldClasses(
-            variant ?? "default",
-            Boolean(Icon),
-            size ?? "normal",
-            false
-          )}`}
-        />
-      ) : (
-        <input
-          id={id}
-          value={value ?? ""}
-          onChange={(e) => onChange?.(e.target.value)}
-          placeholder={placeholder}
-          maxLength={maxLength}
-          type={type}
-          className={`text-sm ${getFieldClasses(
-            variant ?? "default",
-            Boolean(Icon),
-            size ?? "normal",
-            isNumber
-          )}`}
-        />
-      )}
-    </div>
+        {isLarge ? (
+          <textarea
+            id={id}
+            value={value ?? ""}
+            onChange={(e) => onChange?.(e.target.value)}
+            placeholder={placeholder}
+            maxLength={maxLength}
+            className={`text-sm resize-none ${getFieldClasses(
+              variant ?? "default",
+              Boolean(Icon),
+              size ?? "normal",
+              false
+            )} ${errorBorderClass}`}
+          />
+        ) : (
+          <input
+            id={id}
+            value={value ?? ""}
+            onChange={(e) => onChange?.(e.target.value)}
+            placeholder={placeholder}
+            maxLength={maxLength}
+            type={type}
+            className={`text-sm ${getFieldClasses(
+              variant ?? "default",
+              Boolean(Icon),
+              size ?? "normal",
+              isNumber
+            )} ${errorBorderClass}`}
+          />
+        )}
+      </div>
+
+      {error ? <ErrorMessage>{error}</ErrorMessage> : null}
+    </>
   );
 }
 
-function Helper({ children }: { children: React.ReactNode }) {
-  return <span className="text-xs text-badge-neutral-text opacity-80">{children}</span>;
+function Helper({ children }: { children: ReactNode }) {
+  return (
+    <span className="feedback-msg block text-xs text-badge-neutral-text opacity-80 mt-2 [.feedback-msg+&]:mt-1">
+      {children}
+    </span>
+  );
 }
 
-function ErrorMessage({ children }: { children: React.ReactNode }) {
-  return <span className="text-xs text-(--color-error-message)">{children}</span>;
+function ErrorMessage({ children }: { children: ReactNode }) {
+  return (
+    <span className="feedback-msg block text-xs text-(--color-error-message) mt-2 [.feedback-msg+&]:mt-1">
+      {children}
+    </span>
+  );
 }
 
-function SuccessMessage({ children }: { children: React.ReactNode }) {
-  return <span className="text-xs text-(--color-success-message)">{children}</span>;
+function SuccessMessage({ children }: { children: ReactNode }) {
+  return (
+    <span className="feedback-msg block text-xs text-(--color-success-message) mt-2 [.feedback-msg+&]:mt-1">
+      {children}
+    </span>
+  );
 }
 
 export const Input = {

@@ -116,7 +116,7 @@ export function CreatedGamesList({
                         <p className="font-medium text-error-text">
                             No se pudieron cargar tus juegos
                         </p>
-                        <p className="text-sm text-secondary">
+                        <p className="text-sm text-secondary-text">
                             Algo ha salido mal al conectar con el servidor. Inténtalo de nuevo.
                         </p>
                     </div>
