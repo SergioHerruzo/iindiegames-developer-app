@@ -21,13 +21,31 @@ const STAGGER_DELAY = ["[animation-delay:0ms]", "[animation-delay:150ms]", "[ani
 function SkeletonCard({ index }: { index: number }) {
     return (
         <div
-            className={`h-64 rounded-xl border border-border-default bg-card-bg overflow-hidden relative ${STAGGER_DELAY[index] ?? ""}`}
+            className={`flex flex-col h-full rounded-xl border border-border-default bg-card-bg overflow-hidden relative ${STAGGER_DELAY[index] ?? ""}`}
         >
-            <div className="p-4 flex flex-col gap-3 h-full">
-                <div className="h-36 rounded-lg skeleton-block" />
-                <div className="h-4 w-2/3 rounded skeleton-block" />
-                <div className="h-3 w-1/2 rounded skeleton-block" />
-                <div className="mt-auto h-6 w-16 rounded-full skeleton-block" />
+            {/* Image */}
+            <div className="h-52 w-full border-b border-(--color-border-image) skeleton-block" />
+            <div className="flex flex-col gap-2 p-4 flex-1">
+                {/* Title */}
+                <div className="h-5 w-3/4 rounded skeleton-block" />
+
+                {/* Tags */}
+                <div className="inline-flex items-center gap-2 mt-1">
+                    <div className="h-6 w-24 rounded-full skeleton-block" />
+                    <div className="h-6 w-20 rounded-full skeleton-block" />
+                </div>
+
+                {/* Description */}
+                <div className="flex flex-col gap-2 mt-2">
+                    <div className="h-3.5 w-full rounded skeleton-block" />
+                    <div className="h-3.5 w-5/6 rounded skeleton-block" />
+                    <div className="h-3.5 w-4/6 rounded skeleton-block" />
+                </div>
+            </div>
+
+            {/* Footer*/}
+            <div className="border-t border-(--color-border-image) p-4">
+                <div className="h-5 w-28 rounded skeleton-block" />
             </div>
         </div>
     );
