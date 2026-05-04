@@ -8,6 +8,7 @@ export default defineConfig({
     tsconfigPaths: true,
     alias: {
       "@components": "/app/components",
+      "@auth": "/app/auth",
     }
   },
 });

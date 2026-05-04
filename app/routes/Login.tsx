@@ -1,25 +1,67 @@
 import Card from "@components/Card";
 import { Input } from "@components/Input";
 import { Lock, User } from "lucide-react";
-import { useState } from "react";
+import { useState, type SubmitEvent } from "react";
 import PrimaryButton from "@components/PrimaryButton";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { login } from "@auth/AuthService";
+import { useAuth } from "@auth/useAuth";
+
+function parseAuthError(err: unknown): string {
+    if (err instanceof Error) {
+        const map: Record<string, string> = {
+            NotAuthorizedException: "El usuario o la contraseña introducidos son incorrectos",
+            UserNotConfirmedException: "Necesitas confirmar tu correo antes de iniciar sesión",
+            UserNotFoundException: "No existe ningún usuario con ese nombre de usuario",
+            TooManyRequestsException: "Demasiados intentos. Intenta de nuevo más tarde",
+        };
+        return map[err.name] ?? err.message;
+    }
+    return "Error inesperado";
+}
 
 export default function Login() {
+    const { refreshSession } = useAuth();
+    const navigate = useNavigate();
+
     const [user, setUser] = useState("");
     const [password, setPassword] = useState("");
+    const [error, setError] = useState<string | null>(null);
+    const [isPending, setIsPending] = useState(false);
+
+    const handleSubmit = async (e: SubmitEvent) => {
+        e.preventDefault();
+        setError(null);
+        if (!user.trim()) {
+            setError("El nombre de usuario es obligatorio");
+            return;
+        }
+        if (!password.trim()) {
+            setError("La contraseña es obligatoria");
+            return;
+        }
+
+        setIsPending(true);
+        try {
+            await login(user, password);
+            await refreshSession();
+            navigate("/panel", { replace: true });
+        } catch (err) {
+            setError(parseAuthError(err));
+        } finally {
+            setIsPending(false);
+        }
+    };
 
     return (
-        <form className="min-h-screen max-w-xl m-auto flex items-center">
+        <form
+            className="min-h-screen max-w-xl m-auto flex items-center"
+            onSubmit={handleSubmit}
+        >
             <Card>
-
                 <div className="mb-6">
-                    <h2>
-                        Iniciar Sesión
-                    </h2>
-                    <h5>
-                        Bienvenido de nuevo, ingresa tus credenciales
-                    </h5>
+                    <h2>Iniciar Sesión</h2>
+                    <h5>Bienvenido de nuevo, ingresa tus credenciales</h5>
                 </div>
 
                 <div className="flex flex-col gap-4">
@@ -45,15 +87,24 @@ export default function Login() {
                         <Input.Field placeholder="Ingresa tu contraseña" icon={Lock} />
                     </Input.Root>
 
-                    <PrimaryButton>
-                        Iniciar Sesión
+                    {error && (
+                        <p role="alert" className="text-sm text-red-500">
+                            {error}
+                        </p>
+                    )}
+
+                    <PrimaryButton type="submit" disabled={isPending}>
+                        {isPending ? "Iniciando sesión..." : "Iniciar Sesión"}
                     </PrimaryButton>
+
                     <div className="flex flex-col gap-3">
                         <p className="text-sm">
-                            Has olvidado tu contraseña? <Link to="/recover" className="link">Recuperar</Link>
+                            Has olvidado tu contraseña?{" "}
+                            <Link to="/recover" className="link">Recuperar</Link>
                         </p>
                         <p className="text-sm">
-                            No tienes una cuenta? <Link to="/register" className="link">Registrarse</Link>
+                            No tienes una cuenta?{" "}
+                            <Link to="/register" className="link">Registrarse</Link>
                         </p>
                     </div>
                 </div>
