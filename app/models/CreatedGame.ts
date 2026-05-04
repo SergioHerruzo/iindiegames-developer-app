@@ -5,5 +5,6 @@ export type CreatedGame = {
     title: string;
     description: string;
     status: string;
+    isPublic: boolean;
     artworks: Artwork[];
 }

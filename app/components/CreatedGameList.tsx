@@ -164,6 +164,7 @@ export function CreatedGamesList({
                     title={game.title}
                     description={game.description}
                     imageUrl={game.artworks?.[0]?.mediumImageUrl ?? ""}
+                    isPublic={game.isPublic}
                     status={game.status}
                 />
             ))}
