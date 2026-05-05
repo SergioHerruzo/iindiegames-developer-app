@@ -9,6 +9,7 @@ export type DeveloperGame = {
     description: string;
     price: number;
     discount: number;
+    isPublic: boolean;
     releaseBuild: DeveloperGameReleaseBuild | null;
     genres: Genre[];
     artworks: DeveloperArtwork[];

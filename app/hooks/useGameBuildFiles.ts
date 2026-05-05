@@ -1,16 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { apiClient } from "@services/ApiClient";
-import type { DeveloperGame } from "@models/DeveloperGame";
 
-type UseGameDetailsResult = {
-    game: DeveloperGame | null;
+type UseGameBuildFilesResult = {
+    files: string[];
     loading: boolean;
     error: string | null;
     refetch: () => void;
 };
 
-export default function useGameDetails(gameId: string | undefined): UseGameDetailsResult {
-    const [game, setGame] = useState<DeveloperGame | null>(null);
+export default function useGameBuildFiles(buildId: string | undefined): UseGameBuildFilesResult {
+    const [files, setFiles] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [tick, setTick] = useState(0);
@@ -18,26 +17,26 @@ export default function useGameDetails(gameId: string | undefined): UseGameDetai
     const refetch = useCallback(() => setTick((t) => t + 1), []);
 
     useEffect(() => {
-        if (!gameId) return;
+        if (!buildId) return;
 
         let cancelled = false;
 
-        const fetchGame = async () => {
+        const fetchFiles = async () => {
             setLoading(true);
             setError(null);
 
             try {
-                const response = await apiClient.get(`/games/developer/${gameId}`);
+                const response = await apiClient.get(`/game-builds/developer/${buildId}/files`);
 
                 if (!response.ok) {
-                    let message = "No se pudo cargar el juego.";
+                    let message = "No se pudieron cargar los archivos.";
                     switch (response.status) {
                         case 401:
                         case 403:
-                            message = "No tienes permisos para ver este juego.";
+                            message = "No tienes permisos para ver los archivos de esta build.";
                             break;
                         case 404:
-                            message = "El juego no existe o fue eliminado.";
+                            message = "La build no existe o fue eliminada.";
                             break;
                         case 500:
                             message = "Error interno del servidor. Inténtalo más tarde.";
@@ -46,22 +45,21 @@ export default function useGameDetails(gameId: string | undefined): UseGameDetai
                     throw new Error(message);
                 }
 
-                const data: DeveloperGame = await response.json();
-                if (!cancelled) setGame(data);
+                const data: string[] = await response.json();
+                if (!cancelled) setFiles(data);
 
             } catch (err) {
                 if (!cancelled) {
-                    setError(err instanceof Error ? err.message : "Error inesperado al cargar el juego.");
+                    setError(err instanceof Error ? err.message : "Error inesperado al cargar los archivos.");
                 }
             } finally {
                 if (!cancelled) setLoading(false);
             }
         };
 
-        fetchGame();
-
+        fetchFiles();
         return () => { cancelled = true; };
-    }, [gameId, tick]);
+    }, [buildId, tick]);
 
-    return { game, loading, error, refetch };
+    return { files, loading, error, refetch };
 }

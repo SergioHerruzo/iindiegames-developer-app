@@ -29,7 +29,7 @@ function GameDetailsSkeleton() {
 export default function Game() {
     const { gameId } = useParams();
     const [activeTab, setActiveTab] = useState<GameTab>("general");
-    const { game, loading, error } = useGameDetails(gameId);
+    const { game, loading, error, refetch } = useGameDetails(gameId);
 
     return (
         <div className="px-6 py-4 flex flex-col gap-4">
@@ -62,7 +62,7 @@ export default function Game() {
                 {!error && !loading && game && (
                     <>
                         {activeTab === "general"      && <GeneralTab game={game} />}
-                        {activeTab === "artworks"     && <ArtworksTab game={game} />}
+                        {activeTab === "artworks"     && <ArtworksTab game={game} onRefetch={refetch} />}
                         {activeTab === "builds"       && <GameBuildsTab />}
                         {activeTab === "achievements" && <AchievementsTab />}
                     </>

@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Euro, Percent } from "lucide-react";
+import { Euro, Percent, Save, Loader, ChevronDown, Globe } from "lucide-react";
 import Card from "@components/Card";
 import { Input } from "@components/Input";
 import Divider from "@components/Divider";
 import PrimaryButton from "@components/PrimaryButton";
 import GenreSelector from "@components/GenreSelector/GenreSelector";
+import useGameBuilds from "@/hooks/useGameBuilds";
+import { apiClient } from "@services/ApiClient";
 import type { DeveloperGame } from "@models/DeveloperGame";
 
 type GameDetailsGeneralTabProps = {
@@ -17,10 +19,54 @@ export default function GameDetailsGeneralTab({ game }: GameDetailsGeneralTabPro
     const [price, setPrice] = useState(game.price.toString());
     const [discount, setDiscount] = useState(game.discount.toString());
     const [genres, setGenres] = useState<string[]>(game.genres.map((g) => g.id));
+    const [isPublic, setIsPublic] = useState(game.isPublic);
+    const [selectedBuildId, setSelectedBuildId] = useState(game.releaseBuild?.id ?? "");
 
     const [errors, setErrors] = useState<Record<string, string | null>>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+
+    const [isSavingGenres, setIsSavingGenres] = useState(false);
+    const [saveGenresError, setSaveGenresError] = useState<string | null>(null);
+    const [saveGenresSuccess, setSaveGenresSuccess] = useState(false);
+
+    const [isSavingReleaseBuild, setIsSavingReleaseBuild] = useState(false);
+    const [saveReleaseBuildError, setSaveReleaseBuildError] = useState<string | null>(null);
+    const [saveReleaseBuildSuccess, setSaveReleaseBuildSuccess] = useState(false);
+
+    const [isPublishing, setIsPublishing] = useState(false);
+    const [publishError, setPublishError] = useState<string | null>(null);
+    const [publishSuccess, setPublishSuccess] = useState(false);
+
+    const { builds, loading: buildsLoading } = useGameBuilds(game.id);
+
+    const handlePublish = async () => {
+        setIsPublishing(true);
+        setPublishError(null);
+        setPublishSuccess(false);
+
+        try {
+            const response = await apiClient.post(`/games/${game.id}/publish`, {});
+
+            if (!response.ok) {
+                let message = "No se pudo publicar el juego.";
+                switch (response.status) {
+                    case 400: message = "El juego no cumple los requisitos para ser publicado."; break;
+                    case 401:
+                    case 403: message = "No tienes permisos para publicar este juego."; break;
+                    case 404: message = "El juego no existe o fue eliminado."; break;
+                    case 500: message = "Error interno del servidor. Inténtalo más tarde."; break;
+                }
+                throw new Error(message);
+            }
+
+            setPublishSuccess(true);
+        } catch (err) {
+            setPublishError(err instanceof Error ? err.message : "Error inesperado.");
+        } finally {
+            setIsPublishing(false);
+        }
+    };
 
     const finalPrice = (() => {
         const p = parseFloat(price);
@@ -31,7 +77,90 @@ export default function GameDetailsGeneralTab({ game }: GameDetailsGeneralTabPro
 
     const handleSave = async () => {
         setIsSubmitting(true);
-        setTimeout(() => setIsSubmitting(false), 1000);
+        setSubmitError(null);
+
+        try {
+            const response = await apiClient.put(`/games/${game.id}`, {
+                title: title.trim(),
+                description: description.trim(),
+                price: parseFloat(price),
+                discount: parseFloat(discount),
+                isPublic,
+            });
+
+            if (!response.ok) {
+                let message = "No se pudieron guardar los cambios.";
+                switch (response.status) {
+                    case 400: message = "Los datos introducidos no son válidos."; break;
+                    case 401:
+                    case 403: message = "No tienes permisos para editar este juego."; break;
+                    case 404: message = "El juego no existe o fue eliminado."; break;
+                    case 500: message = "Error interno del servidor. Inténtalo más tarde."; break;
+                }
+                throw new Error(message);
+            }
+        } catch (err) {
+            setSubmitError(err instanceof Error ? err.message : "Error inesperado.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleSaveGenres = async () => {
+        setIsSavingGenres(true);
+        setSaveGenresError(null);
+        setSaveGenresSuccess(false);
+
+        try {
+            const response = await apiClient.patch(`/games/${game.id}/genres`, { genres });
+
+            if (!response.ok) {
+                let message = "No se pudieron guardar los géneros.";
+                switch (response.status) {
+                    case 400: message = "Los géneros seleccionados no son válidos."; break;
+                    case 401:
+                    case 403: message = "No tienes permisos para editar este juego."; break;
+                    case 404: message = "El juego no existe o fue eliminado."; break;
+                    case 500: message = "Error interno del servidor. Inténtalo más tarde."; break;
+                }
+                throw new Error(message);
+            }
+
+            setSaveGenresSuccess(true);
+        } catch (err) {
+            setSaveGenresError(err instanceof Error ? err.message : "Error inesperado.");
+        } finally {
+            setIsSavingGenres(false);
+        }
+    };
+
+    const handleSaveReleaseBuild = async () => {
+        if (!selectedBuildId) return;
+        setIsSavingReleaseBuild(true);
+        setSaveReleaseBuildError(null);
+        setSaveReleaseBuildSuccess(false);
+
+        try {
+            const response = await apiClient.patch(`/games/${game.id}/release-build`, { buildId: selectedBuildId });
+
+            if (!response.ok) {
+                let message = "No se pudo guardar la release build.";
+                switch (response.status) {
+                    case 400: message = "La build seleccionada no es válida."; break;
+                    case 401:
+                    case 403: message = "No tienes permisos para editar este juego."; break;
+                    case 404: message = "El juego o la build no existen."; break;
+                    case 500: message = "Error interno del servidor. Inténtalo más tarde."; break;
+                }
+                throw new Error(message);
+            }
+
+            setSaveReleaseBuildSuccess(true);
+        } catch (err) {
+            setSaveReleaseBuildError(err instanceof Error ? err.message : "Error inesperado.");
+        } finally {
+            setIsSavingReleaseBuild(false);
+        }
     };
 
     return (
@@ -99,14 +228,56 @@ export default function GameDetailsGeneralTab({ game }: GameDetailsGeneralTabPro
                 </div>
             )}
 
+            {/* Visibility */}
+            <Card>
+                <div className="flex items-center justify-between gap-4">
+                    <div className="flex flex-col gap-0.5">
+                        <span className="text-sm font-medium text-slate-200">Visibilidad</span>
+                        <span className="text-xs font-light text-(--color-secondary-text)">
+                            {isPublic ? "El juego es visible en la tienda." : "El juego está oculto en la tienda."}
+                        </span>
+                    </div>
+                    <button
+                        type="button"
+                        role="switch"
+                        aria-checked={isPublic}
+                        onClick={() => setIsPublic((v) => !v)}
+                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${isPublic ? "bg-emerald-500" : "bg-(--color-secondary-border)"}`}
+                    >
+                        <span className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform transition-transform duration-200 ${isPublic ? "translate-x-5" : "translate-x-0"}`} />
+                    </button>
+                </div>
+            </Card>
+
             {/* Genres */}
             <Card>
                 <GenreSelector
                     selectedIds={genres}
-                    onChange={setGenres}
+                    onChange={(val) => {
+                        setGenres(val);
+                        setSaveGenresSuccess(false);
+                    }}
                     error={errors.genres}
                 />
             </Card>
+
+            {saveGenresError && (
+                <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                    {saveGenresError}
+                </div>
+            )}
+            {saveGenresSuccess && (
+                <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
+                    Géneros guardados correctamente.
+                </div>
+            )}
+
+            <PrimaryButton className="max-w-fit" onClick={handleSaveGenres} disabled={isSavingGenres}>
+                {isSavingGenres
+                    ? <><Loader size={14} className="animate-spin" /> Guardando géneros...</>
+                    : <><Save size={14} strokeWidth={1.5} /> Guardar géneros</>
+                }
+            </PrimaryButton>
 
             {/* Description */}
             <Divider title="Descripción" />
@@ -128,7 +299,7 @@ export default function GameDetailsGeneralTab({ game }: GameDetailsGeneralTabPro
                 </Input.Root>
             </Card>
 
-            {/* Save */}
+            {/* Save basic info */}
             <Divider />
 
             <div className="flex flex-col gap-4">
@@ -146,6 +317,93 @@ export default function GameDetailsGeneralTab({ game }: GameDetailsGeneralTabPro
                     {isSubmitting ? "Guardando..." : "Guardar cambios"}
                 </PrimaryButton>
             </div>
+
+            {/* Release build */}
+            <Divider title="Release build" />
+
+            <Card>
+                <div className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-0.5">
+                        <span className="text-sm font-medium text-slate-200">Versión de release</span>
+                        <span className="text-xs font-light text-(--color-secondary-text)">
+                            {game.releaseBuild
+                                ? `Actual: ${game.releaseBuild.versionName}`
+                                : "Ninguna build configurada como release."
+                            }
+                        </span>
+                    </div>
+
+                    <div className="relative">
+                        <select
+                            value={selectedBuildId}
+                            onChange={(e) => {
+                                setSelectedBuildId(e.target.value);
+                                setSaveReleaseBuildSuccess(false);
+                            }}
+                            disabled={buildsLoading || isSavingReleaseBuild}
+                            className="w-full appearance-none bg-(--color-secondary-bg) border border-(--color-secondary-border) rounded-lg px-3 py-2.5 pr-9 text-sm text-slate-200 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                        >
+                            <option value="">Sin release build</option>
+                            {builds?.items.map((build) => (
+                                <option key={build.id} value={build.id}>
+                                    {build.versionName}
+                                    {build.isReleaseBuild ? " (actual)" : ""}
+                                    {" · "}
+                                    {build.status}
+                                </option>
+                            ))}
+                        </select>
+                        <ChevronDown
+                            size={14}
+                            strokeWidth={1.5}
+                            className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-(--color-secondary-text)"
+                        />
+                    </div>
+                </div>
+            </Card>
+
+            {saveReleaseBuildError && (
+                <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                    {saveReleaseBuildError}
+                </div>
+            )}
+            {saveReleaseBuildSuccess && (
+                <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
+                    Release build actualizada correctamente.
+                </div>
+            )}
+
+            <PrimaryButton
+                className="max-w-fit"
+                onClick={handleSaveReleaseBuild}
+                disabled={isSavingReleaseBuild || !selectedBuildId}
+            >
+                {isSavingReleaseBuild
+                    ? <><Loader size={14} className="animate-spin" /> Guardando...</>
+                    : <><Save size={14} strokeWidth={1.5} /> Guardar release build</>
+                }
+            </PrimaryButton>
+
+            {/* Publish */}
+            <Divider title="Publicar" />
+
+            {publishError && (
+                <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                    {publishError}
+                </div>
+            )}
+            {publishSuccess && (
+                <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
+                    Juego publicado correctamente.
+                </div>
+            )}
+
+            <PrimaryButton className="max-w-fit" onClick={handlePublish} disabled={isPublishing}>
+                {isPublishing
+                    ? <><Loader size={14} className="animate-spin" /> Publicando...</>
+                    : <><Globe size={14} strokeWidth={1.5} /> Publicar juego</>
+                }
+            </PrimaryButton>
         </div>
     );
 }

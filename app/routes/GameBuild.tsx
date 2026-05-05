@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-import { ArrowLeft, Trash2, Save, Loader, ExternalLink, Package } from "lucide-react";
+import { ArrowLeft, Trash2, Save, Loader, ExternalLink, Package, FolderOpen, Upload, FileText, CheckCircle } from "lucide-react";
 import Card from "@components/Card";
 import { Input } from "@components/Input";
 import Divider from "@components/Divider";
 import PrimaryButton from "@components/PrimaryButton";
 import SecondaryButton from "@components/SecondaryButton";
 import useGameBuildDetail from "@/hooks/useGameBuildDetail";
+import useGameBuildFiles from "@/hooks/useGameBuildFiles";
 import { apiClient } from "@services/ApiClient";
 
 // ─── Status Badge ─────────────────────────────────────────────────────────────
@@ -99,6 +100,7 @@ export default function GameBuild() {
     const { buildId } = useParams();
     const navigate = useNavigate();
     const { build, loading, error } = useGameBuildDetail(buildId);
+    const { files, loading: filesLoading, error: filesError, refetch: refetchFiles } = useGameBuildFiles(buildId);
 
     const [versionName, setVersionName] = useState("");
     const [versionNameError, setVersionNameError] = useState<string | null>(null);
@@ -109,6 +111,18 @@ export default function GameBuild() {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [deleteError, setDeleteError] = useState<string | null>(null);
+
+    const [isCompleting, setIsCompleting] = useState(false);
+    const [completeError, setCompleteError] = useState<string | null>(null);
+    const [completeSuccess, setCompleteSuccess] = useState(false);
+
+    const folderInputRef = useRef<HTMLInputElement>(null);
+    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const [folderName, setFolderName] = useState<string | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState<{ done: number; total: number } | null>(null);
+    const [uploadError, setUploadError] = useState<string | null>(null);
+    const [uploadSuccess, setUploadSuccess] = useState(false);
 
     // Init local state once build loads
     const [initialized, setInitialized] = useState(false);
@@ -179,6 +193,105 @@ export default function GameBuild() {
             setDeleteError(err instanceof Error ? err.message : "Error inesperado.");
             setIsDeleting(false);
             setShowDeleteConfirm(false);
+        }
+    };
+
+    // ── Upload ──
+    const handleFolderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files ?? []);
+        if (!files.length) return;
+        const root = files[0].webkitRelativePath.split("/")[0];
+        setFolderName(root);
+        setSelectedFiles(files);
+        setUploadError(null);
+        setUploadSuccess(false);
+        setUploadProgress(null);
+    };
+
+    const handleUpload = async () => {
+        if (!selectedFiles.length) return;
+        setIsUploading(true);
+        setUploadError(null);
+        setUploadSuccess(false);
+        setUploadProgress({ done: 0, total: selectedFiles.length });
+
+        try {
+            const filePaths = selectedFiles.map(f =>
+                f.webkitRelativePath.split("/").slice(1).join("/")
+            );
+
+            const response = await apiClient.post(`/game-builds/${buildId}/upload`, { filePaths });
+
+            if (!response.ok) {
+                let message = "No se pudieron obtener las URLs de subida.";
+                switch (response.status) {
+                    case 400: message = "Los datos enviados son incorrectos."; break;
+                    case 401:
+                    case 403: message = "No tienes permisos para subir archivos a esta build."; break;
+                    case 404: message = "La build no existe o fue eliminada."; break;
+                    case 500: message = "Error interno del servidor. Inténtalo más tarde."; break;
+                }
+                throw new Error(message);
+            }
+
+            const uploadInfos: { originalFilePath: string; uploadUrl: string }[] = await response.json();
+
+            const fileMap = new Map(
+                selectedFiles.map(f => [f.webkitRelativePath.split("/").slice(1).join("/"), f])
+            );
+
+            let done = 0;
+            for (const info of uploadInfos) {
+                const file = fileMap.get(info.originalFilePath);
+                if (!file) continue;
+                const arrayBuffer = await file.arrayBuffer();
+                const putRes = await fetch(info.uploadUrl, {
+                    method: "PUT",
+                    body: arrayBuffer,
+                });
+                if (!putRes.ok) throw new Error(`Error subiendo ${info.originalFilePath}.`);
+                done++;
+                setUploadProgress({ done, total: selectedFiles.length });
+            }
+
+            setUploadSuccess(true);
+            setSelectedFiles([]);
+            setFolderName(null);
+            if (folderInputRef.current) folderInputRef.current.value = "";
+            refetchFiles();
+        } catch (err) {
+            setUploadError(err instanceof Error ? err.message : "Error inesperado.");
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    // ── Complete ──
+    const handleComplete = async () => {
+        setIsCompleting(true);
+        setCompleteError(null);
+        setCompleteSuccess(false);
+
+        try {
+            const response = await apiClient.post(`/game-builds/${buildId}/complete`, {});
+
+            if (!response.ok) {
+                let message = "No se pudo completar la build.";
+                switch (response.status) {
+                    case 400: message = "La build no puede completarse en su estado actual."; break;
+                    case 401:
+                    case 403: message = "No tienes permisos para completar esta build."; break;
+                    case 404: message = "La build no existe o fue eliminada."; break;
+                    case 500: message = "Error interno del servidor. Inténtalo más tarde."; break;
+                }
+                throw new Error(message);
+            }
+
+            setCompleteSuccess(true);
+        } catch (err) {
+            setCompleteError(err instanceof Error ? err.message : "Error inesperado.");
+        } finally {
+            setIsCompleting(false);
         }
     };
 
@@ -291,6 +404,123 @@ export default function GameBuild() {
                         {isSaving
                             ? <><Loader size={14} className="animate-spin" /> Guardando...</>
                             : <><Save size={14} strokeWidth={1.5} /> Guardar cambios</>
+                        }
+                    </PrimaryButton>
+
+                    {/* Upload section */}
+                    <Divider title="Archivos" />
+
+                    {/* File list */}
+                    {filesError && (
+                        <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                            {filesError}
+                        </div>
+                    )}
+
+                    {!filesError && (
+                        <div className="rounded-xl border border-(--color-border-default) bg-(--color-card-bg) overflow-hidden">
+                            {filesLoading && (
+                                <div className="flex flex-col animate-pulse">
+                                    {Array.from({ length: 3 }).map((_, i) => (
+                                        <div key={i} className="flex items-center gap-3 px-4 py-2.5 border-b border-(--color-border-default) last:border-b-0">
+                                            <div className="w-3.5 h-3.5 rounded skeleton-block shrink-0" />
+                                            <div className="h-3 w-64 rounded skeleton-block" />
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            {!filesLoading && files.length === 0 && (
+                                <div className="flex items-center justify-center py-8 text-sm font-light text-(--color-secondary-text)">
+                                    No hay archivos subidos todavía.
+                                </div>
+                            )}
+
+                            {!filesLoading && files.length > 0 && (
+                                <div className="flex flex-col">
+                                    {files.map((file) => (
+                                        <div key={file} className="flex items-center gap-3 px-4 py-2.5 border-b border-(--color-border-default) last:border-b-0">
+                                            <FileText size={14} strokeWidth={1.5} className="text-(--color-secondary-icon) shrink-0" />
+                                            <span className="text-xs font-light text-(--color-secondary-text) truncate">{file}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    <input
+                        ref={folderInputRef}
+                        type="file"
+                        className="hidden"
+                        // @ts-ignore
+                        webkitdirectory=""
+                        onChange={handleFolderChange}
+                    />
+
+                    <Card>
+                        <div className="flex items-center justify-between gap-4">
+                            <div className="flex flex-col gap-0.5">
+                                <span className="text-sm font-medium text-slate-200">Carpeta de archivos</span>
+                                <span className="text-xs font-light text-(--color-secondary-text)">
+                                    {folderName
+                                        ? `${folderName} · ${selectedFiles.length} archivo${selectedFiles.length !== 1 ? "s" : ""}`
+                                        : "Ninguna carpeta seleccionada"
+                                    }
+                                </span>
+                            </div>
+                            <SecondaryButton onClick={() => folderInputRef.current?.click()} disabled={isUploading}>
+                                <FolderOpen size={14} strokeWidth={1.5} />
+                                Seleccionar carpeta
+                            </SecondaryButton>
+                        </div>
+                    </Card>
+
+                    {uploadProgress && isUploading && (
+                        <div className="rounded-lg border border-(--color-secondary-border) bg-(--color-secondary-bg) p-3 text-sm text-(--color-secondary-text)">
+                            Subiendo {uploadProgress.done} / {uploadProgress.total} archivos...
+                        </div>
+                    )}
+                    {uploadError && (
+                        <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                            {uploadError}
+                        </div>
+                    )}
+                    {uploadSuccess && (
+                        <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
+                            Archivos subidos correctamente.
+                        </div>
+                    )}
+
+                    <PrimaryButton
+                        className="max-w-fit"
+                        onClick={handleUpload}
+                        disabled={isUploading || !selectedFiles.length}
+                    >
+                        {isUploading
+                            ? <><Loader size={14} className="animate-spin" /> Subiendo...</>
+                            : <><Upload size={14} strokeWidth={1.5} /> Subir archivos</>
+                        }
+                    </PrimaryButton>
+
+                    {/* Complete build */}
+                    <Divider title="Completar build" />
+
+                    {completeError && (
+                        <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                            {completeError}
+                        </div>
+                    )}
+                    {completeSuccess && (
+                        <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
+                            Build completada correctamente.
+                        </div>
+                    )}
+
+                    <PrimaryButton className="max-w-fit" onClick={handleComplete} disabled={isCompleting}>
+                        {isCompleting
+                            ? <><Loader size={14} className="animate-spin" /> Completando...</>
+                            : <><CheckCircle size={14} strokeWidth={1.5} /> Completar build</>
                         }
                     </PrimaryButton>
 

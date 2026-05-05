@@ -42,13 +42,20 @@ export const apiClient = {
             headers 
         }),
         
-    put: <T>(path: string, body: T, headers?: Record<string, string>) => 
-        request(path, { 
-            method: "PUT", 
-            body: body instanceof FormData ? body : JSON.stringify(body), 
-            headers 
+    put: <T>(path: string, body: T, headers?: Record<string, string>) =>
+        request(path, {
+            method: "PUT",
+            body: body instanceof FormData ? body : JSON.stringify(body),
+            headers
         }),
-        
-    delete: (path: string, headers?: Record<string, string>) => 
+
+    patch: <T>(path: string, body: T, headers?: Record<string, string>) =>
+        request(path, {
+            method: "PATCH",
+            body: body instanceof FormData ? body : JSON.stringify(body),
+            headers
+        }),
+
+    delete: (path: string, headers?: Record<string, string>) =>
         request(path, { method: "DELETE", headers }),
 };

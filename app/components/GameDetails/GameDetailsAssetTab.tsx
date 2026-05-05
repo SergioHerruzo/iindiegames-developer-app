@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Trash2, Upload, ImageOff, Loader, Plus } from "lucide-react";
 import Divider from "@components/Divider";
+import { apiClient } from "@services/ApiClient";
 import type { DeveloperGame } from "@models/DeveloperGame";
 import type { DeveloperArtwork } from "@models/DeveloperArtwork";
 import type { DeveloperStorePicture } from "@models/DeveloperStorePicture";
@@ -217,8 +218,11 @@ function AddStorePictureButton({ onUpload }: { onUpload: (file: File) => Promise
 
     const handleFile = async (file: File) => {
         setUploading(true);
-        await onUpload(file);
-        setUploading(false);
+        try {
+            await onUpload(file);
+        } finally {
+            setUploading(false);
+        }
     };
 
     return (
@@ -277,9 +281,10 @@ type ArtworkKey = typeof ARTWORK_SLOTS[number]["key"];
 
 type ArtworksTabProps = {
     game: DeveloperGame;
+    onRefetch: () => void;
 };
 
-export default function ArtworksTab({ game }: ArtworksTabProps) {
+export default function ArtworksTab({ game, onRefetch }: ArtworksTabProps) {
     // Artworks — map by position key (assumes order: capsule, header, main)
     const [artworks, setArtworks] = useState<Record<ArtworkKey, DeveloperArtwork | null>>({
         capsule: game.artworks[0] ?? null,
@@ -300,8 +305,14 @@ export default function ArtworksTab({ game }: ArtworksTabProps) {
     };
 
     // ── Store Pictures handlers ──
-    const handleUploadStorePicture = async (_file: File) => {
-        // TODO: apiClient.post(`/games/${game.id}/store-pictures`, formData)
+    const handleUploadStorePicture = async (file: File) => {
+        const formData = new FormData();
+        formData.append("StorePicture", file);
+
+        const response = await apiClient.post(`/games/${game.id}/store-picture`, formData);
+        if (!response.ok) throw new Error("No se pudo subir la imagen.");
+
+        onRefetch();
     };
 
     const handleDeleteStorePicture = async (id: string) => {
