@@ -95,7 +95,7 @@ function Field({
 
     const dropzoneClasses = isDragging
         ? "border-primary-border-hover bg-primary-bg-hover"
-        : "border-(--color-border-inside-card) bg-(--color-input-inside-card)";
+        : "border-border-inside-card bg-input-inside-card";
 
     return (
         <div className="flex-1 flex flex-col">
@@ -151,11 +151,11 @@ function Helper({ children }: { children: ReactNode }) {
 }
 
 function ErrorMessage({ children }: { children: ReactNode }) {
-    return <span className="text-xs text-(--color-error-message) mt-2">{children}</span>;
+    return <span className="text-xs text-error-message mt-2">{children}</span>;
 }
 
 function SuccessMessage({ children }: { children: ReactNode }) {
-    return <span className="text-xs text-(--color-success-message) mt-2">{children}</span>;
+    return <span className="text-xs text-success-message mt-2">{children}</span>;
 }
 
 export const FileInput = {

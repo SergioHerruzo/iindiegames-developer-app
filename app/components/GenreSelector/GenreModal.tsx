@@ -71,7 +71,7 @@ export default function GenreModal({
                             <h3 className="text-base text-white/90">Seleccionar géneros</h3>
                             <button
                                 type="button"
-                                className="inline-flex items-center justify-center rounded-full p-1 transition-colors cursor-pointer border border-(--color-secondary-border) bg-(--color-secondary-bg) text-secondary-icon hover:bg-(--color-secondary-bg-hover) hover:border-(--color-secondary-border-hover) hover:text-secondary-text"
+                                className="inline-flex items-center justify-center rounded-full p-1 transition-colors cursor-pointer border border-secondary-border bg-secondary-bg text-secondary-icon hover:bg-secondary-bg-hover hover:border-secondary-border-hover hover:text-secondary-text"
                                 aria-label="Cerrar"
                                 onClick={onClose}
                             >
@@ -90,7 +90,7 @@ export default function GenreModal({
                             <Input.Field placeholder="Escribe para filtrar" icon={Search} />
                         </Input.Root>
 
-                        <div className="max-h-[50vh] overflow-y-auto scrollbar-thin scrollbar-thumb-(--color-scrollbar-thumb) pr-1">
+                        <div className="max-h-[50vh] overflow-y-auto scrollbar-thin scrollbar-thumb-scrollbar-thumb pr-1">
                             {loading ? (
                                 <p className="text-sm text-badge-neutral-text text-center my-2">Cargando géneros...</p>
                             ) : filteredGenres.length === 0 ? (

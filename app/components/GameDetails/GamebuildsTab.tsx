@@ -12,9 +12,9 @@ import type { DeveloperGameBuild } from "@models/DeveloperGameBuild";
 
 function BuildRow({ build }: { build: DeveloperGameBuild }) {
     return (
-        <Link to={`/game-builds/${build.id}`} className="flex items-center justify-between px-4 py-3 border-b border-(--color-border-default) last:border-b-0 hover:bg-(--color-secondary-bg) transition-colors duration-150">
+        <Link to={`/game-builds/${build.id}`} className="flex items-center justify-between px-4 py-3 border-b border-border-default last:border-b-0 hover:bg-secondary-bg transition-colors duration-150">
             <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-(--color-secondary-bg) border border-(--color-secondary-border)">
+                <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-secondary-bg border border-secondary-border">
                     <Package size={16} strokeWidth={1.5} className="text-secondary-icon" />
                 </div>
                 <div className="flex flex-col gap-0.5">
@@ -25,7 +25,7 @@ function BuildRow({ build }: { build: DeveloperGameBuild }) {
 
             <div className="inline-flex items-center gap-2">
                 {build.isReleaseBuild && (
-                    <span className="text-xs font-light px-2.5 py-1 rounded-full border bg-(--color-published-bg) text-(--color-published-text) border-published-border">
+                    <span className="text-xs font-light px-2.5 py-1 rounded-full border bg-published-bg text-published-text border-published-border">
                         Release
                     </span>
                 )}
@@ -41,7 +41,7 @@ function BuildsSkeleton() {
     return (
         <div className="flex flex-col animate-pulse">
             {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="flex items-center gap-3 px-4 py-3 border-b border-(--color-border-default) last:border-b-0">
+                <div key={i} className="flex items-center gap-3 px-4 py-3 border-b border-border-default last:border-b-0">
                     <div className="w-9 h-9 rounded-lg skeleton-block shrink-0" />
                     <div className="flex flex-col gap-1.5 flex-1">
                         <div className="h-3.5 w-32 rounded skeleton-block" />
@@ -59,7 +59,7 @@ function BuildsSkeleton() {
 function EmptyState() {
     return (
         <div className="flex flex-col items-center justify-center gap-3 py-16 text-secondary-text">
-            <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-(--color-secondary-bg) border border-(--color-secondary-border)">
+            <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-secondary-bg border border-secondary-border">
                 <Package size={22} strokeWidth={1.5} className="text-secondary-icon" />
             </div>
             <div className="flex flex-col items-center gap-1">
@@ -103,7 +103,7 @@ export default function GameBuildsTab({ gameId }: { gameId: string }) {
                 </div>
 
                 {/* Content */}
-                <div className="rounded-xl border border-(--color-border-default) bg-(--color-card-bg) overflow-hidden">
+                <div className="rounded-xl border border-border-default bg-card-bg overflow-hidden">
                     {error && (
                         <div className="flex items-center gap-3 px-4 py-4 text-sm text-error-text">
                             <CircleAlert size={16} strokeWidth={1.5} />

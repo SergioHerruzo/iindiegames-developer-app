@@ -123,10 +123,10 @@ export default function BasicInfoSection({
 
             {/* Final price preview */}
             {finalPrice !== null && parseFloat(discount) > 0 && (
-                <div className="inline-flex items-center gap-2 text-sm font-light text-(--color-secondary-text)">
+                <div className="inline-flex items-center gap-2 text-sm font-light text-secondary-text">
                     <span>Precio final con descuento:</span>
-                    <span className="text-(--color-primary-text) font-medium">{finalPrice} €</span>
-                    <span className="px-2 py-0.5 rounded-full bg-(--color-published-bg) border border-(--color-published-border) text-(--color-published-text) text-xs">
+                    <span className="text-primary-text font-medium">{finalPrice} €</span>
+                    <span className="px-2 py-0.5 rounded-full bg-published-bg border border-published-border text-published-text text-xs">
                         -{discount}%
                     </span>
                 </div>
@@ -137,7 +137,7 @@ export default function BasicInfoSection({
                 <div className="flex items-center justify-between gap-4">
                     <div className="flex flex-col gap-0.5">
                         <span className="text-sm font-medium text-slate-200">Visibilidad</span>
-                        <span className="text-xs font-light text-(--color-secondary-text)">
+                        <span className="text-xs font-light text-secondary-text">
                             {isPublic ? "El juego es visible en la tienda." : "El juego está oculto en la tienda."}
                         </span>
                     </div>
@@ -146,7 +146,7 @@ export default function BasicInfoSection({
                         role="switch"
                         aria-checked={isPublic}
                         onClick={() => setIsPublic((v) => !v)}
-                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${isPublic ? "bg-emerald-500" : "bg-(--color-secondary-border)"}`}
+                        className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${isPublic ? "bg-emerald-500" : "bg-secondary-border"}`}
                     >
                         <span className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform transition-transform duration-200 ${isPublic ? "translate-x-5" : "translate-x-0"}`} />
                     </button>
@@ -171,7 +171,7 @@ export default function BasicInfoSection({
             {/* Save basic info */}
             <div className="flex flex-col gap-4">
                 {submitError && (
-                    <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                    <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
                         {submitError}
                     </div>
                 )}

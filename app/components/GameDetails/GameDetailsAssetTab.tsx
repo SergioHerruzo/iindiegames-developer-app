@@ -53,12 +53,12 @@ function ArtworkSlot({ label, item, onUpload, onDelete }: ArtworkSlotProps) {
     return (
         <div className="flex flex-col gap-2">
             {/* Label */}
-            <span className="text-sm font-light text-(--color-secondary-text)">{label}</span>
+            <span className="text-sm font-light text-secondary-text">{label}</span>
 
-            <div className="rounded-xl border border-(--color-border-default) bg-(--color-card-bg) overflow-hidden">
+            <div className="rounded-xl border border-border-default bg-card-bg overflow-hidden">
                 {/* Image area */}
                 <div
-                    className={`group relative h-44 w-full bg-(--color-secondary-bg) overflow-hidden ${!item ? "cursor-pointer" : ""}`}
+                    className={`group relative h-44 w-full bg-secondary-bg overflow-hidden ${!item ? "cursor-pointer" : ""}`}
                     onClick={() => !item && !uploading && inputRef.current?.click()}
                     onDragOver={(e) => { e.preventDefault(); if (!item) setDragging(true); }}
                     onDragLeave={() => setDragging(false)}
@@ -79,7 +79,7 @@ function ArtworkSlot({ label, item, onUpload, onDelete }: ArtworkSlotProps) {
                                     type="button"
                                     onClick={handleDelete}
                                     disabled={deleting}
-                                    className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-light text-(--color-error-text) bg-(--color-error-bg) border border-(--color-error-border) cursor-pointer hover:opacity-80 transition-opacity disabled:opacity-50"
+                                    className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-light text-error-text bg-error-bg border border-error-border cursor-pointer hover:opacity-80 transition-opacity disabled:opacity-50"
                                 >
                                     {deleting
                                         ? <Loader size={14} className="animate-spin" />
@@ -95,16 +95,16 @@ function ArtworkSlot({ label, item, onUpload, onDelete }: ArtworkSlotProps) {
                             flex h-full w-full flex-col items-center justify-center gap-2
                             transition-colors duration-200
                             ${dragging
-                                ? "bg-(--color-primary-bg)"
-                                : "hover:bg-(--color-secondary-bg-hover)"
+                                ? "bg-primary-bg"
+                                : "hover:bg-secondary-bg-hover"
                             }
                             ${uploading ? "pointer-events-none opacity-60" : ""}
                         `}>
                             {uploading
-                                ? <Loader size={20} className="animate-spin text-(--color-primary-icon)" />
-                                : <Upload size={20} strokeWidth={1.5} className="text-(--color-secondary-icon)" />
+                                ? <Loader size={20} className="animate-spin text-primary-icon" />
+                                : <Upload size={20} strokeWidth={1.5} className="text-secondary-icon" />
                             }
-                            <span className="text-sm font-light text-(--color-secondary-text)">
+                            <span className="text-sm font-light text-secondary-text">
                                 {uploading ? "Subiendo..." : "Subir imagen"}
                             </span>
                         </div>
@@ -125,8 +125,8 @@ function ArtworkSlot({ label, item, onUpload, onDelete }: ArtworkSlotProps) {
 
                 {/* Footer — only when there's an image */}
                 {item && (
-                    <div className="flex items-center justify-between px-3 py-2 border-t border-(--color-border-image)">
-                        <span className="text-xs text-(--color-secondary-text) font-light truncate max-w-[60%]">
+                    <div className="flex items-center justify-between px-3 py-2 border-t border-border-image">
+                        <span className="text-xs text-secondary-text font-light truncate max-w-[60%]">
                             {item.id}
                         </span>
                         <StatusBadge status={item.processingStatus} className="px-2 py-0.5" />
@@ -150,8 +150,8 @@ function StorePictureCard({ item, onDelete }: { item: DeveloperStorePicture; onD
     };
 
     return (
-        <div className="group relative flex flex-col rounded-xl border border-(--color-border-default) bg-(--color-card-bg) overflow-hidden">
-            <div className="relative h-44 w-full bg-(--color-secondary-bg) overflow-hidden">
+        <div className="group relative flex flex-col rounded-xl border border-border-default bg-card-bg overflow-hidden">
+            <div className="relative h-44 w-full bg-secondary-bg overflow-hidden">
                 {!imageLoaded && <div className="absolute inset-0 skeleton-block z-10" />}
                 <img
                     src={item.mediumPictureUrl}
@@ -164,7 +164,7 @@ function StorePictureCard({ item, onDelete }: { item: DeveloperStorePicture; onD
                         type="button"
                         onClick={handleDelete}
                         disabled={deleting}
-                        className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-light text-(--color-error-text) bg-(--color-error-bg) border border-(--color-error-border) cursor-pointer hover:opacity-80 transition-opacity disabled:opacity-50"
+                        className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-light text-error-text bg-error-bg border border-error-border cursor-pointer hover:opacity-80 transition-opacity disabled:opacity-50"
                     >
                         {deleting
                             ? <Loader size={14} className="animate-spin" />
@@ -175,8 +175,8 @@ function StorePictureCard({ item, onDelete }: { item: DeveloperStorePicture; onD
                 </div>
             </div>
 
-            <div className="flex items-center justify-between px-3 py-2 border-t border-(--color-border-image)">
-                <span className="text-xs text-(--color-secondary-text) font-light truncate max-w-[60%]">
+            <div className="flex items-center justify-between px-3 py-2 border-t border-border-image">
+                <span className="text-xs text-secondary-text font-light truncate max-w-[60%]">
                     {item.id}
                 </span>
                 <StatusBadge status={item.processingStatus} className="px-2 py-0.5" />
@@ -217,17 +217,17 @@ function AddStorePictureButton({ onUpload }: { onUpload: (file: File) => Promise
                 border border-dashed cursor-pointer
                 transition-all duration-200
                 ${dragging
-                    ? "border-(--color-primary-border) bg-(--color-primary-bg)"
-                    : "border-(--color-border-default) bg-(--color-secondary-bg) hover:border-(--color-primary-border) hover:bg-(--color-primary-bg)"
+                    ? "border-primary-border bg-primary-bg"
+                    : "border-border-default bg-secondary-bg hover:border-primary-border hover:bg-primary-bg"
                 }
                 ${uploading ? "pointer-events-none opacity-60" : ""}
             `}
         >
             {uploading
-                ? <Loader size={20} className="animate-spin text-(--color-primary-icon)" />
-                : <Plus size={20} strokeWidth={1.5} className="text-(--color-secondary-icon)" />
+                ? <Loader size={20} className="animate-spin text-primary-icon" />
+                : <Plus size={20} strokeWidth={1.5} className="text-secondary-icon" />
             }
-            <span className="text-sm font-light text-(--color-secondary-text)">
+            <span className="text-sm font-light text-secondary-text">
                 {uploading ? "Subiendo..." : "Añadir imagen"}
             </span>
             <input
@@ -318,7 +318,7 @@ export default function ArtworksTab({ game, onRefetch }: ArtworksTabProps) {
             {/* ── Artworks ── */}
             <div className="flex flex-col gap-4">
                 <Divider title="Artworks" />
-                <p className="text-sm font-light text-(--color-secondary-text)">
+                <p className="text-sm font-light text-secondary-text">
                     Imágenes principales del juego. Cada slot tiene un propósito específico y solo puede contener una imagen.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -337,13 +337,13 @@ export default function ArtworksTab({ game, onRefetch }: ArtworksTabProps) {
             {/* ── Store Pictures ── */}
             <div className="flex flex-col gap-4">
                 <Divider title="Store Pictures" />
-                <p className="text-sm font-light text-(--color-secondary-text)">
+                <p className="text-sm font-light text-secondary-text">
                     Capturas y material visual que se mostrará en la página de la tienda.
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                     {storePictures.length === 0 && (
-                        <div className="col-span-full flex flex-col items-center justify-center gap-2 py-6 text-(--color-secondary-text)">
-                            <ImageOff size={24} strokeWidth={1.5} className="text-(--color-secondary-icon)" />
+                        <div className="col-span-full flex flex-col items-center justify-center gap-2 py-6 text-secondary-text">
+                            <ImageOff size={24} strokeWidth={1.5} className="text-secondary-icon" />
                             <span className="text-sm font-light">No hay imágenes de tienda todavía</span>
                         </div>
                     )}

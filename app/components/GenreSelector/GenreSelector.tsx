@@ -41,7 +41,7 @@ export default function GenreSelector({ selectedIds, onChange, error }: GenreSel
             selectedGenres.map((genre) => (
               <span
                 key={genre.id}
-                className="inline-flex shrink-0 items-center gap-2 rounded-full border border-(--color-border-default) bg-(--color-card-bg) px-3 py-1 text-xs text-badge-neutral-text"
+                className="inline-flex shrink-0 items-center gap-2 rounded-full border border-border-default bg-card-bg px-3 py-1 text-xs text-badge-neutral-text"
               >
                 {genre.name}
                 <button

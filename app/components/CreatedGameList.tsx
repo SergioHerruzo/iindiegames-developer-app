@@ -24,7 +24,7 @@ function SkeletonCard({ index }: { index: number }) {
             className={`flex flex-col h-full rounded-xl border border-border-default bg-card-bg overflow-hidden relative ${STAGGER_DELAY[index] ?? ""}`}
         >
             {/* Image */}
-            <div className="h-52 w-full border-b border-(--color-border-image) skeleton-block" />
+            <div className="h-52 w-full border-b border-border-image skeleton-block" />
             <div className="flex flex-col gap-2 p-4 flex-1">
                 {/* Title */}
                 <div className="h-5 w-3/4 rounded skeleton-block" />
@@ -44,7 +44,7 @@ function SkeletonCard({ index }: { index: number }) {
             </div>
 
             {/* Footer*/}
-            <div className="border-t border-(--color-border-image) p-4">
+            <div className="border-t border-border-image p-4">
                 <div className="h-5 w-28 rounded skeleton-block" />
             </div>
         </div>

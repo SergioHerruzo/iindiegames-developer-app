@@ -26,7 +26,7 @@ export function UserDropdown({ isOpen }: Props) {
             className={`
                 absolute right-0 top-full z-20 mt-2 w-64
                 origin-top-right overflow-hidden rounded-2xl p-2
-                bg-(--color-card-bg) border border-(--color-border-default)
+                bg-card-bg border border-border-default
                 transition-all duration-200 ease-out
                 ${isOpen
                     ? "pointer-events-auto translate-y-0 scale-100 opacity-100"
@@ -35,7 +35,7 @@ export function UserDropdown({ isOpen }: Props) {
             `}
         >
             {/* User Info */}
-            <div className="flex items-center gap-3 px-3 py-2.5 mb-1 border-b border-(--color-divider)">
+            <div className="flex items-center gap-3 px-3 py-2.5 mb-1 border-b border-divider">
                 <div className="shrink-0">
                     <AvatarButton
                         displayName={displayName}
@@ -75,8 +75,8 @@ export function UserDropdown({ isOpen }: Props) {
                     : "border-primary-border-hover bg-primary-bg-hover"
                     }`}>
                     <span className={`absolute top-1/2 -translate-y-1/2 flex h-5 w-5 items-center justify-center rounded-full transition-all duration-300 ease-out ${isDark
-                        ? "left-[calc(100%-1.375rem)] bg-primary-text text-(--color-card-bg)"
-                        : "left-0.5 bg-(--color-card-bg) text-primary-icon"
+                        ? "left-[calc(100%-1.375rem)] bg-primary-text text-card-bg"
+                        : "left-0.5 bg-card-bg text-primary-icon"
                         }`}>
                         <span className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${isDark ? "scale-100 opacity-100" : "scale-75 opacity-0"}`}>
                             <Moon size={11} />

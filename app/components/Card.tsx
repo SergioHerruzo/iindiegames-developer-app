@@ -23,8 +23,8 @@ export default function Card({
         <div
             className={`
                 relative overflow-hidden w-full rounded-2xl
-                bg-(--color-card-bg)
-                border border-(--color-border-default)
+                bg-card-bg
+                border border-border-default
                 backdrop-blur-md
                 ${variants[variant]}
                 ${className}

@@ -64,7 +64,7 @@ function getFieldClasses(variant: InputVariant, hasIcon: boolean, size: InputSiz
   const base = `
     block w-full rounded-lg ${sizeClasses} px-3 py-2.5
     backdrop-blur-sm transition-colors outline-none
-    placeholder:text-(--color-badge-neutral-text) placeholder:opacity-80
+    placeholder:text-badge-neutral-text placeholder:opacity-80
     text-slate-600 dark:text-white/60
     ${hasIcon ? "pl-9" : ""}
     ${isNumber ? "appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" : ""}
@@ -72,13 +72,13 @@ function getFieldClasses(variant: InputVariant, hasIcon: boolean, size: InputSiz
 
   switch (variant) {
     case "error":
-      return `${base} bg-(--color-input-bg) border border-[color:var(--color-error-input-border)] focus:border-[color:var(--color-error-input-focus)]`;
+      return `${base} bg-input-bg border border-[color:var(--color-error-input-border)] focus:border-[color:var(--color-error-input-focus)]`;
     case "success":
-      return `${base} bg-(--color-input-bg) border border-[color:var(--color-success-input-border)] focus:border-[color:var(--color-success-input-focus)]`;
+      return `${base} bg-input-bg border border-[color:var(--color-success-input-border)] focus:border-[color:var(--color-success-input-focus)]`;
     case "inside card":
-      return `${base} bg-(--color-input-inside-card) border border-(--color-border-inside-card) focus:border-primary-focus`;
+      return `${base} bg-input-inside-card border border-border-inside-card focus:border-primary-focus`;
     default:
-      return `${base} bg-(--color-input-bg) border border-(--color-border-default) focus:border-primary-focus`;
+      return `${base} bg-input-bg border border-border-default focus:border-primary-focus`;
   }
 }
 
@@ -156,7 +156,7 @@ function Helper({ children }: { children: ReactNode }) {
 
 function ErrorMessage({ children }: { children: ReactNode }) {
   return (
-    <span className="feedback-msg block text-xs text-(--color-error-message) mt-2 [.feedback-msg+&]:mt-1">
+    <span className="feedback-msg block text-xs text-error-message mt-2 [.feedback-msg+&]:mt-1">
       {children}
     </span>
   );
@@ -164,7 +164,7 @@ function ErrorMessage({ children }: { children: ReactNode }) {
 
 function SuccessMessage({ children }: { children: ReactNode }) {
   return (
-    <span className="feedback-msg block text-xs text-(--color-success-message) mt-2 [.feedback-msg+&]:mt-1">
+    <span className="feedback-msg block text-xs text-success-message mt-2 [.feedback-msg+&]:mt-1">
       {children}
     </span>
   );

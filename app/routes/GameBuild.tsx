@@ -78,15 +78,15 @@ export default function GameBuild() {
             {/* Header */}
             <header className="flex items-center justify-between w-full gap-4">
                 <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-(--color-secondary-bg) border border-(--color-secondary-border)">
-                        <Package size={18} strokeWidth={1.5} className="text-(--color-secondary-icon)" />
+                    <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-secondary-bg border border-secondary-border">
+                        <Package size={18} strokeWidth={1.5} className="text-secondary-icon" />
                     </div>
                     <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2 flex-wrap">
                             <h2>{build?.versionName ?? buildId}</h2>
                             {build && <StatusBadge status={build.status} />}
                             {build?.isReleaseBuild && (
-                                <span className="text-xs font-light px-2.5 py-1 rounded-full border bg-(--color-published-bg) text-(--color-published-text) border-(--color-published-border)">
+                                <span className="text-xs font-light px-2.5 py-1 rounded-full border bg-published-bg text-published-text border-published-border">
                                     Release
                                 </span>
                             )}
@@ -98,13 +98,13 @@ export default function GameBuild() {
                 </div>
 
                 {build && (
-                    <span className="text-xs font-light text-(--color-secondary-text)">{build.buildId}</span>
+                    <span className="text-xs font-light text-secondary-text">{build.buildId}</span>
                 )}
             </header>
 
             {/* Error loading */}
             {error && (
-                <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-4 text-sm text-(--color-error-text)">
+                <div className="rounded-lg border border-error-border bg-error-bg p-4 text-sm text-error-text">
                     {error}
                 </div>
             )}
@@ -116,7 +116,7 @@ export default function GameBuild() {
             {!error && !loading && build && (
                 <>
                     {isReadOnly && (
-                        <div className="rounded-lg border border-(--color-secondary-border) bg-(--color-secondary-bg) p-4 text-sm text-(--color-secondary-text)">
+                        <div className="rounded-lg border border-secondary-border bg-secondary-bg p-4 text-sm text-secondary-text">
                             Esta build está marcada como <span className="font-medium">Release</span> y no se puede editar.
                         </div>
                     )}
@@ -128,7 +128,7 @@ export default function GameBuild() {
                         <Card>
                             <div className="flex flex-col gap-0.5">
                                 <span className="text-sm font-medium text-slate-200">Nombre de versión</span>
-                                <span className="text-xs font-light text-(--color-secondary-text)">
+                                <span className="text-xs font-light text-secondary-text">
                                     {build.versionName}
                                 </span>
                             </div>
@@ -157,7 +157,7 @@ export default function GameBuild() {
                             <div className="flex items-center justify-between">
                                 <div className="flex flex-col gap-0.5">
                                     <span className="text-sm font-medium text-slate-200">Manifest</span>
-                                    <span className="text-xs font-light text-(--color-secondary-text) truncate max-w-sm">
+                                    <span className="text-xs font-light text-secondary-text truncate max-w-sm">
                                         {build.manifestUrl}
                                     </span>
                                 </div>
@@ -165,7 +165,7 @@ export default function GameBuild() {
                                     href={build.manifestUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-light text-(--color-secondary-text) bg-(--color-secondary-bg) border border-(--color-secondary-border) hover:bg-(--color-secondary-bg-hover) hover:border-(--color-secondary-border-hover) transition-all duration-200"
+                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-light text-secondary-text bg-secondary-bg border border-secondary-border hover:bg-secondary-bg-hover hover:border-secondary-border-hover transition-all duration-200"
                                 >
                                     <ExternalLink size={14} strokeWidth={1.5} />
                                     Ver manifest
@@ -178,12 +178,12 @@ export default function GameBuild() {
                         <>
                             {/* Save feedback */}
                             {saveError && (
-                                <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                                <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
                                     {saveError}
                                 </div>
                             )}
                             {saveSuccess && (
-                                <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
+                                <div className="rounded-lg border border-published-border bg-published-bg p-3 text-sm text-published-text">
                                     Cambios guardados correctamente.
                                 </div>
                             )}
@@ -218,7 +218,7 @@ export default function GameBuild() {
                                 <div className="flex items-center justify-between gap-4">
                                     <div className="flex flex-col gap-0.5">
                                         <span className="text-sm font-medium text-slate-200">Carpeta de archivos</span>
-                                        <span className="text-xs font-light text-(--color-secondary-text)">
+                                        <span className="text-xs font-light text-secondary-text">
                                             {folderName
                                                 ? `${folderName} · ${selectedFiles.length} archivo${selectedFiles.length !== 1 ? "s" : ""}`
                                                 : "Ninguna carpeta seleccionada"
@@ -233,17 +233,17 @@ export default function GameBuild() {
                             </Card>
 
                             {uploadProgress && isUploading && (
-                                <div className="rounded-lg border border-(--color-secondary-border) bg-(--color-secondary-bg) p-3 text-sm text-(--color-secondary-text)">
+                                <div className="rounded-lg border border-secondary-border bg-secondary-bg p-3 text-sm text-secondary-text">
                                     Subiendo {uploadProgress.done} / {uploadProgress.total} archivos...
                                 </div>
                             )}
                             {uploadError && (
-                                <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                                <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
                                     {uploadError}
                                 </div>
                             )}
                             {uploadSuccess && (
-                                <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
+                                <div className="rounded-lg border border-published-border bg-published-bg p-3 text-sm text-published-text">
                                     Archivos subidos correctamente.
                                 </div>
                             )}
@@ -267,12 +267,12 @@ export default function GameBuild() {
                             <Divider title="Completar build" />
 
                             {completeError && (
-                                <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                                <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
                                     {completeError}
                                 </div>
                             )}
                             {completeSuccess && (
-                                <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
+                                <div className="rounded-lg border border-published-border bg-published-bg p-3 text-sm text-published-text">
                                     Build completada correctamente.
                                 </div>
                             )}
@@ -290,7 +290,7 @@ export default function GameBuild() {
                     <Divider title="Zona de peligro" />
 
                     {deleteError && (
-                        <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                        <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
                             {deleteError}
                         </div>
                     )}
@@ -306,7 +306,7 @@ export default function GameBuild() {
                             type="button"
                             onClick={() => setShowDeleteConfirm(true)}
                             disabled={isReadOnly}
-                            className="inline-flex items-center gap-2 px-4 py-2 max-w-fit rounded-full text-sm font-light text-(--color-error-text) bg-(--color-error-bg) border border-(--color-error-border) cursor-pointer hover:opacity-80 transition-opacity"
+                            className="inline-flex items-center gap-2 px-4 py-2 max-w-fit rounded-full text-sm font-light text-error-text bg-error-bg border border-error-border cursor-pointer hover:opacity-80 transition-opacity"
                         >
                             <Trash2 size={14} strokeWidth={1.5} />
                             Eliminar build

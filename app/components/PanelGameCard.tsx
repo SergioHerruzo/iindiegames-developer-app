@@ -5,21 +5,21 @@ import { Link } from "react-router";
 
 const statusConfig: Record<string, { bg: string; text: string; border: string; label: string }> = {
     "Published": {
-        bg: "bg-(--color-published-bg)",
-        text: "text-(--color-published-text)",
-        border: "border-(--color-published-border)",
+        bg: "bg-published-bg",
+        text: "text-published-text",
+        border: "border-published-border",
         label: "Publicado"
     },
     "NotPublished": {
-        bg: "bg-(--color-badge-neutral-bg)",
-        text: "text-(--color-badge-neutral-text)",
-        border: "border-(--color-badge-neutral-border)",
+        bg: "bg-badge-neutral-bg",
+        text: "text-badge-neutral-text",
+        border: "border-badge-neutral-border",
         label: "No Publicado"
     },
     "WithErrors": {
-        bg: "bg-(--color-error-bg)",
-        text: "text-(--color-error-text)",
-        border: "border-(--color-error-border)",
+        bg: "bg-error-bg",
+        text: "text-error-text",
+        border: "border-error-border",
         label: "Con Errores"
     },
 };
@@ -41,7 +41,7 @@ export default function PanelGameCard({ id, title, description, imageUrl, status
             <Card variant="none" className="h-full flex flex-col">
 
                 {/* Image Section */}
-                <div className="relative h-52 w-full border-b border-(--color-border-image) overflow-hidden bg-(--color-card-bg)">
+                <div className="relative h-52 w-full border-b border-border-image overflow-hidden bg-card-bg">
                     {imageUrl ? (
                         <>
                             {/* Skeleton Local */}
@@ -57,7 +57,7 @@ export default function PanelGameCard({ id, title, description, imageUrl, status
                             />
                         </>
                     ) : (
-                        <div className="h-full w-full flex items-center justify-center bg-(--color-secondary-bg)">
+                        <div className="h-full w-full flex items-center justify-center bg-secondary-bg">
                             <h3 className="uppercase tracking-[0.2em] text-xs font-semibold text-secondary-text">
                                 Sin Artwork
                             </h3>
@@ -90,8 +90,8 @@ export default function PanelGameCard({ id, title, description, imageUrl, status
                 </div>
 
                 {/* Footer Section */}
-                <div className="border-t border-(--color-border-image) p-4 mt-auto">
-                    <div className="inline-flex items-center gap-1 w-fit text-secondary-text group-hover:text-(--color-primary-text) transition-colors duration-300">
+                <div className="border-t border-border-image p-4 mt-auto">
+                    <div className="inline-flex items-center gap-1 w-fit text-secondary-text group-hover:text-primary-text transition-colors duration-300">
                         <span className="text-sm font-medium leading-none">Administrar</span>
                         <ArrowRight
                             size={16}
