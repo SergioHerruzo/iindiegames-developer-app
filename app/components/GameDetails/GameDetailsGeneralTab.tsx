@@ -317,11 +317,14 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
             <div className="grid grid-cols-2 gap-4">
                 <Card>
                     <div className="flex items-center justify-between gap-4">
-                        <div className="flex flex-col gap-0.5">
+                        <div className="flex flex-col gap-1">
                             <span className="text-sm text-badge-neutral-text">Visibilidad</span>
                             <span className="text-xs text-badge-neutral-text opacity-80">
                                 {isPublic ? "Visible en la tienda." : "Oculto en la tienda."}
                             </span>
+                            <p className="text-xs text-badge-neutral-text opacity-60 mt-1">
+                                La visibilidad del juego solo afecta a la tienda, los usuarios que hayan adquirido el producto podrán seguir viéndolo y usándolo en su biblioteca de Indie Games.
+                            </p>
                         </div>
                         <button
                             type="button"
@@ -339,12 +342,6 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
                     <div className="flex flex-col gap-2">
                         <div className="flex flex-col gap-0.5">
                             <span className="text-sm text-badge-neutral-text">Release build</span>
-                            <span className="text-xs text-badge-neutral-text opacity-80">
-                                {game.releaseBuild
-                                    ? `Actual: ${game.releaseBuild.versionName}`
-                                    : "Sin build de release configurada."
-                                }
-                            </span>
                         </div>
                         <div className="relative">
                             <select
@@ -353,7 +350,7 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
                                 disabled={buildsLoading || isSaving}
                                 className="w-full appearance-none bg-input-inside-card border border-border-inside-card rounded-lg px-3 py-2.5 pr-9 text-sm text-white/60 cursor-pointer focus:outline-none focus:border-primary-focus disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
-                                <option value="">Sin release build</option>
+                                {!game.releaseBuild && <option value="">Sin release build</option>}
                                 {builds?.items.map((build) => (
                                     <option key={build.id} value={build.id}>
                                         {build.versionName}
