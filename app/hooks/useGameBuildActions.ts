@@ -42,6 +42,7 @@ type UseGameBuildActionsResult = {
 export default function useGameBuildActions(
     buildId: string | undefined,
     initialVersionName: string,
+    isReadOnly: boolean,
     onDeleteSuccess: () => void,
     onUploadSuccess: () => void
 ): UseGameBuildActionsResult {
@@ -77,12 +78,18 @@ export default function useGameBuildActions(
     }, [initialVersionName, initialized]);
 
     const onVersionNameChange = (value: string) => {
+        if (isReadOnly) return;
         setVersionName(value);
         setSaveSuccess(false);
     };
 
     const handleSave = async () => {
         if (!buildId) return;
+        if (isReadOnly) {
+            setSaveError("No puedes editar una build marcada como Release.");
+            setSaveSuccess(false);
+            return;
+        }
 
         if (!versionName.trim()) {
             setVersionNameError("El nombre de la versión es obligatorio.");
@@ -126,6 +133,11 @@ export default function useGameBuildActions(
 
     const handleDelete = async () => {
         if (!buildId) return;
+        if (isReadOnly) {
+            setDeleteError("No puedes eliminar una build marcada como Release.");
+            setShowDeleteConfirm(false);
+            return;
+        }
 
         setIsDeleting(true);
         setDeleteError(null);
@@ -157,6 +169,12 @@ export default function useGameBuildActions(
     };
 
     const handleFolderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (isReadOnly) {
+            setUploadError("No puedes subir archivos a una build marcada como Release.");
+            setUploadSuccess(false);
+            setUploadProgress(null);
+            return;
+        }
         const files = Array.from(e.target.files ?? []);
         if (!files.length) return;
 
@@ -170,6 +188,11 @@ export default function useGameBuildActions(
 
     const handleUpload = async () => {
         if (!buildId) return;
+        if (isReadOnly) {
+            setUploadError("No puedes subir archivos a una build marcada como Release.");
+            setUploadSuccess(false);
+            return;
+        }
         if (!selectedFiles.length) return;
 
         setIsUploading(true);
@@ -238,6 +261,11 @@ export default function useGameBuildActions(
 
     const handleComplete = async () => {
         if (!buildId) return;
+        if (isReadOnly) {
+            setCompleteError("No puedes completar una build marcada como Release.");
+            setCompleteSuccess(false);
+            return;
+        }
 
         setIsCompleting(true);
         setCompleteError(null);

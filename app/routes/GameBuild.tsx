@@ -21,6 +21,8 @@ export default function GameBuild() {
     const { build, loading, error } = useGameBuildDetail(buildId);
     const { files, loading: filesLoading, error: filesError, refetch: refetchFiles } = useGameBuildFiles(buildId);
 
+    const isReadOnly = Boolean(build?.isReleaseBuild);
+
     const {
         versionName,
         versionNameError,
@@ -54,6 +56,7 @@ export default function GameBuild() {
     } = useGameBuildActions(
         buildId,
         build?.versionName ?? "",
+        isReadOnly,
         () => navigate(-1),
         () => refetchFiles()
     );
@@ -112,24 +115,41 @@ export default function GameBuild() {
             {/* Content */}
             {!error && !loading && build && (
                 <>
+                    {isReadOnly && (
+                        <div className="rounded-lg border border-(--color-secondary-border) bg-(--color-secondary-bg) p-4 text-sm text-(--color-secondary-text)">
+                            Esta build está marcada como <span className="font-medium">Release</span> y no se puede editar.
+                        </div>
+                    )}
+
                     {/* Edit section */}
                     <Divider title="Información" />
 
-                    <Card>
-                        <Input.Root
-                            id="version-name"
-                            type="text"
-                            variant="inside card"
-                            value={versionName}
-                            onChange={onVersionNameChange}
-                        >
-                            <Input.Label>Nombre de versión</Input.Label>
-                            <Input.Field
-                                placeholder="ej. 1.0.0"
-                                error={versionNameError}
-                            />
-                        </Input.Root>
-                    </Card>
+                    {isReadOnly ? (
+                        <Card>
+                            <div className="flex flex-col gap-0.5">
+                                <span className="text-sm font-medium text-slate-200">Nombre de versión</span>
+                                <span className="text-xs font-light text-(--color-secondary-text)">
+                                    {build.versionName}
+                                </span>
+                            </div>
+                        </Card>
+                    ) : (
+                        <Card>
+                            <Input.Root
+                                id="version-name"
+                                type="text"
+                                variant="inside card"
+                                value={versionName}
+                                onChange={onVersionNameChange}
+                            >
+                                <Input.Label>Nombre de versión</Input.Label>
+                                <Input.Field
+                                    placeholder="ej. 1.0.0"
+                                    error={versionNameError}
+                                />
+                            </Input.Root>
+                        </Card>
+                    )}
 
                     {/* Manifest URL */}
                     {build.manifestUrl && (
@@ -154,104 +174,117 @@ export default function GameBuild() {
                         </Card>
                     )}
 
-                    {/* Save feedback */}
-                    {saveError && (
-                        <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
-                            {saveError}
-                        </div>
-                    )}
-                    {saveSuccess && (
-                        <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
-                            Cambios guardados correctamente.
-                        </div>
-                    )}
+                    {!isReadOnly && (
+                        <>
+                            {/* Save feedback */}
+                            {saveError && (
+                                <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                                    {saveError}
+                                </div>
+                            )}
+                            {saveSuccess && (
+                                <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
+                                    Cambios guardados correctamente.
+                                </div>
+                            )}
 
-                    <PrimaryButton className="max-w-fit" onClick={handleSave} disabled={isSaving}>
-                        {isSaving
-                            ? <><Loader size={14} className="animate-spin" /> Guardando...</>
-                            : <><Save size={14} strokeWidth={1.5} /> Guardar cambios</>
-                        }
-                    </PrimaryButton>
+                            <PrimaryButton className="max-w-fit" onClick={handleSave} disabled={isSaving}>
+                                {isSaving
+                                    ? <><Loader size={14} className="animate-spin" /> Guardando...</>
+                                    : <><Save size={14} strokeWidth={1.5} /> Guardar cambios</>
+                                }
+                            </PrimaryButton>
+                        </>
+                    )}
 
                     {/* Upload section */}
                     <Divider title="Archivos" />
 
                     <BuildFileList files={files} loading={filesLoading} error={filesError} />
 
-                    <input
-                        ref={folderInputRef}
-                        type="file"
-                        className="hidden"
-                        // @ts-ignore
-                        webkitdirectory=""
-                        onChange={handleFolderChange}
-                    />
+                    {!isReadOnly && (
+                        <>
+                            <input
+                                ref={folderInputRef}
+                                type="file"
+                                className="hidden"
+                                // @ts-ignore
+                                webkitdirectory=""
+                                onChange={handleFolderChange}
+                                disabled={isUploading}
+                            />
 
-                    <Card>
-                        <div className="flex items-center justify-between gap-4">
-                            <div className="flex flex-col gap-0.5">
-                                <span className="text-sm font-medium text-slate-200">Carpeta de archivos</span>
-                                <span className="text-xs font-light text-(--color-secondary-text)">
-                                    {folderName
-                                        ? `${folderName} · ${selectedFiles.length} archivo${selectedFiles.length !== 1 ? "s" : ""}`
-                                        : "Ninguna carpeta seleccionada"
-                                    }
-                                </span>
-                            </div>
-                            <SecondaryButton onClick={() => folderInputRef.current?.click()} disabled={isUploading}>
-                                <FolderOpen size={14} strokeWidth={1.5} />
-                                Seleccionar carpeta
-                            </SecondaryButton>
-                        </div>
-                    </Card>
+                            <Card>
+                                <div className="flex items-center justify-between gap-4">
+                                    <div className="flex flex-col gap-0.5">
+                                        <span className="text-sm font-medium text-slate-200">Carpeta de archivos</span>
+                                        <span className="text-xs font-light text-(--color-secondary-text)">
+                                            {folderName
+                                                ? `${folderName} · ${selectedFiles.length} archivo${selectedFiles.length !== 1 ? "s" : ""}`
+                                                : "Ninguna carpeta seleccionada"
+                                            }
+                                        </span>
+                                    </div>
+                                    <SecondaryButton onClick={() => folderInputRef.current?.click()} disabled={isUploading}>
+                                        <FolderOpen size={14} strokeWidth={1.5} />
+                                        Seleccionar carpeta
+                                    </SecondaryButton>
+                                </div>
+                            </Card>
 
-                    {uploadProgress && isUploading && (
-                        <div className="rounded-lg border border-(--color-secondary-border) bg-(--color-secondary-bg) p-3 text-sm text-(--color-secondary-text)">
-                            Subiendo {uploadProgress.done} / {uploadProgress.total} archivos...
-                        </div>
-                    )}
-                    {uploadError && (
-                        <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
-                            {uploadError}
-                        </div>
-                    )}
-                    {uploadSuccess && (
-                        <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
-                            Archivos subidos correctamente.
-                        </div>
-                    )}
+                            {uploadProgress && isUploading && (
+                                <div className="rounded-lg border border-(--color-secondary-border) bg-(--color-secondary-bg) p-3 text-sm text-(--color-secondary-text)">
+                                    Subiendo {uploadProgress.done} / {uploadProgress.total} archivos...
+                                </div>
+                            )}
+                            {uploadError && (
+                                <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                                    {uploadError}
+                                </div>
+                            )}
+                            {uploadSuccess && (
+                                <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
+                                    Archivos subidos correctamente.
+                                </div>
+                            )}
 
-                    <PrimaryButton
-                        className="max-w-fit"
-                        onClick={handleUpload}
-                        disabled={isUploading || !selectedFiles.length}
-                    >
-                        {isUploading
-                            ? <><Loader size={14} className="animate-spin" /> Subiendo...</>
-                            : <><Upload size={14} strokeWidth={1.5} /> Subir archivos</>
-                        }
-                    </PrimaryButton>
+                            <PrimaryButton
+                                className="max-w-fit"
+                                onClick={handleUpload}
+                                disabled={isUploading || !selectedFiles.length}
+                            >
+                                {isUploading
+                                    ? <><Loader size={14} className="animate-spin" /> Subiendo...</>
+                                    : <><Upload size={14} strokeWidth={1.5} /> Subir archivos</>
+                                }
+                            </PrimaryButton>
+                        </>
+                    )}
 
                     {/* Complete build */}
-                    <Divider title="Completar build" />
+                    {!isReadOnly && (
+                        <>
+                            <Divider title="Completar build" />
 
-                    {completeError && (
-                        <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
-                            {completeError}
-                        </div>
-                    )}
-                    {completeSuccess && (
-                        <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
-                            Build completada correctamente.
-                        </div>
-                    )}
+                            {completeError && (
+                                <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                                    {completeError}
+                                </div>
+                            )}
+                            {completeSuccess && (
+                                <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
+                                    Build completada correctamente.
+                                </div>
+                            )}
 
-                    <PrimaryButton className="max-w-fit" onClick={handleComplete} disabled={isCompleting}>
-                        {isCompleting
-                            ? <><Loader size={14} className="animate-spin" /> Completando...</>
-                            : <><CheckCircle size={14} strokeWidth={1.5} /> Completar build</>
-                        }
-                    </PrimaryButton>
+                            <PrimaryButton className="max-w-fit" onClick={handleComplete} disabled={isCompleting}>
+                                {isCompleting
+                                    ? <><Loader size={14} className="animate-spin" /> Completando...</>
+                                    : <><CheckCircle size={14} strokeWidth={1.5} /> Completar build</>
+                                }
+                            </PrimaryButton>
+                        </>
+                    )}
 
                     {/* Danger zone */}
                     <Divider title="Zona de peligro" />
@@ -272,6 +305,7 @@ export default function GameBuild() {
                         <button
                             type="button"
                             onClick={() => setShowDeleteConfirm(true)}
+                            disabled={isReadOnly}
                             className="inline-flex items-center gap-2 px-4 py-2 max-w-fit rounded-full text-sm font-light text-(--color-error-text) bg-(--color-error-bg) border border-(--color-error-border) cursor-pointer hover:opacity-80 transition-opacity"
                         >
                             <Trash2 size={14} strokeWidth={1.5} />
