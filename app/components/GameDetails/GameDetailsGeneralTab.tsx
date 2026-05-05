@@ -85,6 +85,16 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
         setPublishSuccess(false);
     }, [game.id]);
 
+    // Sync visibility when the parent refetches the same game (e.g. after publish).
+    // The effect above only fires on game.id change, so isPublic can drift if the
+    // server updates it without the component unmounting.
+    useEffect(() => {
+        setIsPublic(game.isPublic);
+        if (initialRef.current) {
+            initialRef.current.isPublic = game.isPublic;
+        }
+    }, [game.isPublic]);
+
     const parsedPrice = useMemo(() => parseFloat(price), [price]);
     const parsedDiscount = useMemo(() => parseFloat(discount), [discount]);
     const finalPrice = useMemo(() => {
@@ -229,6 +239,7 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
     };
 
     const handlePublish = async () => {
+        if (game.isReleased) return;
         setIsPublishing(true);
         setPublishError(null);
         setPublishSuccess(false);
@@ -426,24 +437,28 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
                 </PrimaryButton>
             </div>
 
-            <Divider title="Publicar" />
-            {publishError && (
-                <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
-                    {publishError}
-                </div>
-            )}
-            {publishSuccess && (
-                <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
-                    Juego publicado correctamente.
-                </div>
-            )}
+            {!game.isReleased && (
+                <>
+                    <Divider title="Publicar" />
+                    {publishError && (
+                        <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                            {publishError}
+                        </div>
+                    )}
+                    {publishSuccess && (
+                        <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
+                            Juego publicado correctamente.
+                        </div>
+                    )}
 
-            <PrimaryButton className="max-w-fit" onClick={handlePublish} disabled={isPublishing}>
-                {isPublishing
-                    ? <><Loader size={14} className="animate-spin" /> Publicando...</>
-                    : <><Globe size={14} strokeWidth={1.5} /> Publicar juego</>
-                }
-            </PrimaryButton>
+                    <PrimaryButton className="max-w-fit" onClick={handlePublish} disabled={isPublishing}>
+                        {isPublishing
+                            ? <><Loader size={14} className="animate-spin" /> Publicando...</>
+                            : <><Globe size={14} strokeWidth={1.5} /> Publicar juego</>
+                        }
+                    </PrimaryButton>
+                </>
+            )}
         </div>
     );
 }

@@ -10,6 +10,7 @@ export type DeveloperGame = {
     price: number;
     discount: number;
     isPublic: boolean;
+    isReleased: boolean;
     releaseBuild: DeveloperGameReleaseBuild | null;
     genres: Genre[];
     artworks: DeveloperArtwork[];
