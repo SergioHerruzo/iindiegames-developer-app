@@ -15,17 +15,17 @@ function BuildRow({ build }: { build: DeveloperGameBuild }) {
         <Link to={`/game-builds/${build.id}`} className="flex items-center justify-between px-4 py-3 border-b border-(--color-border-default) last:border-b-0 hover:bg-(--color-secondary-bg) transition-colors duration-150">
             <div className="flex items-center gap-3">
                 <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-(--color-secondary-bg) border border-(--color-secondary-border)">
-                    <Package size={16} strokeWidth={1.5} className="text-(--color-secondary-icon)" />
+                    <Package size={16} strokeWidth={1.5} className="text-secondary-icon" />
                 </div>
                 <div className="flex flex-col gap-0.5">
                     <span className="text-sm font-medium text-slate-200">{build.versionName}</span>
-                    <span className="text-xs font-light text-(--color-secondary-text)">{build.id}</span>
+                    <span className="text-xs font-light text-secondary-text">{build.id}</span>
                 </div>
             </div>
 
             <div className="inline-flex items-center gap-2">
                 {build.isReleaseBuild && (
-                    <span className="text-xs font-light px-2.5 py-1 rounded-full border bg-(--color-published-bg) text-(--color-published-text) border-(--color-published-border)">
+                    <span className="text-xs font-light px-2.5 py-1 rounded-full border bg-(--color-published-bg) text-(--color-published-text) border-published-border">
                         Release
                     </span>
                 )}
@@ -58,13 +58,13 @@ function BuildsSkeleton() {
 
 function EmptyState() {
     return (
-        <div className="flex flex-col items-center justify-center gap-3 py-16 text-(--color-secondary-text)">
+        <div className="flex flex-col items-center justify-center gap-3 py-16 text-secondary-text">
             <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-(--color-secondary-bg) border border-(--color-secondary-border)">
-                <Package size={22} strokeWidth={1.5} className="text-(--color-secondary-icon)" />
+                <Package size={22} strokeWidth={1.5} className="text-secondary-icon" />
             </div>
             <div className="flex flex-col items-center gap-1">
                 <span className="text-sm font-medium text-slate-300">Sin builds todavía</span>
-                <span className="text-sm font-light text-(--color-secondary-text)">
+                <span className="text-sm font-light text-secondary-text">
                     Crea tu primera build para empezar a distribuir el juego.
                 </span>
             </div>
@@ -87,10 +87,10 @@ export default function GameBuildsTab({ gameId }: { gameId: string }) {
 
                 {/* Header row */}
                 <div className="flex items-center justify-between">
-                    <p className="text-sm font-light text-(--color-secondary-text)">
+                    <p className="text-sm font-light text-secondary-text">
                         Gestiona las versiones distribuibles de tu juego.
                         {!loading && builds && (
-                            <span className="ml-1 text-(--color-badge-neutral-text)">
+                            <span className="ml-1 text-badge-neutral-text">
                                 {builds.totalItemCount} {builds.totalItemCount === 1 ? "build" : "builds"}
                             </span>
                         )}
@@ -105,7 +105,7 @@ export default function GameBuildsTab({ gameId }: { gameId: string }) {
                 {/* Content */}
                 <div className="rounded-xl border border-(--color-border-default) bg-(--color-card-bg) overflow-hidden">
                     {error && (
-                        <div className="flex items-center gap-3 px-4 py-4 text-sm text-(--color-error-text)">
+                        <div className="flex items-center gap-3 px-4 py-4 text-sm text-error-text">
                             <CircleAlert size={16} strokeWidth={1.5} />
                             <span>{error}</span>
                         </div>
