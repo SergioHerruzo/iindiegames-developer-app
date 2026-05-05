@@ -32,7 +32,7 @@ export default function Game() {
     const { game, loading, error, refetch } = useGameDetails(gameId);
 
     return (
-        <div className="flex flex-col flex-1 h-full w-full px-6 py-4 gap-8">
+        <div className="flex flex-col flex-1 h-full w-full px-6 py-4 gap-4">
             {/* Back Link */}
             <Link
                 to="/panel"
@@ -44,27 +44,16 @@ export default function Game() {
                 <span>Volver al Panel</span>
             </Link>
 
-            {/* Header */}
-            <header className="flex items-center justify-between w-full gap-4">
-                <div className="flex flex-col gap-1">
-                    <h2>{game?.title || gameId}</h2>
-                    <h4>Edita la información, assets y builds.</h4>
-                </div>
-            </header>
-
             {/* Tab Navigation */}
             <EditGameNavigationBar
                 activeTab={activeTab}
                 onTabChange={setActiveTab}
-                onDelete={() => {
-                    // Stub: hook up to delete endpoint + confirmation when implemented.
-                }}
             />
 
             {/* Tab Content */}
-            <div className="flex-1">
+            <div className="flex-1 mt-2">
                 {error && (
-                    <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-4 text-sm text-(--color-error-text)">
+                    <div className="rounded-lg border border-error-border bg-error-bg p-4 text-sm text-error-text">
                         {error}
                     </div>
                 )}
