@@ -318,8 +318,8 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
                 <Card>
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex flex-col gap-0.5">
-                            <span className="text-sm font-medium text-slate-200">Visibilidad</span>
-                            <span className="text-xs font-light text-(--color-secondary-text)">
+                            <span className="text-sm text-badge-neutral-text">Visibilidad</span>
+                            <span className="text-xs text-badge-neutral-text opacity-80">
                                 {isPublic ? "Visible en la tienda." : "Oculto en la tienda."}
                             </span>
                         </div>
@@ -338,8 +338,8 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
                 <Card>
                     <div className="flex flex-col gap-2">
                         <div className="flex flex-col gap-0.5">
-                            <span className="text-sm font-medium text-slate-200">Release build</span>
-                            <span className="text-xs font-light text-(--color-secondary-text)">
+                            <span className="text-sm text-badge-neutral-text">Release build</span>
+                            <span className="text-xs text-badge-neutral-text opacity-80">
                                 {game.releaseBuild
                                     ? `Actual: ${game.releaseBuild.versionName}`
                                     : "Sin build de release configurada."
@@ -351,7 +351,7 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
                                 value={selectedBuildId}
                                 onChange={(e) => { setSelectedBuildId(e.target.value); setSaveSuccess(false); }}
                                 disabled={buildsLoading || isSaving}
-                                className="w-full appearance-none bg-(--color-secondary-bg) border border-(--color-secondary-border) rounded-lg px-3 py-2.5 pr-9 text-sm text-slate-200 cursor-pointer focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                className="w-full appearance-none bg-input-inside-card border border-border-inside-card rounded-lg px-3 py-2.5 pr-9 text-sm text-white/60 cursor-pointer focus:outline-none focus:border-primary-focus disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
                                 <option value="">Sin release build</option>
                                 {builds?.items.map((build) => (
