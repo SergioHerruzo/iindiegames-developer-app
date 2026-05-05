@@ -12,9 +12,10 @@ const NAV_TABS: { key: GameTab; label: string; icon: React.ElementType }[] = [
 type EditGameNavigationBarProps = {
     activeTab: GameTab;
     onTabChange: (tab: GameTab) => void;
+    onDelete?: () => void;
 };
 
-export default function EditGameNavigationBar({ activeTab, onTabChange }: EditGameNavigationBarProps) {
+export default function EditGameNavigationBar({ activeTab, onTabChange, onDelete }: EditGameNavigationBarProps) {
     return (
         <div className="flex items-center justify-between w-full border-b border-(--color-divider)">
             {/* Tabs */}
@@ -66,6 +67,8 @@ export default function EditGameNavigationBar({ activeTab, onTabChange }: EditGa
             <div className="px-4">
                 <button
                     type="button"
+                    onClick={onDelete}
+                    disabled={!onDelete}
                     className="
                         inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-light
                         text-(--color-error-text)
@@ -73,6 +76,7 @@ export default function EditGameNavigationBar({ activeTab, onTabChange }: EditGa
                         border border-(--color-error-border)
                         transition-all duration-200 ease-out
                         cursor-pointer hover:opacity-80
+                        disabled:opacity-50 disabled:cursor-not-allowed
                     "
                 >
                     <Trash2 size={14} strokeWidth={1.5} />

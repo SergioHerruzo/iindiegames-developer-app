@@ -1,42 +1,12 @@
 import { useRef, useState } from "react";
 import { Trash2, Upload, ImageOff, Loader, Plus } from "lucide-react";
 import Divider from "@components/Divider";
+import StatusBadge from "@components/StatusBadge";
 import { apiClient } from "@services/ApiClient";
+import { getApiErrorMessage } from "@/utils/apiErrors";
 import type { DeveloperGame } from "@models/DeveloperGame";
 import type { DeveloperArtwork } from "@models/DeveloperArtwork";
 import type { DeveloperStorePicture } from "@models/DeveloperStorePicture";
-
-// ─── Status Badge ─────────────────────────────────────────────────────────────
-
-const statusConfig: Record<string, { bg: string; text: string; border: string; label: string }> = {
-    Ready: {
-        bg: "bg-(--color-published-bg)",
-        text: "text-(--color-published-text)",
-        border: "border-(--color-published-border)",
-        label: "Lista",
-    },
-    Processing: {
-        bg: "bg-(--color-badge-neutral-bg)",
-        text: "text-(--color-badge-neutral-text)",
-        border: "border-(--color-badge-neutral-border)",
-        label: "Procesando",
-    },
-    Error: {
-        bg: "bg-(--color-error-bg)",
-        text: "text-(--color-error-text)",
-        border: "border-(--color-error-border)",
-        label: "Error",
-    },
-};
-
-function StatusBadge({ status }: { status: string }) {
-    const config = statusConfig[status] ?? statusConfig["Processing"];
-    return (
-        <span className={`text-xs font-light px-2 py-0.5 rounded-full border ${config.bg} ${config.text} ${config.border}`}>
-            {config.label}
-        </span>
-    );
-}
 
 // ─── Artwork Slot (fixed, named) ──────────────────────────────────────────────
 
@@ -56,8 +26,11 @@ function ArtworkSlot({ label, item, onUpload, onDelete }: ArtworkSlotProps) {
 
     const handleFile = async (file: File) => {
         setUploading(true);
-        await onUpload(file);
-        setUploading(false);
+        try {
+            await onUpload(file);
+        } finally {
+            setUploading(false);
+        }
     };
 
     const handleDrop = (e: React.DragEvent) => {
@@ -70,8 +43,11 @@ function ArtworkSlot({ label, item, onUpload, onDelete }: ArtworkSlotProps) {
     const handleDelete = async () => {
         if (!item) return;
         setDeleting(true);
-        await onDelete(item.id);
-        setDeleting(false);
+        try {
+            await onDelete(item.id);
+        } finally {
+            setDeleting(false);
+        }
     };
 
     return (
@@ -153,7 +129,7 @@ function ArtworkSlot({ label, item, onUpload, onDelete }: ArtworkSlotProps) {
                         <span className="text-xs text-(--color-secondary-text) font-light truncate max-w-[60%]">
                             {item.id}
                         </span>
-                        <StatusBadge status={item.processingStatus} />
+                        <StatusBadge status={item.processingStatus} className="px-2 py-0.5" />
                     </div>
                 )}
             </div>
@@ -203,7 +179,7 @@ function StorePictureCard({ item, onDelete }: { item: DeveloperStorePicture; onD
                 <span className="text-xs text-(--color-secondary-text) font-light truncate max-w-[60%]">
                     {item.id}
                 </span>
-                <StatusBadge status={item.processingStatus} />
+                <StatusBadge status={item.processingStatus} className="px-2 py-0.5" />
             </div>
         </div>
     );
@@ -295,12 +271,24 @@ export default function ArtworksTab({ game, onRefetch }: ArtworksTabProps) {
     const [storePictures, setStorePictures] = useState(game.storePictures);
 
     // ── Artwork handlers ──
-    const handleUploadArtwork = (key: ArtworkKey) => async (_file: File) => {
-        // TODO: apiClient.post(`/games/${game.id}/artworks/${key}`, formData)
+    const handleUploadArtwork = (key: ArtworkKey) => async (file: File) => {
+        const formData = new FormData();
+        formData.append("Artwork", file);
+
+        const response = await apiClient.post(`/games/${game.id}/artworks/${key}`, formData);
+        if (!response.ok) {
+            throw new Error(getApiErrorMessage(response.status, {}, "No se pudo subir el artwork."));
+        }
+
+        onRefetch();
     };
 
-    const handleDeleteArtwork = (key: ArtworkKey) => async (_id: string) => {
-        // TODO: apiClient.delete(`/games/${game.id}/artworks/${key}`)
+    const handleDeleteArtwork = (key: ArtworkKey) => async (id: string) => {
+        const response = await apiClient.delete(`/games/${game.id}/artworks/${id}`);
+        if (!response.ok) {
+            throw new Error(getApiErrorMessage(response.status, {}, "No se pudo eliminar el artwork."));
+        }
+
         setArtworks((prev) => ({ ...prev, [key]: null }));
     };
 
@@ -316,7 +304,11 @@ export default function ArtworksTab({ game, onRefetch }: ArtworksTabProps) {
     };
 
     const handleDeleteStorePicture = async (id: string) => {
-        // TODO: apiClient.delete(`/games/${game.id}/store-pictures/${id}`)
+        const response = await apiClient.delete(`/games/${game.id}/store-pictures/${id}`);
+        if (!response.ok) {
+            throw new Error(getApiErrorMessage(response.status, {}, "No se pudo eliminar la imagen."));
+        }
+
         setStorePictures((prev) => prev.filter((p) => p.id !== id));
     };
 

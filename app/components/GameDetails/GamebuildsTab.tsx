@@ -1,43 +1,12 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link } from "react-router";
 import { Package, Plus, CircleAlert } from "lucide-react";
 import Divider from "@components/Divider";
 import PrimaryButton from "@components/PrimaryButton";
 import CreateGameBuildModal from "@components/GameDetails/Creategamebuildmodal";
+import StatusBadge from "@components/StatusBadge";
 import useGameBuilds from "@/hooks/useGameBuilds";
 import type { DeveloperGameBuild } from "@models/DeveloperGameBuild";
-
-// ─── Status Badge ─────────────────────────────────────────────────────────────
-
-const statusConfig: Record<string, { bg: string; text: string; border: string; label: string }> = {
-    Ready: {
-        bg: "bg-(--color-published-bg)",
-        text: "text-(--color-published-text)",
-        border: "border-(--color-published-border)",
-        label: "Lista",
-    },
-    Processing: {
-        bg: "bg-(--color-badge-neutral-bg)",
-        text: "text-(--color-badge-neutral-text)",
-        border: "border-(--color-badge-neutral-border)",
-        label: "Procesando",
-    },
-    Error: {
-        bg: "bg-(--color-error-bg)",
-        text: "text-(--color-error-text)",
-        border: "border-(--color-error-border)",
-        label: "Error",
-    },
-};
-
-function StatusBadge({ status }: { status: string }) {
-    const config = statusConfig[status] ?? statusConfig["Processing"];
-    return (
-        <span className={`text-xs font-light px-2.5 py-1 rounded-full border ${config.bg} ${config.text} ${config.border}`}>
-            {config.label}
-        </span>
-    );
-}
 
 // ─── Build Row ────────────────────────────────────────────────────────────────
 
@@ -105,8 +74,7 @@ function EmptyState() {
 
 // ─── Game Builds Tab ──────────────────────────────────────────────────────────
 
-export default function GameBuildsTab() {
-    const { gameId } = useParams();
+export default function GameBuildsTab({ gameId }: { gameId: string }) {
     const { builds, loading, error, refetch } = useGameBuilds(gameId);
     const [isModalOpen, setIsModalOpen] = useState(false);
 

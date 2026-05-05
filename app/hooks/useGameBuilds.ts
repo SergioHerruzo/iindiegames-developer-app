@@ -1,5 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
-import { apiClient } from "@services/ApiClient";
+import useFetch from "@/hooks/useFetch";
 import type { DeveloperGameBuild } from "@models/DeveloperGameBuild";
 import type { PaginatedResponse } from "@models/PaginatedResponse";
 
@@ -11,58 +10,18 @@ type UseGameBuildsResult = {
 };
 
 export default function useGameBuilds(gameId: string | undefined): UseGameBuildsResult {
-    const [builds, setBuilds] = useState<PaginatedResponse<DeveloperGameBuild> | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [tick, setTick] = useState(0);
+    const { data, loading, error, refetch } = useFetch<PaginatedResponse<DeveloperGameBuild>>(
+        gameId ? `/games/developer/${gameId}/builds` : null,
+        {
+            fallbackError: "No se pudieron cargar las builds.",
+            errorMessages: {
+                401: "No tienes permisos para ver las builds de este juego.",
+                403: "No tienes permisos para ver las builds de este juego.",
+                404: "El juego no existe o fue eliminado.",
+                500: "Error interno del servidor. Inténtalo más tarde.",
+            },
+        }
+    );
 
-    const refetch = useCallback(() => setTick((t) => t + 1), []);
-
-    useEffect(() => {
-        if (!gameId) return;
-
-        let cancelled = false;
-
-        const fetchBuilds = async () => {
-            setLoading(true);
-            setError(null);
-
-            try {
-                const response = await apiClient.get(`/games/developer/${gameId}/builds`);
-
-                if (!response.ok) {
-                    let message = "No se pudieron cargar las builds.";
-                    switch (response.status) {
-                        case 401:
-                        case 403:
-                            message = "No tienes permisos para ver las builds de este juego.";
-                            break;
-                        case 404:
-                            message = "El juego no existe o fue eliminado.";
-                            break;
-                        case 500:
-                            message = "Error interno del servidor. Inténtalo más tarde.";
-                            break;
-                    }
-                    throw new Error(message);
-                }
-
-                const data: PaginatedResponse<DeveloperGameBuild> = await response.json();
-                if (!cancelled) setBuilds(data);
-
-            } catch (err) {
-                if (!cancelled) {
-                    setError(err instanceof Error ? err.message : "Error inesperado al cargar las builds.");
-                }
-            } finally {
-                if (!cancelled) setLoading(false);
-            }
-        };
-
-        fetchBuilds();
-
-        return () => { cancelled = true; };
-    }, [gameId, tick]);
-
-    return { builds, loading, error, refetch };
+    return { builds: data, loading, error, refetch };
 }

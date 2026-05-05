@@ -1,98 +1,17 @@
-import { useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-import { ArrowLeft, Trash2, Save, Loader, ExternalLink, Package, FolderOpen, Upload, FileText, CheckCircle } from "lucide-react";
+import { ArrowLeft, Trash2, Save, Loader, ExternalLink, Package, FolderOpen, Upload, CheckCircle } from "lucide-react";
 import Card from "@components/Card";
 import { Input } from "@components/Input";
 import Divider from "@components/Divider";
 import PrimaryButton from "@components/PrimaryButton";
 import SecondaryButton from "@components/SecondaryButton";
+import StatusBadge from "@components/StatusBadge";
+import BuildFileList from "@components/GameDetails/BuildFileList";
+import DeleteConfirmCard from "@components/GameDetails/DeleteConfirmCard";
+import GameBuildSkeleton from "@components/GameDetails/GameBuildSkeleton";
 import useGameBuildDetail from "@/hooks/useGameBuildDetail";
 import useGameBuildFiles from "@/hooks/useGameBuildFiles";
-import { apiClient } from "@services/ApiClient";
-
-// ─── Status Badge ─────────────────────────────────────────────────────────────
-
-const statusConfig: Record<string, { bg: string; text: string; border: string; label: string }> = {
-    Ready: {
-        bg: "bg-(--color-published-bg)",
-        text: "text-(--color-published-text)",
-        border: "border-(--color-published-border)",
-        label: "Lista",
-    },
-    Processing: {
-        bg: "bg-(--color-badge-neutral-bg)",
-        text: "text-(--color-badge-neutral-text)",
-        border: "border-(--color-badge-neutral-border)",
-        label: "Procesando",
-    },
-    Completed: {
-        bg: "bg-(--color-published-bg)",
-        text: "text-(--color-published-text)",
-        border: "border-(--color-published-border)",
-        label: "Completada",
-    },
-    Error: {
-        bg: "bg-(--color-error-bg)",
-        text: "text-(--color-error-text)",
-        border: "border-(--color-error-border)",
-        label: "Error",
-    },
-};
-
-function StatusBadge({ status }: { status: string }) {
-    const config = statusConfig[status] ?? statusConfig["Processing"];
-    return (
-        <span className={`text-xs font-light px-2.5 py-1 rounded-full border ${config.bg} ${config.text} ${config.border}`}>
-            {config.label}
-        </span>
-    );
-}
-
-// ─── Skeleton ─────────────────────────────────────────────────────────────────
-
-function GameBuildSkeleton() {
-    return (
-        <div className="flex flex-col gap-4 animate-pulse">
-            <div className="h-7 w-48 rounded-lg skeleton-block" />
-            <div className="h-px w-full skeleton-block" />
-            <div className="h-24 w-full rounded-xl skeleton-block" />
-            <div className="h-24 w-full rounded-xl skeleton-block" />
-        </div>
-    );
-}
-
-// ─── Delete Confirm ───────────────────────────────────────────────────────────
-
-function DeleteConfirmCard({ onConfirm, onCancel, isDeleting }: {
-    onConfirm: () => void;
-    onCancel: () => void;
-    isDeleting: boolean;
-}) {
-    return (
-        <div className="rounded-xl border border-(--color-error-border) bg-(--color-error-bg) p-4 flex items-center justify-between gap-4">
-            <p className="text-sm text-(--color-error-text)">
-                ¿Seguro que quieres eliminar esta build? Esta acción no se puede deshacer.
-            </p>
-            <div className="inline-flex items-center gap-2 shrink-0">
-                <SecondaryButton onClick={onCancel} disabled={isDeleting}>
-                    Cancelar
-                </SecondaryButton>
-                <button
-                    type="button"
-                    onClick={onConfirm}
-                    disabled={isDeleting}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-light text-(--color-error-text) bg-(--color-error-bg) border border-(--color-error-border) cursor-pointer hover:opacity-80 transition-opacity disabled:opacity-50"
-                >
-                    {isDeleting
-                        ? <Loader size={14} className="animate-spin" />
-                        : <Trash2 size={14} strokeWidth={1.5} />
-                    }
-                    {isDeleting ? "Eliminando..." : "Sí, eliminar"}
-                </button>
-            </div>
-        </div>
-    );
-}
+import useGameBuildActions from "@/hooks/useGameBuildActions";
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -102,201 +21,45 @@ export default function GameBuild() {
     const { build, loading, error } = useGameBuildDetail(buildId);
     const { files, loading: filesLoading, error: filesError, refetch: refetchFiles } = useGameBuildFiles(buildId);
 
-    const [versionName, setVersionName] = useState("");
-    const [versionNameError, setVersionNameError] = useState<string | null>(null);
-    const [isSaving, setIsSaving] = useState(false);
-    const [saveError, setSaveError] = useState<string | null>(null);
-    const [saveSuccess, setSaveSuccess] = useState(false);
+    const {
+        versionName,
+        versionNameError,
+        onVersionNameChange,
 
-    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-    const [isDeleting, setIsDeleting] = useState(false);
-    const [deleteError, setDeleteError] = useState<string | null>(null);
+        isSaving,
+        saveError,
+        saveSuccess,
+        handleSave,
 
-    const [isCompleting, setIsCompleting] = useState(false);
-    const [completeError, setCompleteError] = useState<string | null>(null);
-    const [completeSuccess, setCompleteSuccess] = useState(false);
+        showDeleteConfirm,
+        setShowDeleteConfirm,
+        isDeleting,
+        deleteError,
+        handleDelete,
 
-    const folderInputRef = useRef<HTMLInputElement>(null);
-    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-    const [folderName, setFolderName] = useState<string | null>(null);
-    const [isUploading, setIsUploading] = useState(false);
-    const [uploadProgress, setUploadProgress] = useState<{ done: number; total: number } | null>(null);
-    const [uploadError, setUploadError] = useState<string | null>(null);
-    const [uploadSuccess, setUploadSuccess] = useState(false);
+        folderInputRef,
+        selectedFiles,
+        folderName,
+        isUploading,
+        uploadProgress,
+        uploadError,
+        uploadSuccess,
+        handleFolderChange,
+        handleUpload,
 
-    // Init local state once build loads
-    const [initialized, setInitialized] = useState(false);
-    if (build && !initialized) {
-        setVersionName(build.versionName);
-        setInitialized(true);
-    }
-
-    // ── Edit ──
-    const handleSave = async () => {
-        if (!versionName.trim()) {
-            setVersionNameError("El nombre de la versión es obligatorio.");
-            return;
-        }
-
-        setVersionNameError(null);
-        setSaveError(null);
-        setSaveSuccess(false);
-        setIsSaving(true);
-
-        try {
-            const response = await apiClient.put(`/game-builds/${buildId}`, {
-                versionName: versionName.trim(),
-            });
-
-            if (!response.ok) {
-                let message = "No se pudo guardar los cambios.";
-                switch (response.status) {
-                    case 400: message = "Los datos enviados son incorrectos."; break;
-                    case 401:
-                    case 403: message = "No tienes permisos para editar esta build."; break;
-                    case 404: message = "La build no existe o fue eliminada."; break;
-                    case 409: message = "Ya existe una build con ese nombre de versión."; break;
-                    case 500: message = "Error interno del servidor. Inténtalo más tarde."; break;
-                }
-                throw new Error(message);
-            }
-
-            setSaveSuccess(true);
-        } catch (err) {
-            setSaveError(err instanceof Error ? err.message : "Error inesperado.");
-        } finally {
-            setIsSaving(false);
-        }
-    };
-
-    // ── Delete ──
-    const handleDelete = async () => {
-        setIsDeleting(true);
-        setDeleteError(null);
-
-        try {
-            const response = await apiClient.delete(`/game-builds/${buildId}`);
-
-            if (!response.ok) {
-                let message = "No se pudo eliminar la build.";
-                switch (response.status) {
-                    case 401:
-                    case 403: message = "No tienes permisos para eliminar esta build."; break;
-                    case 404: message = "La build no existe o ya fue eliminada."; break;
-                    case 500: message = "Error interno del servidor. Inténtalo más tarde."; break;
-                }
-                throw new Error(message);
-            }
-
-            navigate(-1);
-        } catch (err) {
-            setDeleteError(err instanceof Error ? err.message : "Error inesperado.");
-            setIsDeleting(false);
-            setShowDeleteConfirm(false);
-        }
-    };
-
-    // ── Upload ──
-    const handleFolderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = Array.from(e.target.files ?? []);
-        if (!files.length) return;
-        const root = files[0].webkitRelativePath.split("/")[0];
-        setFolderName(root);
-        setSelectedFiles(files);
-        setUploadError(null);
-        setUploadSuccess(false);
-        setUploadProgress(null);
-    };
-
-    const handleUpload = async () => {
-        if (!selectedFiles.length) return;
-        setIsUploading(true);
-        setUploadError(null);
-        setUploadSuccess(false);
-        setUploadProgress({ done: 0, total: selectedFiles.length });
-
-        try {
-            const filePaths = selectedFiles.map(f =>
-                f.webkitRelativePath.split("/").slice(1).join("/")
-            );
-
-            const response = await apiClient.post(`/game-builds/${buildId}/upload`, { filePaths });
-
-            if (!response.ok) {
-                let message = "No se pudieron obtener las URLs de subida.";
-                switch (response.status) {
-                    case 400: message = "Los datos enviados son incorrectos."; break;
-                    case 401:
-                    case 403: message = "No tienes permisos para subir archivos a esta build."; break;
-                    case 404: message = "La build no existe o fue eliminada."; break;
-                    case 500: message = "Error interno del servidor. Inténtalo más tarde."; break;
-                }
-                throw new Error(message);
-            }
-
-            const uploadInfos: { originalFilePath: string; uploadUrl: string }[] = await response.json();
-
-            const fileMap = new Map(
-                selectedFiles.map(f => [f.webkitRelativePath.split("/").slice(1).join("/"), f])
-            );
-
-            let done = 0;
-            for (const info of uploadInfos) {
-                const file = fileMap.get(info.originalFilePath);
-                if (!file) continue;
-                const arrayBuffer = await file.arrayBuffer();
-                const putRes = await fetch(info.uploadUrl, {
-                    method: "PUT",
-                    body: arrayBuffer,
-                });
-                if (!putRes.ok) throw new Error(`Error subiendo ${info.originalFilePath}.`);
-                done++;
-                setUploadProgress({ done, total: selectedFiles.length });
-            }
-
-            setUploadSuccess(true);
-            setSelectedFiles([]);
-            setFolderName(null);
-            if (folderInputRef.current) folderInputRef.current.value = "";
-            refetchFiles();
-        } catch (err) {
-            setUploadError(err instanceof Error ? err.message : "Error inesperado.");
-        } finally {
-            setIsUploading(false);
-        }
-    };
-
-    // ── Complete ──
-    const handleComplete = async () => {
-        setIsCompleting(true);
-        setCompleteError(null);
-        setCompleteSuccess(false);
-
-        try {
-            const response = await apiClient.post(`/game-builds/${buildId}/complete`, {});
-
-            if (!response.ok) {
-                let message = "No se pudo completar la build.";
-                switch (response.status) {
-                    case 400: message = "La build no puede completarse en su estado actual."; break;
-                    case 401:
-                    case 403: message = "No tienes permisos para completar esta build."; break;
-                    case 404: message = "La build no existe o fue eliminada."; break;
-                    case 500: message = "Error interno del servidor. Inténtalo más tarde."; break;
-                }
-                throw new Error(message);
-            }
-
-            setCompleteSuccess(true);
-        } catch (err) {
-            setCompleteError(err instanceof Error ? err.message : "Error inesperado.");
-        } finally {
-            setIsCompleting(false);
-        }
-    };
+        isCompleting,
+        completeError,
+        completeSuccess,
+        handleComplete,
+    } = useGameBuildActions(
+        buildId,
+        build?.versionName ?? "",
+        () => navigate(-1),
+        () => refetchFiles()
+    );
 
     return (
-        <div className="px-6 py-4 flex flex-col gap-4">
+        <div className="flex flex-col flex-1 h-full w-full px-6 py-4 gap-8">
 
             {/* Back link */}
             <Link
@@ -310,25 +73,31 @@ export default function GameBuild() {
             </Link>
 
             {/* Header */}
-            <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-(--color-secondary-bg) border border-(--color-secondary-border)">
-                    <Package size={18} strokeWidth={1.5} className="text-(--color-secondary-icon)" />
-                </div>
-                <div className="flex flex-col gap-1">
-                    <div className="flex items-center gap-2">
-                        <h2>{build?.versionName ?? buildId}</h2>
-                        {build && <StatusBadge status={build.status} />}
-                        {build?.isReleaseBuild && (
-                            <span className="text-xs font-light px-2.5 py-1 rounded-full border bg-(--color-published-bg) text-(--color-published-text) border-(--color-published-border)">
-                                Release
-                            </span>
-                        )}
+            <header className="flex items-center justify-between w-full gap-4">
+                <div className="flex items-center gap-3">
+                    <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-(--color-secondary-bg) border border-(--color-secondary-border)">
+                        <Package size={18} strokeWidth={1.5} className="text-(--color-secondary-icon)" />
                     </div>
-                    {build && (
-                        <span className="text-xs font-light text-(--color-secondary-text)">{build.buildId}</span>
-                    )}
+                    <div className="flex flex-col gap-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                            <h2>{build?.versionName ?? buildId}</h2>
+                            {build && <StatusBadge status={build.status} />}
+                            {build?.isReleaseBuild && (
+                                <span className="text-xs font-light px-2.5 py-1 rounded-full border bg-(--color-published-bg) text-(--color-published-text) border-(--color-published-border)">
+                                    Release
+                                </span>
+                            )}
+                        </div>
+                        <h4 className="truncate">
+                            Gestiona el nombre, archivos, release y completado de la build.
+                        </h4>
+                    </div>
                 </div>
-            </div>
+
+                {build && (
+                    <span className="text-xs font-light text-(--color-secondary-text)">{build.buildId}</span>
+                )}
+            </header>
 
             {/* Error loading */}
             {error && (
@@ -352,10 +121,7 @@ export default function GameBuild() {
                             type="text"
                             variant="inside card"
                             value={versionName}
-                            onChange={(val) => {
-                                setVersionName(val);
-                                setSaveSuccess(false);
-                            }}
+                            onChange={onVersionNameChange}
                         >
                             <Input.Label>Nombre de versión</Input.Label>
                             <Input.Field
@@ -410,44 +176,7 @@ export default function GameBuild() {
                     {/* Upload section */}
                     <Divider title="Archivos" />
 
-                    {/* File list */}
-                    {filesError && (
-                        <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
-                            {filesError}
-                        </div>
-                    )}
-
-                    {!filesError && (
-                        <div className="rounded-xl border border-(--color-border-default) bg-(--color-card-bg) overflow-hidden">
-                            {filesLoading && (
-                                <div className="flex flex-col animate-pulse">
-                                    {Array.from({ length: 3 }).map((_, i) => (
-                                        <div key={i} className="flex items-center gap-3 px-4 py-2.5 border-b border-(--color-border-default) last:border-b-0">
-                                            <div className="w-3.5 h-3.5 rounded skeleton-block shrink-0" />
-                                            <div className="h-3 w-64 rounded skeleton-block" />
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-
-                            {!filesLoading && files.length === 0 && (
-                                <div className="flex items-center justify-center py-8 text-sm font-light text-(--color-secondary-text)">
-                                    No hay archivos subidos todavía.
-                                </div>
-                            )}
-
-                            {!filesLoading && files.length > 0 && (
-                                <div className="flex flex-col">
-                                    {files.map((file) => (
-                                        <div key={file} className="flex items-center gap-3 px-4 py-2.5 border-b border-(--color-border-default) last:border-b-0">
-                                            <FileText size={14} strokeWidth={1.5} className="text-(--color-secondary-icon) shrink-0" />
-                                            <span className="text-xs font-light text-(--color-secondary-text) truncate">{file}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    )}
+                    <BuildFileList files={files} loading={filesLoading} error={filesError} />
 
                     <input
                         ref={folderInputRef}

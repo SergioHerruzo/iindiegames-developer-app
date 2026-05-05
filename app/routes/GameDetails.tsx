@@ -32,7 +32,7 @@ export default function Game() {
     const { game, loading, error, refetch } = useGameDetails(gameId);
 
     return (
-        <div className="px-6 py-4 flex flex-col gap-4">
+        <div className="flex flex-col flex-1 h-full w-full px-6 py-4 gap-8">
             {/* Back Link */}
             <Link
                 to="/panel"
@@ -44,10 +44,22 @@ export default function Game() {
                 <span>Volver al Panel</span>
             </Link>
 
-            <h2>{game?.title || gameId}</h2>
+            {/* Header */}
+            <header className="flex items-center justify-between w-full gap-4">
+                <div className="flex flex-col gap-1">
+                    <h2>{game?.title || gameId}</h2>
+                    <h4>Edita la información, assets y builds.</h4>
+                </div>
+            </header>
 
             {/* Tab Navigation */}
-            <EditGameNavigationBar activeTab={activeTab} onTabChange={setActiveTab} />
+            <EditGameNavigationBar
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+                onDelete={() => {
+                    // Stub: hook up to delete endpoint + confirmation when implemented.
+                }}
+            />
 
             {/* Tab Content */}
             <div className="flex-1">
@@ -61,9 +73,9 @@ export default function Game() {
 
                 {!error && !loading && game && (
                     <>
-                        {activeTab === "general"      && <GeneralTab game={game} />}
+                        {activeTab === "general"      && <GeneralTab game={game} onRefetch={refetch} />}
                         {activeTab === "artworks"     && <ArtworksTab game={game} onRefetch={refetch} />}
-                        {activeTab === "builds"       && <GameBuildsTab />}
+                        {activeTab === "builds"       && <GameBuildsTab gameId={game.id} />}
                         {activeTab === "achievements" && <AchievementsTab />}
                     </>
                 )}

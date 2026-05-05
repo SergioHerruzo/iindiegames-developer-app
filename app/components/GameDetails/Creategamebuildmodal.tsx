@@ -6,6 +6,7 @@ import { Input } from "@components/Input";
 import SecondaryButton from "@components/SecondaryButton";
 import PrimaryButton from "@components/PrimaryButton";
 import { apiClient } from "@services/ApiClient";
+import { getApiErrorMessage } from "@/utils/apiErrors";
 
 type CreateGameBuildModalProps = {
     isOpen: boolean;
@@ -55,29 +56,20 @@ export default function CreateGameBuildModal({
             const response = await apiClient.post(`/games/${gameId}/builds`, {
                 versionName: versionName.trim(),
             });
-            console.log(response.status)
 
             if (!response.ok) {
-                let message = "No se pudo crear la build.";
-                switch (response.status) {
-                    case 400:
-                        message = "Los datos enviados son incorrectos.";
-                        break;
-                    case 401:
-                    case 403:
-                        message = "No tienes permisos para crear builds en este juego.";
-                        break;
-                    case 404:
-                        message = "El juego no existe o fue eliminado.";
-                        break;
-                    case 409:
-                        message = "Ya existe una build con ese nombre de versión.";
-                        break;
-                    case 500:
-                        message = "Error interno del servidor. Inténtalo más tarde.";
-                        break;
-                }
-                throw new Error(message);
+                throw new Error(
+                    getApiErrorMessage(
+                        response.status,
+                        {
+                            401: "No tienes permisos para crear builds en este juego.",
+                            403: "No tienes permisos para crear builds en este juego.",
+                            404: "El juego no existe o fue eliminado.",
+                            409: "Ya existe una build con ese nombre de versión.",
+                        },
+                        "No se pudo crear la build."
+                    )
+                );
             }
 
             onSuccess();
@@ -132,7 +124,7 @@ export default function CreateGameBuildModal({
                         </Input.Root>
 
                         {/* Submit error */}
-                        {error && !versionName.trim() === false && (
+                        {error && versionName.trim() && (
                             <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
                                 {error}
                             </div>
