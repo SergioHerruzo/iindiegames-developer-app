@@ -35,7 +35,7 @@ export default function EditGameNavigationBar({ activeTab, onTabChange }: EditGa
     }, [activeTab]);
 
     return (
-        <div className="flex items-center justify-center w-full pb-4 mb-2">
+        <div className="flex items-center">
             <nav ref={navRef} className="relative flex items-center gap-2 overflow-x-auto no-scrollbar">
 
                 {/* Sliding Pill Background */}

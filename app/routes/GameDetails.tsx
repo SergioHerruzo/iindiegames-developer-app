@@ -33,22 +33,24 @@ export default function Game() {
 
     return (
         <div className="flex flex-col flex-1 h-full w-full px-6 py-4 gap-4">
-            {/* Back Link */}
-            <Link
-                to="/panel"
-                className="group inline-flex items-center w-fit text-slate-600 dark:text-white/60 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors duration-300"
-            >
-                <div className="flex items-center w-0 overflow-hidden opacity-0 -translate-x-4 transition-all duration-300 ease-out group-hover:w-6 group-hover:opacity-100 group-hover:translate-x-0">
-                    <ArrowLeft size={16} />
-                </div>
-                <span>Volver al Panel</span>
-            </Link>
+            {/* Back Link + Tab Navigation */}
+            <div className="flex items-center gap-6">
+                <Link
+                    to="/panel"
+                    className="group relative inline-flex items-center shrink-0 ml-5 text-slate-600 dark:text-white/60 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors duration-300"
+                >
+                    <ArrowLeft
+                        size={16}
+                        className="absolute -left-5 opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ease-out"
+                    />
+                    <span>Volver al Panel</span>
+                </Link>
 
-            {/* Tab Navigation */}
-            <EditGameNavigationBar
-                activeTab={activeTab}
-                onTabChange={setActiveTab}
-            />
+                <EditGameNavigationBar
+                    activeTab={activeTab}
+                    onTabChange={setActiveTab}
+                />
+            </div>
 
             {/* Tab Content */}
             <div className="flex-1 mt-2">
