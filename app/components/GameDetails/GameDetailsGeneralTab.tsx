@@ -234,7 +234,7 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
     return (
         <div className="flex flex-col gap-4">
 
-            {/* ── ROW 1: Título | Géneros ── */}
+            {/* Title And Genres */}
             <div className="grid grid-cols-2 gap-4">
                 <Card>
                     <Input.Root
@@ -258,7 +258,7 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
                 </Card>
             </div>
 
-            {/* ── ROW 2: Descripción ── */}
+            {/* Description */}
             <Card>
                 <Input.Root
                     id="description"
@@ -273,7 +273,7 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
                 </Input.Root>
             </Card>
 
-            {/* ── ROW 3: Precio | Descuento ── */}
+            {/* Price And Discount */}
             <div className="grid grid-cols-2 gap-4">
                 <Card>
                     <Input.Root
@@ -302,27 +302,27 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
                 </Card>
             </div>
 
-            {/* Precio final calculado */}
+            {/* Calculated Final Price */}
             {finalPrice !== null && parsedDiscount > 0 && (
-                <div className="inline-flex items-center gap-2 text-sm font-light text-(--color-secondary-text) px-1">
+                <div className="inline-flex items-center gap-2 text-secondary-text px-1">
                     <span>Precio final:</span>
-                    <span className="text-(--color-primary-text) font-medium">{finalPrice} €</span>
-                    <span className="px-2 py-0.5 rounded-full bg-(--color-published-bg) border border-(--color-published-border) text-(--color-published-text) text-xs">
+                    <span className="text-(--color-primary-text)">{finalPrice} €</span>
+                    <span className="px-2 py-0.5 rounded-full bg-(--color-published-bg) border border-published-border text-(--color-published-text) text-sm">
                         -{discount}%
                     </span>
                 </div>
             )}
 
-            {/* ── ROW 4: Visibilidad | Release build ── */}
+            {/* Visibility And Release Build */}
             <div className="grid grid-cols-2 gap-4">
                 <Card>
                     <div className="flex items-center justify-between gap-4">
                         <div className="flex flex-col gap-1">
-                            <span className="text-sm text-badge-neutral-text">Visibilidad</span>
-                            <span className="text-xs text-badge-neutral-text opacity-80">
+                            <span className="text-badge-neutral-text">Visibilidad</span>
+                            <span className="text-xs text-badge-neutral-text">
                                 {isPublic ? "Visible en la tienda." : "Oculto en la tienda."}
                             </span>
-                            <p className="text-xs text-badge-neutral-text opacity-60 mt-1">
+                            <p className="text-xs text-badge-neutral-text">
                                 La visibilidad del juego solo afecta a la tienda, los usuarios que hayan adquirido el producto podrán seguir viéndolo y usándolo en su biblioteca de Indie Games.
                             </p>
                         </div>
@@ -341,7 +341,7 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
                 <Card>
                     <div className="flex flex-col gap-2">
                         <div className="flex flex-col gap-0.5">
-                            <span className="text-sm text-badge-neutral-text">Release build</span>
+                            <span className="text-badge-neutral-text">Release build</span>
                         </div>
                         <div className="relative">
                             <select
@@ -353,17 +353,14 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
                                 {!game.releaseBuild && <option value="">Sin release build</option>}
                                 {builds?.items.map((build) => (
                                     <option key={build.id} value={build.id}>
-                                        {build.versionName}
-                                        {build.isReleaseBuild ? " (actual)" : ""}
-                                        {" · "}
-                                        {build.status}
+                                        {build.versionName} ({build.id})
                                     </option>
                                 ))}
                             </select>
                             <ChevronDown
                                 size={14}
                                 strokeWidth={1.5}
-                                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-(--color-secondary-text)"
+                                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-secondary-text"
                             />
                         </div>
                     </div>
@@ -373,17 +370,17 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
             {/* ── Guardar ── */}
             <div className="flex flex-col gap-3">
                 {saveError && (
-                    <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                    <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
                         {saveError}
                     </div>
                 )}
                 {saveSuccess && (
-                    <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
+                    <div className="rounded-lg border border-published-border bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
                         Cambios guardados correctamente.
                     </div>
                 )}
                 <div className="flex items-center justify-between gap-4">
-                    <p className="text-sm font-light text-(--color-secondary-text)">
+                    <p className="text-sm font-light text-secondary-text">
                         {isDirty ? "Tienes cambios sin guardar." : "No hay cambios pendientes."}
                     </p>
                     <PrimaryButton className="max-w-fit" onClick={handleSaveAll} disabled={isSaving || !isDirty}>
@@ -395,17 +392,17 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
                 </div>
             </div>
 
-            {/* ── Publicar (solo si aún no está released) ── */}
+            {/* Publish */}
             {!game.isReleased && (
                 <div className="flex flex-col gap-3">
                     <Divider title="Publicar" />
                     {publishError && (
-                        <div className="rounded-lg border border-(--color-error-border) bg-(--color-error-bg) p-3 text-sm text-(--color-error-text)">
+                        <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
                             {publishError}
                         </div>
                     )}
                     {publishSuccess && (
-                        <div className="rounded-lg border border-(--color-published-border) bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
+                        <div className="rounded-lg border border-published-border bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
                             Juego publicado correctamente.
                         </div>
                     )}
