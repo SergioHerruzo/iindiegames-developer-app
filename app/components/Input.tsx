@@ -43,7 +43,7 @@ function Label({ children }: { children: ReactNode }) {
   const { id } = useInput();
 
   return (
-    <label htmlFor={id} className="mb-1 text-badge-neutral-text">
+    <label htmlFor={id} className="mb-2 text-badge-neutral-text">
       {children}
     </label>
   );
@@ -148,7 +148,7 @@ function Field({
 
 function Helper({ children }: { children: ReactNode }) {
   return (
-    <span className="feedback-msg block text-xs text-badge-neutral-text opacity-80 mt-2 [.feedback-msg+&]:mt-1">
+    <span className="feedback-msg block text-xs text-badge-neutral-text opacity-80 mt-4 [.feedback-msg+&]:mt-1">
       {children}
     </span>
   );
@@ -156,7 +156,7 @@ function Helper({ children }: { children: ReactNode }) {
 
 function ErrorMessage({ children }: { children: ReactNode }) {
   return (
-    <span className="feedback-msg block text-xs text-error-message mt-2 [.feedback-msg+&]:mt-1">
+    <span className="feedback-msg block text-xs text-error-message mt-4 [.feedback-msg+&]:mt-1">
       {children}
     </span>
   );
@@ -164,7 +164,7 @@ function ErrorMessage({ children }: { children: ReactNode }) {
 
 function SuccessMessage({ children }: { children: ReactNode }) {
   return (
-    <span className="feedback-msg block text-xs text-success-message mt-2 [.feedback-msg+&]:mt-1">
+    <span className="feedback-msg block text-xs text-success-message mt-4 [.feedback-msg+&]:mt-1">
       {children}
     </span>
   );

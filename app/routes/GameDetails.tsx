@@ -62,9 +62,9 @@ export default function Game() {
 
                 {!error && !loading && game && (
                     <>
-                        {activeTab === "general"      && <GeneralTab game={game} onRefetch={refetch} />}
-                        {activeTab === "artworks"     && <ArtworksTab game={game} onRefetch={refetch} />}
-                        {activeTab === "builds"       && <GameBuildsTab gameId={game.id} />}
+                        {activeTab === "general" && <GeneralTab game={game} onRefetch={refetch} />}
+                        {activeTab === "artworks" && <ArtworksTab game={game} onRefetch={refetch} />}
+                        {activeTab === "builds" && <GameBuildsTab gameId={game.id} />}
                         {activeTab === "achievements" && <AchievementsTab />}
                     </>
                 )}
