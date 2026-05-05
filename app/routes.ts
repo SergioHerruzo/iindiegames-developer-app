@@ -12,7 +12,8 @@ export default [
         layout("Layout/TopBarLayout.tsx", [
             route("panel", "routes/Panel.tsx"),
             route("new-game", "routes/NewGame.tsx"),
-            route("game/:gameId", "routes/Game.tsx"),
+            route("game-details/:gameId", "routes/GameDetails.tsx"),
+            route("game-builds/:buildId", "routes/GameBuild.tsx"),
         ])
     ]),
 ] satisfies RouteConfig;

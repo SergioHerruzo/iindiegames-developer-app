@@ -37,7 +37,7 @@ export default function PanelGameCard({ id, title, description, imageUrl, status
     const config = statusConfig[status] ?? statusConfig["NotPublished"];
 
     return (
-        <Link to={`/game/${id}`} className="cursor-pointer h-full group">
+        <Link to={`/game-details/${id}`} className="cursor-pointer h-full group">
             <Card variant="none" className="h-full flex flex-col">
 
                 {/* Image Section */}

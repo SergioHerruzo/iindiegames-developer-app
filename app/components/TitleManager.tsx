@@ -7,7 +7,7 @@ const routeTitles: Record<string, string> = {
   "/login": "Login",
   "/register": "Registro",
   "/new-game": "Crear Juego",
-  "/game/:gameId": "Detalles del Juego",
+  "/game-details/:gameId": "Detalles del Juego",
 };
 
 function matchRoute(pathname: string): string | undefined {
