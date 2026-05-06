@@ -3,6 +3,7 @@ import { useAuth } from "@auth/UseAuth";
 import { useTheme } from "@theme/useTheme";
 import { useNavigate } from "react-router";
 import { AvatarButton } from "@components/TopBar/AvatarButton";
+import Divider from "@components/Divider";
 
 interface Props {
     isOpen: boolean;
@@ -35,7 +36,7 @@ export function UserDropdown({ isOpen }: Props) {
             `}
         >
             {/* User Info */}
-            <div className="flex items-center gap-3 px-3 py-2.5 mb-1 border-b border-divider">
+            <div className="flex items-center gap-3 px-3 py-2.5">
                 <div className="shrink-0">
                     <AvatarButton
                         displayName={displayName}
@@ -52,6 +53,8 @@ export function UserDropdown({ isOpen }: Props) {
                     </h6>
                 </div>
             </div>
+
+            <Divider />
 
             {/* Theme Toggle */}
             <button
