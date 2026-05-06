@@ -15,6 +15,7 @@ type UseGameBuildActionsResult = {
     isSaving: boolean;
     saveError: string | null;
     saveSuccess: boolean;
+    uploadProgress: UploadProgress | null;
     handleSave: () => Promise<void>;
 
     showDeleteConfirm: boolean;
@@ -26,12 +27,8 @@ type UseGameBuildActionsResult = {
     folderInputRef: React.RefObject<HTMLInputElement | null>;
     selectedFiles: File[];
     folderName: string | null;
-    isUploading: boolean;
-    uploadProgress: UploadProgress | null;
-    uploadError: string | null;
-    uploadSuccess: boolean;
+    skippedCount: number;
     handleFolderChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    handleUpload: () => Promise<void>;
 
     isCompleting: boolean;
     completeError: string | null;
@@ -43,6 +40,7 @@ export default function useGameBuildActions(
     buildId: string | undefined,
     initialVersionName: string,
     isReadOnly: boolean,
+    existingFiles: string[],
     onDeleteSuccess: () => void,
     onUploadSuccess: () => void
 ): UseGameBuildActionsResult {
@@ -51,6 +49,7 @@ export default function useGameBuildActions(
     const [isSaving, setIsSaving] = useState(false);
     const [saveError, setSaveError] = useState<string | null>(null);
     const [saveSuccess, setSaveSuccess] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null);
 
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -59,20 +58,19 @@ export default function useGameBuildActions(
     const folderInputRef = useRef<HTMLInputElement>(null);
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [folderName, setFolderName] = useState<string | null>(null);
-    const [isUploading, setIsUploading] = useState(false);
-    const [uploadProgress, setUploadProgress] = useState<UploadProgress | null>(null);
-    const [uploadError, setUploadError] = useState<string | null>(null);
-    const [uploadSuccess, setUploadSuccess] = useState(false);
+    const [skippedCount, setSkippedCount] = useState(0);
 
     const [isCompleting, setIsCompleting] = useState(false);
     const [completeError, setCompleteError] = useState<string | null>(null);
     const [completeSuccess, setCompleteSuccess] = useState(false);
 
-    // Init local state once build loads
     const [initialized, setInitialized] = useState(false);
+    const savedVersionNameRef = useRef(initialVersionName);
+
     useEffect(() => {
         if (initialVersionName && !initialized) {
             setVersionName(initialVersionName);
+            savedVersionNameRef.current = initialVersionName;
             setInitialized(true);
         }
     }, [initialVersionName, initialized]);
@@ -84,14 +82,14 @@ export default function useGameBuildActions(
     };
 
     const handleSave = async () => {
-        if (!buildId) return;
-        if (isReadOnly) {
-            setSaveError("No puedes editar una build marcada como Release.");
-            setSaveSuccess(false);
-            return;
-        }
+        if (!buildId || isReadOnly) return;
 
-        if (!versionName.trim()) {
+        const nameChanged = versionName.trim() !== savedVersionNameRef.current;
+        const hasFiles = selectedFiles.length > 0;
+
+        if (!nameChanged && !hasFiles) return;
+
+        if (nameChanged && !versionName.trim()) {
             setVersionNameError("El nombre de la versión es obligatorio.");
             return;
         }
@@ -99,28 +97,89 @@ export default function useGameBuildActions(
         setVersionNameError(null);
         setSaveError(null);
         setSaveSuccess(false);
+        setUploadProgress(null);
         setIsSaving(true);
 
         try {
-            const response = await apiClient.put(`/game-builds/${buildId}`, {
-                versionName: versionName.trim(),
-            });
+            if (nameChanged) {
+                const response = await apiClient.put(`/game-builds/${buildId}`, {
+                    versionName: versionName.trim(),
+                });
 
-            if (!response.ok) {
-                throw new Error(
-                    getApiErrorMessage(
-                        response.status,
-                        {
-                            400: "Los datos enviados son incorrectos.",
-                            401: "No tienes permisos para editar esta build.",
-                            403: "No tienes permisos para editar esta build.",
-                            404: "La build no existe o fue eliminada.",
-                            409: "Ya existe una build con ese nombre de versión.",
-                            500: "Error interno del servidor. Inténtalo más tarde.",
-                        },
-                        "No se pudo guardar los cambios."
-                    )
+                if (!response.ok) {
+                    throw new Error(
+                        getApiErrorMessage(
+                            response.status,
+                            {
+                                400: "Los datos enviados son incorrectos.",
+                                401: "No tienes permisos para editar esta build.",
+                                403: "No tienes permisos para editar esta build.",
+                                404: "La build no existe o fue eliminada.",
+                                409: "Ya existe una build con ese nombre de versión.",
+                                500: "Error interno del servidor. Inténtalo más tarde.",
+                            },
+                            "No se pudo guardar los cambios."
+                        )
+                    );
+                }
+
+                savedVersionNameRef.current = versionName.trim();
+            }
+
+            if (hasFiles) {
+                setUploadProgress({ done: 0, total: selectedFiles.length });
+
+                const filePaths = selectedFiles.map((file) =>
+                    file.webkitRelativePath.split("/").slice(1).join("/")
                 );
+
+                const response = await apiClient.post(`/game-builds/${buildId}/upload`, { filePaths });
+
+                if (!response.ok) {
+                    throw new Error(
+                        getApiErrorMessage(
+                            response.status,
+                            {
+                                400: "Los datos enviados son incorrectos.",
+                                401: "No tienes permisos para subir archivos a esta build.",
+                                403: "No tienes permisos para subir archivos a esta build.",
+                                404: "La build no existe o fue eliminada.",
+                                500: "Error interno del servidor. Inténtalo más tarde.",
+                            },
+                            "No se pudieron obtener las URLs de subida."
+                        )
+                    );
+                }
+
+                const uploadInfos = (await response.json()) as { originalFilePath: string; uploadUrl: string }[];
+
+                const fileMap = new Map(
+                    selectedFiles.map((file) => [file.webkitRelativePath.split("/").slice(1).join("/"), file])
+                );
+
+                let done = 0;
+                for (const info of uploadInfos) {
+                    const file = fileMap.get(info.originalFilePath);
+                    if (!file) continue;
+
+                    const arrayBuffer = await file.arrayBuffer();
+                    const putRes = await fetch(info.uploadUrl, {
+                        method: "PUT",
+                        body: arrayBuffer,
+                    });
+
+                    if (!putRes.ok) throw new Error(`Error subiendo ${info.originalFilePath}.`);
+
+                    done++;
+                    setUploadProgress({ done, total: selectedFiles.length });
+                }
+
+                setSelectedFiles([]);
+                setFolderName(null);
+                setSkippedCount(0);
+                if (folderInputRef.current) folderInputRef.current.value = "";
+
+                onUploadSuccess();
             }
 
             setSaveSuccess(true);
@@ -128,6 +187,7 @@ export default function useGameBuildActions(
             setSaveError(err instanceof Error ? err.message : "Error inesperado.");
         } finally {
             setIsSaving(false);
+            setUploadProgress(null);
         }
     };
 
@@ -169,103 +229,24 @@ export default function useGameBuildActions(
     };
 
     const handleFolderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (isReadOnly) {
-            setUploadError("No puedes subir archivos a una build marcada como Release.");
-            setUploadSuccess(false);
-            setUploadProgress(null);
-            return;
-        }
-        const files = Array.from(e.target.files ?? []);
-        if (!files.length) return;
+        if (isReadOnly) return;
+        const all = Array.from(e.target.files ?? []);
+        if (!all.length) return;
 
-        const root = files[0].webkitRelativePath.split("/")[0];
+        const root = all[0].webkitRelativePath.split("/")[0];
+        const existingSet = new Set(existingFiles);
+        const filtered = all.filter(
+            (file) => !existingSet.has(file.webkitRelativePath.split("/").slice(1).join("/"))
+        );
+
         setFolderName(root);
-        setSelectedFiles(files);
-        setUploadError(null);
-        setUploadSuccess(false);
-        setUploadProgress(null);
-    };
-
-    const handleUpload = async () => {
-        if (!buildId) return;
-        if (isReadOnly) {
-            setUploadError("No puedes subir archivos a una build marcada como Release.");
-            setUploadSuccess(false);
-            return;
-        }
-        if (!selectedFiles.length) return;
-
-        setIsUploading(true);
-        setUploadError(null);
-        setUploadSuccess(false);
-        setUploadProgress({ done: 0, total: selectedFiles.length });
-
-        try {
-            const filePaths = selectedFiles.map((file) =>
-                file.webkitRelativePath.split("/").slice(1).join("/")
-            );
-
-            const response = await apiClient.post(`/game-builds/${buildId}/upload`, { filePaths });
-
-            if (!response.ok) {
-                throw new Error(
-                    getApiErrorMessage(
-                        response.status,
-                        {
-                            400: "Los datos enviados son incorrectos.",
-                            401: "No tienes permisos para subir archivos a esta build.",
-                            403: "No tienes permisos para subir archivos a esta build.",
-                            404: "La build no existe o fue eliminada.",
-                            500: "Error interno del servidor. Inténtalo más tarde.",
-                        },
-                        "No se pudieron obtener las URLs de subida."
-                    )
-                );
-            }
-
-            const uploadInfos = (await response.json()) as { originalFilePath: string; uploadUrl: string }[];
-
-            const fileMap = new Map(
-                selectedFiles.map((file) => [file.webkitRelativePath.split("/").slice(1).join("/"), file])
-            );
-
-            let done = 0;
-            for (const info of uploadInfos) {
-                const file = fileMap.get(info.originalFilePath);
-                if (!file) continue;
-
-                const arrayBuffer = await file.arrayBuffer();
-                const putRes = await fetch(info.uploadUrl, {
-                    method: "PUT",
-                    body: arrayBuffer,
-                });
-
-                if (!putRes.ok) throw new Error(`Error subiendo ${info.originalFilePath}.`);
-
-                done++;
-                setUploadProgress({ done, total: selectedFiles.length });
-            }
-
-            setUploadSuccess(true);
-            setSelectedFiles([]);
-            setFolderName(null);
-            if (folderInputRef.current) folderInputRef.current.value = "";
-
-            onUploadSuccess();
-        } catch (err) {
-            setUploadError(err instanceof Error ? err.message : "Error inesperado.");
-        } finally {
-            setIsUploading(false);
-        }
+        setSelectedFiles(filtered);
+        setSkippedCount(all.length - filtered.length);
+        setSaveSuccess(false);
     };
 
     const handleComplete = async () => {
-        if (!buildId) return;
-        if (isReadOnly) {
-            setCompleteError("No puedes completar una build marcada como Release.");
-            setCompleteSuccess(false);
-            return;
-        }
+        if (!buildId || isReadOnly) return;
 
         setIsCompleting(true);
         setCompleteError(null);
@@ -306,6 +287,7 @@ export default function useGameBuildActions(
         isSaving,
         saveError,
         saveSuccess,
+        uploadProgress,
         handleSave,
 
         showDeleteConfirm,
@@ -317,12 +299,8 @@ export default function useGameBuildActions(
         folderInputRef,
         selectedFiles,
         folderName,
-        isUploading,
-        uploadProgress,
-        uploadError,
-        uploadSuccess,
+        skippedCount,
         handleFolderChange,
-        handleUpload,
 
         isCompleting,
         completeError,

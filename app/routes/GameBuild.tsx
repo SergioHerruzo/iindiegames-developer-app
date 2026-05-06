@@ -1,5 +1,5 @@
 import { Link, useNavigate, useParams } from "react-router";
-import { ArrowLeft, Trash2, Save, Loader, ExternalLink, Package, FolderOpen, Upload, CheckCircle } from "lucide-react";
+import { ArrowLeft, Trash2, Save, Loader, ExternalLink, Package, FolderOpen, CheckCircle } from "lucide-react";
 import Card from "@components/Card";
 import { Input } from "@components/Input";
 import Divider from "@components/Divider";
@@ -31,6 +31,7 @@ export default function GameBuild() {
         isSaving,
         saveError,
         saveSuccess,
+        uploadProgress,
         handleSave,
 
         showDeleteConfirm,
@@ -42,12 +43,8 @@ export default function GameBuild() {
         folderInputRef,
         selectedFiles,
         folderName,
-        isUploading,
-        uploadProgress,
-        uploadError,
-        uploadSuccess,
+        skippedCount,
         handleFolderChange,
-        handleUpload,
 
         isCompleting,
         completeError,
@@ -57,6 +54,7 @@ export default function GameBuild() {
         buildId,
         build?.versionName ?? "",
         isReadOnly,
+        files,
         () => navigate(-1),
         () => refetchFiles()
     );
@@ -78,8 +76,8 @@ export default function GameBuild() {
             {/* Header */}
             <header className="flex items-center justify-between w-full gap-4">
                 <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-secondary-bg border border-secondary-border">
-                        <Package size={18} strokeWidth={1.5} className="text-secondary-icon" />
+                    <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-secondary-bg border border-secondary-border">
+                        <Package size={24} strokeWidth={1.5} className="text-secondary-icon" />
                     </div>
                     <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2 flex-wrap">
@@ -91,15 +89,11 @@ export default function GameBuild() {
                                 </span>
                             )}
                         </div>
-                        <h4 className="truncate">
-                            Gestiona el nombre, archivos, release y completado de la build.
+                        <h4>
+                            Gestiona los archivos y detalles de esta build.
                         </h4>
                     </div>
                 </div>
-
-                {build && (
-                    <span className="text-xs font-light text-secondary-text">{build.buildId}</span>
-                )}
             </header>
 
             {/* Error loading */}
@@ -122,8 +116,6 @@ export default function GameBuild() {
                     )}
 
                     {/* Edit section */}
-                    <Divider title="Información" />
-
                     {isReadOnly ? (
                         <Card>
                             <div className="flex flex-col gap-0.5">
@@ -174,30 +166,7 @@ export default function GameBuild() {
                         </Card>
                     )}
 
-                    {!isReadOnly && (
-                        <>
-                            {/* Save feedback */}
-                            {saveError && (
-                                <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
-                                    {saveError}
-                                </div>
-                            )}
-                            {saveSuccess && (
-                                <div className="rounded-lg border border-published-border bg-published-bg p-3 text-sm text-published-text">
-                                    Cambios guardados correctamente.
-                                </div>
-                            )}
-
-                            <PrimaryButton className="max-w-fit" onClick={handleSave} disabled={isSaving}>
-                                {isSaving
-                                    ? <><Loader size={14} className="animate-spin" /> Guardando...</>
-                                    : <><Save size={14} strokeWidth={1.5} /> Guardar cambios</>
-                                }
-                            </PrimaryButton>
-                        </>
-                    )}
-
-                    {/* Upload section */}
+                    {/* Files section */}
                     <Divider title="Archivos" />
 
                     <BuildFileList files={files} loading={filesLoading} error={filesError} />
@@ -211,7 +180,7 @@ export default function GameBuild() {
                                 // @ts-ignore
                                 webkitdirectory=""
                                 onChange={handleFolderChange}
-                                disabled={isUploading}
+                                disabled={isSaving}
                             />
 
                             <Card>
@@ -220,98 +189,92 @@ export default function GameBuild() {
                                         <span className="text-sm font-medium text-slate-200">Carpeta de archivos</span>
                                         <span className="text-xs font-light text-secondary-text">
                                             {folderName
-                                                ? `${folderName} · ${selectedFiles.length} archivo${selectedFiles.length !== 1 ? "s" : ""}`
+                                                ? `${folderName} · ${selectedFiles.length} archivo${selectedFiles.length !== 1 ? "s" : ""}${skippedCount > 0 ? ` · ${skippedCount} ya existente${skippedCount !== 1 ? "s" : ""} omitido${skippedCount !== 1 ? "s" : ""}` : ""}`
                                                 : "Ninguna carpeta seleccionada"
                                             }
                                         </span>
                                     </div>
-                                    <SecondaryButton onClick={() => folderInputRef.current?.click()} disabled={isUploading}>
+                                    <SecondaryButton onClick={() => folderInputRef.current?.click()} disabled={isSaving}>
                                         <FolderOpen size={14} strokeWidth={1.5} />
                                         Seleccionar carpeta
                                     </SecondaryButton>
                                 </div>
                             </Card>
 
-                            {uploadProgress && isUploading && (
+                            {isSaving && uploadProgress && (
                                 <div className="rounded-lg border border-secondary-border bg-secondary-bg p-3 text-sm text-secondary-text">
                                     Subiendo {uploadProgress.done} / {uploadProgress.total} archivos...
                                 </div>
                             )}
-                            {uploadError && (
-                                <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
-                                    {uploadError}
-                                </div>
-                            )}
-                            {uploadSuccess && (
-                                <div className="rounded-lg border border-published-border bg-published-bg p-3 text-sm text-published-text">
-                                    Archivos subidos correctamente.
-                                </div>
-                            )}
-
-                            <PrimaryButton
-                                className="max-w-fit"
-                                onClick={handleUpload}
-                                disabled={isUploading || !selectedFiles.length}
-                            >
-                                {isUploading
-                                    ? <><Loader size={14} className="animate-spin" /> Subiendo...</>
-                                    : <><Upload size={14} strokeWidth={1.5} /> Subir archivos</>
-                                }
-                            </PrimaryButton>
                         </>
                     )}
 
-                    {/* Complete build */}
-                    {!isReadOnly && (
-                        <>
-                            <Divider title="Completar build" />
-
-                            {completeError && (
-                                <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
-                                    {completeError}
-                                </div>
-                            )}
-                            {completeSuccess && (
-                                <div className="rounded-lg border border-published-border bg-published-bg p-3 text-sm text-published-text">
-                                    Build completada correctamente.
-                                </div>
-                            )}
-
-                            <PrimaryButton className="max-w-fit" onClick={handleComplete} disabled={isCompleting}>
-                                {isCompleting
-                                    ? <><Loader size={14} className="animate-spin" /> Completando...</>
-                                    : <><CheckCircle size={14} strokeWidth={1.5} /> Completar build</>
-                                }
-                            </PrimaryButton>
-                        </>
+                    {/* Feedback messages */}
+                    {saveError && (
+                        <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
+                            {saveError}
+                        </div>
                     )}
-
-                    {/* Danger zone */}
-                    <Divider title="Zona de peligro" />
-
+                    {saveSuccess && (
+                        <div className="rounded-lg border border-published-border bg-published-bg p-3 text-sm text-published-text">
+                            Cambios guardados correctamente.
+                        </div>
+                    )}
+                    {completeError && (
+                        <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
+                            {completeError}
+                        </div>
+                    )}
+                    {completeSuccess && (
+                        <div className="rounded-lg border border-published-border bg-published-bg p-3 text-sm text-published-text">
+                            Build completada correctamente.
+                        </div>
+                    )}
                     {deleteError && (
                         <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
                             {deleteError}
                         </div>
                     )}
 
-                    {showDeleteConfirm ? (
-                        <DeleteConfirmCard
-                            onConfirm={handleDelete}
-                            onCancel={() => setShowDeleteConfirm(false)}
-                            isDeleting={isDeleting}
-                        />
-                    ) : (
-                        <button
-                            type="button"
-                            onClick={() => setShowDeleteConfirm(true)}
-                            disabled={isReadOnly}
-                            className="inline-flex items-center gap-2 px-4 py-2 max-w-fit rounded-full text-sm font-light text-error-text bg-error-bg border border-error-border cursor-pointer hover:opacity-80 transition-opacity"
-                        >
-                            <Trash2 size={14} strokeWidth={1.5} />
-                            Eliminar build
-                        </button>
-                    )}
+                    {/* Bottom action row */}
+                    <div className="flex items-center justify-between gap-4 flex-wrap">
+                        <div className="flex items-center gap-3 flex-wrap">
+                            {!isReadOnly && (
+                                <PrimaryButton onClick={handleSave} disabled={isSaving || isCompleting}>
+                                    {isSaving
+                                        ? <><Loader size={14} className="animate-spin" /> Guardando...</>
+                                        : <><Save size={14} strokeWidth={1.5} /> Guardar cambios</>
+                                    }
+                                </PrimaryButton>
+                            )}
+                            {!isReadOnly && (
+                                <PrimaryButton onClick={handleComplete} disabled={isCompleting || isSaving}>
+                                    {isCompleting
+                                        ? <><Loader size={14} className="animate-spin" /> Completando...</>
+                                        : <><CheckCircle size={14} strokeWidth={1.5} /> Completar build</>
+                                    }
+                                </PrimaryButton>
+                            )}
+                        </div>
+
+                        {showDeleteConfirm ? (
+                            <DeleteConfirmCard
+                                onConfirm={handleDelete}
+                                onCancel={() => setShowDeleteConfirm(false)}
+                                isDeleting={isDeleting}
+                            />
+                        ) : (
+                            <button
+                                type="button"
+                                onClick={() => setShowDeleteConfirm(true)}
+                                disabled={isReadOnly || isDeleting}
+                                className="inline-flex items-center gap-2 px-4 py-2 max-w-fit rounded-full text-sm font-light text-error-text bg-error-bg border border-error-border cursor-pointer hover:opacity-80 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+                            >
+                                <Trash2 size={14} strokeWidth={1.5} />
+                                Eliminar build
+                            </button>
+                        )}
+                    </div>
                 </>
             )}
         </div>
