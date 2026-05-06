@@ -127,7 +127,7 @@ export default function GameBuild() {
                                 </span>
                             </div>
                         </Card>
-                    ) : (
+                    ) : isUploadingFiles ? (
                         <Card>
                             <Input.Root
                                 id="version-name"
@@ -143,7 +143,12 @@ export default function GameBuild() {
                                 />
                             </Input.Root>
                         </Card>
-                    )}
+                    ) : null}
+
+                    {/* Files section */}
+                    <Divider title="Archivos" />
+
+                    <BuildFileList files={files} loading={filesLoading} error={filesError} />
 
                     {/* Manifest URL */}
                     {build.manifestUrl && (
@@ -167,11 +172,6 @@ export default function GameBuild() {
                             </div>
                         </Card>
                     )}
-
-                    {/* Files section */}
-                    <Divider title="Archivos" />
-
-                    <BuildFileList files={files} loading={filesLoading} error={filesError} />
 
                     {isUploadingFiles && (
                         <>
