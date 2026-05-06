@@ -11,6 +11,7 @@ type UseGameBuildActionsResult = {
     versionName: string;
     versionNameError: string | null;
     onVersionNameChange: (value: string) => void;
+    isDirty: boolean;
 
     isSaving: boolean;
     saveError: string | null;
@@ -279,10 +280,13 @@ export default function useGameBuildActions(
         }
     };
 
+    const isDirty = versionName.trim() !== savedVersionNameRef.current || selectedFiles.length > 0;
+
     return {
         versionName,
         versionNameError,
         onVersionNameChange,
+        isDirty,
 
         isSaving,
         saveError,

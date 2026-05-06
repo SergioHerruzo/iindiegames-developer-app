@@ -1,35 +1,33 @@
 import { useState } from "react";
 import { Link } from "react-router";
 import { Package, Plus, CircleAlert } from "lucide-react";
-import Divider from "@components/Divider";
 import PrimaryButton from "@components/PrimaryButton";
 import CreateGameBuildModal from "@components/GameDetails/Creategamebuildmodal";
 import StatusBadge from "@components/StatusBadge";
 import useGameBuilds from "@/hooks/useGameBuilds";
 import type { DeveloperGameBuild } from "@models/DeveloperGameBuild";
 
-// ─── Build Row ────────────────────────────────────────────────────────────────
+// ─── Build Card ───────────────────────────────────────────────────────────────
 
-function BuildRow({ build }: { build: DeveloperGameBuild }) {
+function BuildCard({ build }: { build: DeveloperGameBuild }) {
     return (
-        <Link to={`/game-builds/${build.id}`} className="flex items-center justify-between px-4 py-3 border-b border-border-default last:border-b-0 hover:bg-secondary-bg transition-colors duration-150">
-            <div className="flex items-center gap-3">
-                <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-secondary-bg border border-secondary-border">
-                    <Package size={16} strokeWidth={1.5} className="text-secondary-icon" />
+        <Link to={`/game-builds/${build.id}`} className="flex flex-col gap-4 p-5 rounded-xl border border-border-default bg-card-bg hover:bg-secondary-bg hover:border-secondary-border transition-all duration-150">
+            <div className="flex items-start justify-between gap-3">
+                <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-secondary-bg border border-secondary-border shrink-0">
+                    <Package size={22} strokeWidth={1.5} className="text-secondary-icon" />
                 </div>
-                <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-medium text-slate-200">{build.versionName}</span>
-                    <span className="text-xs font-light text-secondary-text">{build.id}</span>
+                <div className="inline-flex items-center gap-2 flex-wrap justify-end">
+                    {build.isReleaseBuild && (
+                        <span className="text-xs font-light px-2.5 py-1 rounded-full border bg-published-bg text-published-text border-published-border">
+                            Release
+                        </span>
+                    )}
+                    <StatusBadge status={build.status} />
                 </div>
             </div>
-
-            <div className="inline-flex items-center gap-2">
-                {build.isReleaseBuild && (
-                    <span className="text-xs font-light px-2.5 py-1 rounded-full border bg-published-bg text-published-text border-published-border">
-                        Release
-                    </span>
-                )}
-                <StatusBadge status={build.status} />
+            <div className="flex flex-col gap-1">
+                <span className="text-base font-medium text-slate-200">{build.versionName}</span>
+                <span className="text-xs font-light text-secondary-text">{build.id}</span>
             </div>
         </Link>
     );
@@ -39,15 +37,17 @@ function BuildRow({ build }: { build: DeveloperGameBuild }) {
 
 function BuildsSkeleton() {
     return (
-        <div className="flex flex-col animate-pulse">
+        <div className="grid grid-cols-2 gap-3 animate-pulse">
             {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="flex items-center gap-3 px-4 py-3 border-b border-border-default last:border-b-0">
-                    <div className="w-9 h-9 rounded-lg skeleton-block shrink-0" />
-                    <div className="flex flex-col gap-1.5 flex-1">
-                        <div className="h-3.5 w-32 rounded skeleton-block" />
-                        <div className="h-3 w-48 rounded skeleton-block" />
+                <div key={i} className="flex flex-col gap-4 p-5 rounded-xl border border-border-default bg-card-bg">
+                    <div className="flex items-start justify-between gap-3">
+                        <div className="w-12 h-12 rounded-xl skeleton-block shrink-0" />
+                        <div className="h-6 w-16 rounded-full skeleton-block" />
                     </div>
-                    <div className="h-6 w-16 rounded-full skeleton-block" />
+                    <div className="flex flex-col gap-1.5">
+                        <div className="h-4 w-28 rounded skeleton-block" />
+                        <div className="h-3 w-44 rounded skeleton-block" />
+                    </div>
                 </div>
             ))}
         </div>
@@ -85,42 +85,35 @@ export default function GameBuildsTab({ gameId }: { gameId: string }) {
             <div className="flex flex-col gap-4">
                 {/* Header row */}
                 <div className="flex items-center justify-between">
-                    <p className="text-sm font-light text-secondary-text">
+                    <h4 className="font-light">
                         Gestiona las versiones distribuibles de tu juego.
-                        {!loading && builds && (
-                            <span className="ml-1 text-badge-neutral-text">
-                                {builds.totalItemCount} {builds.totalItemCount === 1 ? "build" : "builds"}
-                            </span>
-                        )}
-                    </p>
+                    </h4>
 
                     <PrimaryButton onClick={() => setIsModalOpen(true)}>
                         <PrimaryButton.Icon icon={Plus} />
-                        Nueva build
+                        Nueva Build
                     </PrimaryButton>
                 </div>
 
                 {/* Content */}
-                <div className="rounded-xl border border-border-default bg-card-bg overflow-hidden">
-                    {error && (
-                        <div className="flex items-center gap-3 px-4 py-4 text-sm text-error-text">
-                            <CircleAlert size={16} strokeWidth={1.5} />
-                            <span>{error}</span>
-                        </div>
-                    )}
+                {error && (
+                    <div className="flex items-center gap-3 px-1 py-2 text-sm text-error-text">
+                        <CircleAlert size={16} strokeWidth={1.5} />
+                        <span>{error}</span>
+                    </div>
+                )}
 
-                    {!error && loading && <BuildsSkeleton />}
+                {!error && loading && <BuildsSkeleton />}
 
-                    {!error && !loading && items.length === 0 && <EmptyState />}
+                {!error && !loading && items.length === 0 && <EmptyState />}
 
-                    {!error && !loading && items.length > 0 && (
-                        <div className="flex flex-col">
-                            {items.map((build) => (
-                                <BuildRow key={build.id} build={build} />
-                            ))}
-                        </div>
-                    )}
-                </div>
+                {!error && !loading && items.length > 0 && (
+                    <div className="grid grid-cols-2 gap-3">
+                        {items.map((build) => (
+                            <BuildCard key={build.id} build={build} />
+                        ))}
+                    </div>
+                )}
             </div>
 
             {/* Modal */}

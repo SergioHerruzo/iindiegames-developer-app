@@ -13,6 +13,18 @@ import useGameBuildDetail from "@/hooks/useGameBuildDetail";
 import useGameBuildFiles from "@/hooks/useGameBuildFiles";
 import useGameBuildActions from "@/hooks/useGameBuildActions";
 
+// ─── Status labels ────────────────────────────────────────────────────────────
+
+const STATUS_LABELS: Record<string, string> = {
+    UploadingFiles: "Subiendo archivos",
+    PendingForProcessing: "Pendiente de procesado",
+    Processing: "Procesando archivos",
+    Removing: "Eliminando",
+    Completed: "Completado",
+};
+
+const statusLabel = (status: string) => STATUS_LABELS[status] ?? status;
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function GameBuild() {
@@ -29,6 +41,7 @@ export default function GameBuild() {
         versionName,
         versionNameError,
         onVersionNameChange,
+        isDirty,
 
         isSaving,
         saveError,
@@ -91,9 +104,9 @@ export default function GameBuild() {
                                 </span>
                             )}
                         </div>
-                        <h4>
+                        <h5>
                             Gestiona los archivos y detalles de esta build.
-                        </h4>
+                        </h5>
                     </div>
                 </div>
             </header>
@@ -111,145 +124,158 @@ export default function GameBuild() {
             {/* Content */}
             {!error && !loading && build && (
                 <>
-                    {isReadOnly && (
-                        <div className="rounded-lg border border-secondary-border bg-secondary-bg p-3 text-sm text-secondary-text">
-                            Esta build está marcada como <span className="font-medium">Release</span> y no se puede editar.
-                        </div>
-                    )}
-
-                    {/* Edit section */}
-                    {isReadOnly ? (
-                        <Card>
-                            <div className="flex flex-col gap-0.5">
-                                <span className="text-sm font-medium text-badge-neutral-text">Nombre de versión</span>
-                                <span className="text-xs font-light text-secondary-text">
-                                    {build.versionName}
-                                </span>
-                            </div>
-                        </Card>
-                    ) : isUploadingFiles ? (
-                        <Card>
-                            <Input.Root
-                                id="version-name"
-                                type="text"
-                                variant="inside card"
-                                value={versionName}
-                                onChange={onVersionNameChange}
-                            >
-                                <Input.Label>Nombre de versión</Input.Label>
-                                <Input.Field
-                                    placeholder="ej. 1.0.0"
-                                    error={versionNameError}
-                                />
-                            </Input.Root>
-                        </Card>
-                    ) : null}
-
-                    {/* Files section */}
-                    <Divider title="Archivos" />
-
-                    <BuildFileList files={files} loading={filesLoading} error={filesError} />
-
-                    {/* Manifest URL */}
-                    {build.manifestUrl && (
-                        <Card>
-                            <div className="flex items-center justify-between">
+                    <div className="flex flex-col gap-2">
+                        {!isUploadingFiles && (
+                            <Card>
+                                <p className="text-sm text-secondary-text">
+                                    Esta build no se puede editar porque su estado actual es{" "}
+                                    <span className="font-medium text-badge-neutral-text">{statusLabel(build.status)}</span>.
+                                </p>
+                            </Card>
+                        )}
+                        {build.isReleaseBuild && (
+                            <Card>
+                                <p className="text-sm text-secondary-text">
+                                    Esta build está marcada como{" "}
+                                    <span className="font-medium text-badge-neutral-text">Release</span>{" "}
+                                    y no puede ser eliminada.
+                                </p>
+                            </Card>
+                        )}
+                        {/* Edit section */}
+                        {isReadOnly ? (
+                            <Card>
                                 <div className="flex flex-col gap-0.5">
-                                    <span className="text-sm font-medium text-badge-neutral-text">Manifest</span>
-                                    <span className="text-xs font-light text-secondary-text truncate max-w-sm">
-                                        {build.manifestUrl}
+                                    <span className="text-sm font-medium text-badge-neutral-text">Nombre de versión</span>
+                                    <span className="text-xs font-light text-secondary-text">
+                                        {build.versionName}
                                     </span>
                                 </div>
-                                <a
-                                    href={build.manifestUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-light text-secondary-text bg-secondary-bg border border-secondary-border hover:bg-secondary-bg-hover hover:border-secondary-border-hover transition-all duration-200"
-                                >
-                                    <ExternalLink size={14} strokeWidth={1.5} />
-                                    Ver manifest
-                                </a>
-                            </div>
-                        </Card>
-                    )}
-
-                    {isUploadingFiles && (
-                        <>
-                            <input
-                                ref={folderInputRef}
-                                type="file"
-                                className="hidden"
-                                // @ts-ignore
-                                webkitdirectory=""
-                                onChange={handleFolderChange}
-                                disabled={isSaving}
-                            />
-
+                            </Card>
+                        ) : isUploadingFiles ? (
                             <Card>
-                                <div className="flex items-center justify-between gap-4">
+                                <Input.Root
+                                    id="version-name"
+                                    type="text"
+                                    variant="inside card"
+                                    value={versionName}
+                                    onChange={onVersionNameChange}
+                                >
+                                    <Input.Label>Nombre de versión</Input.Label>
+                                    <Input.Field
+                                        placeholder="ej. 1.0.0"
+                                        error={versionNameError}
+                                    />
+                                </Input.Root>
+                            </Card>
+                        ) : null}
+                    </div>
+
+                    {/* Files section */}
+                    <div className="flex flex-col gap-2">
+                        <Divider title="Archivos" className="mb-2" />
+
+                        <BuildFileList files={files} loading={filesLoading} error={filesError} />
+
+                        {build.manifestUrl && (
+                            <Card>
+                                <div className="flex items-center justify-between">
                                     <div className="flex flex-col gap-0.5">
-                                        <span className="text-sm font-medium text-badge-neutral-text">Carpeta de archivos</span>
-                                        <span className="text-xs font-light text-secondary-text">
-                                            {folderName
-                                                ? `${folderName} · ${selectedFiles.length} archivo${selectedFiles.length !== 1 ? "s" : ""}${skippedCount > 0 ? ` · ${skippedCount} ya existente${skippedCount !== 1 ? "s" : ""} omitido${skippedCount !== 1 ? "s" : ""}` : ""}`
-                                                : "Ninguna carpeta seleccionada"
-                                            }
+                                        <span className="text-sm font-medium text-badge-neutral-text">Manifest</span>
+                                        <span className="text-xs font-light text-secondary-text truncate max-w-sm">
+                                            {build.manifestUrl}
                                         </span>
                                     </div>
-                                    <SecondaryButton onClick={() => folderInputRef.current?.click()} disabled={isSaving}>
-                                        <FolderOpen size={14} strokeWidth={1.5} />
-                                        Seleccionar carpeta
-                                    </SecondaryButton>
+                                    <a
+                                        href={build.manifestUrl}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-light text-secondary-text bg-secondary-bg border border-secondary-border hover:bg-secondary-bg-hover hover:border-secondary-border-hover transition-all duration-200"
+                                    >
+                                        <ExternalLink size={14} strokeWidth={1.5} />
+                                        Ver manifest
+                                    </a>
                                 </div>
                             </Card>
+                        )}
 
-                            {isSaving && uploadProgress && (
-                                <div className="rounded-lg border border-secondary-border bg-secondary-bg p-3 text-sm text-secondary-text">
-                                    Subiendo {uploadProgress.done} / {uploadProgress.total} archivos...
-                                </div>
-                            )}
-                        </>
-                    )}
+                        {isUploadingFiles && (
+                            <>
+                                <input
+                                    ref={folderInputRef}
+                                    type="file"
+                                    className="hidden"
+                                    // @ts-ignore
+                                    webkitdirectory=""
+                                    onChange={handleFolderChange}
+                                    disabled={isSaving}
+                                />
 
-                    {/* Feedback messages */}
-                    {saveError && (
-                        <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
-                            {saveError}
-                        </div>
-                    )}
-                    {saveSuccess && (
-                        <div className="rounded-lg border border-published-border bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
-                            Cambios guardados correctamente.
-                        </div>
-                    )}
-                    {completeError && (
-                        <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
-                            {completeError}
-                        </div>
-                    )}
-                    {completeSuccess && (
-                        <div className="rounded-lg border border-published-border bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
-                            Build completada correctamente.
-                        </div>
-                    )}
-                    {deleteError && (
-                        <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
-                            {deleteError}
-                        </div>
-                    )}
+                                <Card>
+                                    <div className="flex items-center justify-between gap-4">
+                                        <div className="flex flex-col gap-0.5">
+                                            <span className="text-sm font-medium text-badge-neutral-text">Carpeta de archivos</span>
+                                            <span className="text-xs font-light text-secondary-text">
+                                                {folderName
+                                                    ? `${folderName} · ${selectedFiles.length} archivo${selectedFiles.length !== 1 ? "s" : ""}${skippedCount > 0 ? ` · ${skippedCount} ya existente${skippedCount !== 1 ? "s" : ""} omitido${skippedCount !== 1 ? "s" : ""}` : ""}`
+                                                    : "Ninguna carpeta seleccionada"
+                                                }
+                                            </span>
+                                        </div>
+                                        <SecondaryButton onClick={() => folderInputRef.current?.click()} disabled={isSaving}>
+                                            <FolderOpen size={14} strokeWidth={1.5} />
+                                            Seleccionar carpeta
+                                        </SecondaryButton>
+                                    </div>
+                                </Card>
+
+                                {isSaving && uploadProgress && (
+                                    <div className="rounded-lg border border-secondary-border bg-secondary-bg p-3 text-sm text-secondary-text">
+                                        Subiendo {uploadProgress.done} / {uploadProgress.total} archivos...
+                                    </div>
+                                )}
+                            </>
+                        )}
+
+                        {saveError && (
+                            <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
+                                {saveError}
+                            </div>
+                        )}
+                        {saveSuccess && (
+                            <div className="rounded-lg border border-published-border bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
+                                Cambios guardados correctamente.
+                            </div>
+                        )}
+                        {completeError && (
+                            <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
+                                {completeError}
+                            </div>
+                        )}
+                        {completeSuccess && (
+                            <div className="rounded-lg border border-published-border bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
+                                Build completada correctamente.
+                            </div>
+                        )}
+                        {deleteError && (
+                            <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
+                                {deleteError}
+                            </div>
+                        )}
+                    </div>
 
                     {/* Bottom action row */}
                     <div className="flex items-center justify-between gap-4 flex-wrap">
                         <div className="flex items-center gap-3 flex-wrap">
                             {isUploadingFiles && (
-                                <PrimaryButton onClick={handleSave} disabled={isSaving || isCompleting}>
+                                <PrimaryButton onClick={handleSave} disabled={isSaving || isCompleting || !isDirty}>
                                     {isSaving
                                         ? <><Loader size={14} className="animate-spin" /> Guardando...</>
                                         : <><Save size={14} strokeWidth={1.5} /> Guardar cambios</>
                                     }
                                 </PrimaryButton>
                             )}
-                            {isUploadingFiles && (
+                            {isUploadingFiles && (files?.length ?? 0) > 0 && (
                                 <PrimaryButton onClick={handleComplete} disabled={isCompleting || isSaving}>
                                     {isCompleting
                                         ? <><Loader size={14} className="animate-spin" /> Completando...</>
