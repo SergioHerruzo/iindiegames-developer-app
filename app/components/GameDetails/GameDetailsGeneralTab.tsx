@@ -46,7 +46,7 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
     const [discount, setDiscount] = useState(game.discount.toString());
     const [isPublic, setIsPublic] = useState(game.isPublic);
     const [genres, setGenres] = useState<string[]>(game.genres.map((g) => g.id));
-    const [selectedBuildId, setSelectedBuildId] = useState(game.releaseBuild?.id ?? "");
+    const [selectedBuildId, setSelectedBuildId] = useState("");
 
     const [errors, setErrors] = useState<Record<string, string | null>>({});
     const [isSaving, setIsSaving] = useState(false);
@@ -66,7 +66,7 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
         setDiscount(game.discount.toString());
         setIsPublic(game.isPublic);
         setGenres(game.genres.map((g) => g.id));
-        setSelectedBuildId(game.releaseBuild?.id ?? "");
+        setSelectedBuildId("");
 
         initialRef.current = {
             title: game.title.trim(),
@@ -75,7 +75,7 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
             discount: game.discount,
             isPublic: game.isPublic,
             genres: normalizeGenres(game.genres.map((g) => g.id)),
-            releaseBuildId: game.releaseBuild?.id ?? "",
+            releaseBuildId: "",
         };
 
         setErrors({});
@@ -91,6 +91,15 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
             initialRef.current.isPublic = game.isPublic;
         }
     }, [game.isPublic]);
+
+    useEffect(() => {
+        if (!builds) return;
+        const id = builds.items.find((b) => b.isReleaseBuild)?.id ?? "";
+        setSelectedBuildId(id);
+        if (initialRef.current) {
+            initialRef.current.releaseBuildId = id;
+        }
+    }, [builds]);
 
     const parsedPrice = useMemo(() => parseFloat(price), [price]);
     const parsedDiscount = useMemo(() => parseFloat(discount), [discount]);
@@ -352,7 +361,7 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
                                 disabled={buildsLoading || isSaving}
                                 className="w-full appearance-none bg-input-inside-card border border-border-inside-card rounded-lg px-3 py-2.5 pr-9 text-sm text-white/60 cursor-pointer focus:outline-none focus:border-primary-focus disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                             >
-                                {!game.releaseBuild && <option value="">Sin release build</option>}
+                                {!builds?.items.some((b) => b.isReleaseBuild) && <option value="">Sin release build</option>}
                                 {builds?.items.map((build) => (
                                     <option key={build.id} value={build.id}>
                                         {build.versionName} ({build.id})

@@ -5,7 +5,7 @@ export type GameTab = "general" | "artworks" | "builds" | "achievements";
 
 const NAV_TABS: { key: GameTab; label: string; icon: React.ElementType }[] = [
     { key: "general", label: "General", icon: Settings },
-    { key: "artworks", label: "Artworks", icon: Image },
+    { key: "artworks", label: "Assets", icon: Image },
     { key: "builds", label: "Builds", icon: Package },
     { key: "achievements", label: "Logros", icon: Trophy },
 ];
