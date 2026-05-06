@@ -22,6 +22,8 @@ export default function GameBuild() {
     const { files, loading: filesLoading, error: filesError, refetch: refetchFiles } = useGameBuildFiles(buildId);
 
     const isReadOnly = Boolean(build?.isReleaseBuild);
+    const isUploadingFiles = build?.status === "UploadingFiles";
+    const canDelete = !build?.isReleaseBuild && !["PendingForProcessing", "Processing", "Removing"].includes(build?.status ?? "");
 
     const {
         versionName,
@@ -98,7 +100,7 @@ export default function GameBuild() {
 
             {/* Error loading */}
             {error && (
-                <div className="rounded-lg border border-error-border bg-error-bg p-4 text-sm text-error-text">
+                <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
                     {error}
                 </div>
             )}
@@ -110,7 +112,7 @@ export default function GameBuild() {
             {!error && !loading && build && (
                 <>
                     {isReadOnly && (
-                        <div className="rounded-lg border border-secondary-border bg-secondary-bg p-4 text-sm text-secondary-text">
+                        <div className="rounded-lg border border-secondary-border bg-secondary-bg p-3 text-sm text-secondary-text">
                             Esta build está marcada como <span className="font-medium">Release</span> y no se puede editar.
                         </div>
                     )}
@@ -119,7 +121,7 @@ export default function GameBuild() {
                     {isReadOnly ? (
                         <Card>
                             <div className="flex flex-col gap-0.5">
-                                <span className="text-sm font-medium text-slate-200">Nombre de versión</span>
+                                <span className="text-sm font-medium text-badge-neutral-text">Nombre de versión</span>
                                 <span className="text-xs font-light text-secondary-text">
                                     {build.versionName}
                                 </span>
@@ -148,7 +150,7 @@ export default function GameBuild() {
                         <Card>
                             <div className="flex items-center justify-between">
                                 <div className="flex flex-col gap-0.5">
-                                    <span className="text-sm font-medium text-slate-200">Manifest</span>
+                                    <span className="text-sm font-medium text-badge-neutral-text">Manifest</span>
                                     <span className="text-xs font-light text-secondary-text truncate max-w-sm">
                                         {build.manifestUrl}
                                     </span>
@@ -171,7 +173,7 @@ export default function GameBuild() {
 
                     <BuildFileList files={files} loading={filesLoading} error={filesError} />
 
-                    {!isReadOnly && (
+                    {isUploadingFiles && (
                         <>
                             <input
                                 ref={folderInputRef}
@@ -186,7 +188,7 @@ export default function GameBuild() {
                             <Card>
                                 <div className="flex items-center justify-between gap-4">
                                     <div className="flex flex-col gap-0.5">
-                                        <span className="text-sm font-medium text-slate-200">Carpeta de archivos</span>
+                                        <span className="text-sm font-medium text-badge-neutral-text">Carpeta de archivos</span>
                                         <span className="text-xs font-light text-secondary-text">
                                             {folderName
                                                 ? `${folderName} · ${selectedFiles.length} archivo${selectedFiles.length !== 1 ? "s" : ""}${skippedCount > 0 ? ` · ${skippedCount} ya existente${skippedCount !== 1 ? "s" : ""} omitido${skippedCount !== 1 ? "s" : ""}` : ""}`
@@ -216,7 +218,7 @@ export default function GameBuild() {
                         </div>
                     )}
                     {saveSuccess && (
-                        <div className="rounded-lg border border-published-border bg-published-bg p-3 text-sm text-published-text">
+                        <div className="rounded-lg border border-published-border bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
                             Cambios guardados correctamente.
                         </div>
                     )}
@@ -226,7 +228,7 @@ export default function GameBuild() {
                         </div>
                     )}
                     {completeSuccess && (
-                        <div className="rounded-lg border border-published-border bg-published-bg p-3 text-sm text-published-text">
+                        <div className="rounded-lg border border-published-border bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
                             Build completada correctamente.
                         </div>
                     )}
@@ -239,7 +241,7 @@ export default function GameBuild() {
                     {/* Bottom action row */}
                     <div className="flex items-center justify-between gap-4 flex-wrap">
                         <div className="flex items-center gap-3 flex-wrap">
-                            {!isReadOnly && (
+                            {isUploadingFiles && (
                                 <PrimaryButton onClick={handleSave} disabled={isSaving || isCompleting}>
                                     {isSaving
                                         ? <><Loader size={14} className="animate-spin" /> Guardando...</>
@@ -247,7 +249,7 @@ export default function GameBuild() {
                                     }
                                 </PrimaryButton>
                             )}
-                            {!isReadOnly && (
+                            {isUploadingFiles && (
                                 <PrimaryButton onClick={handleComplete} disabled={isCompleting || isSaving}>
                                     {isCompleting
                                         ? <><Loader size={14} className="animate-spin" /> Completando...</>
@@ -257,7 +259,7 @@ export default function GameBuild() {
                             )}
                         </div>
 
-                        {showDeleteConfirm ? (
+                        {canDelete && (showDeleteConfirm ? (
                             <DeleteConfirmCard
                                 onConfirm={handleDelete}
                                 onCancel={() => setShowDeleteConfirm(false)}
@@ -267,13 +269,13 @@ export default function GameBuild() {
                             <button
                                 type="button"
                                 onClick={() => setShowDeleteConfirm(true)}
-                                disabled={isReadOnly || isDeleting}
+                                disabled={isDeleting}
                                 className="inline-flex items-center gap-2 px-4 py-2 max-w-fit rounded-full text-sm font-light text-error-text bg-error-bg border border-error-border cursor-pointer hover:opacity-80 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
                             >
                                 <Trash2 size={14} strokeWidth={1.5} />
                                 Eliminar build
                             </button>
-                        )}
+                        ))}
                     </div>
                 </>
             )}
