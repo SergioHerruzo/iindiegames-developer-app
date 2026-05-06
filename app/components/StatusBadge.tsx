@@ -1,4 +1,10 @@
-type StatusKey = "Ready" | "Processing" | "Completed" | "Error";
+type StatusKey =
+    | "UploadingFiles"
+    | "PendingForProcessing"
+    | "Processing"
+    | "Removing"
+    | "Completed"
+    | "Failed";
 
 type StatusBadgeProps = {
     status: string;
@@ -6,11 +12,17 @@ type StatusBadgeProps = {
 };
 
 const statusConfig: Record<StatusKey, { bg: string; text: string; border: string; label: string }> = {
-    Ready: {
-        bg: "bg-published-bg",
-        text: "text-published-text",
-        border: "border-published-border",
-        label: "Lista",
+    UploadingFiles: {
+        bg: "bg-badge-neutral-bg",
+        text: "text-badge-neutral-text",
+        border: "border-badge-neutral-border",
+        label: "Subida en progreso",
+    },
+    PendingForProcessing: {
+        bg: "bg-badge-neutral-bg",
+        text: "text-badge-neutral-text",
+        border: "border-badge-neutral-border",
+        label: "En cola",
     },
     Processing: {
         bg: "bg-badge-neutral-bg",
@@ -18,13 +30,19 @@ const statusConfig: Record<StatusKey, { bg: string; text: string; border: string
         border: "border-badge-neutral-border",
         label: "Procesando",
     },
+    Removing: {
+        bg: "bg-error-bg",
+        text: "text-error-text",
+        border: "border-error-border",
+        label: "Eliminando",
+    },
     Completed: {
         bg: "bg-published-bg",
         text: "text-published-text",
         border: "border-published-border",
         label: "Completada",
     },
-    Error: {
+    Failed: {
         bg: "bg-error-bg",
         text: "text-error-text",
         border: "border-error-border",
@@ -32,9 +50,10 @@ const statusConfig: Record<StatusKey, { bg: string; text: string; border: string
     },
 };
 
+const fallback = statusConfig["PendingForProcessing"];
+
 export default function StatusBadge({ status, className }: StatusBadgeProps) {
-    const key = (status in statusConfig ? (status as StatusKey) : "Processing") as StatusKey;
-    const config = statusConfig[key];
+    const config = status in statusConfig ? statusConfig[status as StatusKey] : fallback;
 
     return (
         <span

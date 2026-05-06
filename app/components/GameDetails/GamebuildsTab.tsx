@@ -83,8 +83,6 @@ export default function GameBuildsTab({ gameId }: { gameId: string }) {
     return (
         <>
             <div className="flex flex-col gap-4">
-                <Divider title="Game Builds" />
-
                 {/* Header row */}
                 <div className="flex items-center justify-between">
                     <p className="text-sm font-light text-secondary-text">

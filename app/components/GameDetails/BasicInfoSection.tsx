@@ -40,6 +40,12 @@ export default function BasicInfoSection({
     })();
 
     const handleSave = async () => {
+        const trimmedTitle = title.trim();
+        if (trimmedTitle.length < 3 || trimmedTitle.length > 24) {
+            setSubmitError("El título debe tener entre 3 y 24 caracteres.");
+            return;
+        }
+
         setIsSubmitting(true);
         setSubmitError(null);
 
@@ -88,7 +94,7 @@ export default function BasicInfoSection({
                     >
                         <Input.Label>Título</Input.Label>
                         <Input.Field placeholder="Título del juego" />
-                        <Input.Helper>Entre 1 y 24 caracteres.</Input.Helper>
+                        <Input.Helper>Entre 3 y 24 caracteres.</Input.Helper>
                     </Input.Root>
                 </Card>
 

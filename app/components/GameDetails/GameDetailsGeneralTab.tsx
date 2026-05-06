@@ -129,7 +129,9 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
 
     const validate = () => {
         const nextErrors: Record<string, string | null> = {};
-        if (!title.trim()) nextErrors.title = "El título es obligatorio.";
+        const trimmedTitle = title.trim();
+        if (trimmedTitle.length < 3) nextErrors.title = "El título debe tener al menos 3 caracteres.";
+        else if (trimmedTitle.length > 24) nextErrors.title = "El título no puede superar los 24 caracteres.";
         if (isNaN(parsedPrice) || parsedPrice < 0) nextErrors.price = "El precio debe ser un número válido (>= 0).";
         if (isNaN(parsedDiscount) || parsedDiscount < 0 || parsedDiscount > 100) nextErrors.discount = "El descuento debe estar entre 0 y 100.";
         setErrors(nextErrors);
@@ -246,7 +248,7 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
                     >
                         <Input.Label>Título</Input.Label>
                         <Input.Field placeholder="Título del juego" error={errors.title} />
-                        <Input.Helper>Entre 1 y 24 caracteres.</Input.Helper>
+                        <Input.Helper>Entre 3 y 24 caracteres.</Input.Helper>
                     </Input.Root>
                 </Card>
 

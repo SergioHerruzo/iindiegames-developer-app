@@ -1,120 +1,106 @@
 import { useRef, useState } from "react";
-import { Trash2, Upload, ImageOff, Loader, Plus } from "lucide-react";
+import { Trash2, Upload, Loader, Plus } from "lucide-react";
 import Divider from "@components/Divider";
 import StatusBadge from "@components/StatusBadge";
+import Card from "@components/Card";
 import { apiClient } from "@services/ApiClient";
 import { getApiErrorMessage } from "@/utils/apiErrors";
 import type { DeveloperGame } from "@models/DeveloperGame";
 import type { DeveloperArtwork } from "@models/DeveloperArtwork";
 import type { DeveloperStorePicture } from "@models/DeveloperStorePicture";
 
-// ─── Artwork Slot (fixed, named) ──────────────────────────────────────────────
+// ─── Artwork Slot ─────────────────────────────────────────────────────────────
 
 type ArtworkSlotProps = {
     label: string;
     item: DeveloperArtwork | null;
     onUpload: (file: File) => Promise<void>;
-    onDelete: (id: string) => Promise<void>;
 };
 
-function ArtworkSlot({ label, item, onUpload, onDelete }: ArtworkSlotProps) {
+function ArtworkSlot({ label, item, onUpload }: ArtworkSlotProps) {
     const inputRef = useRef<HTMLInputElement>(null);
     const [imageLoaded, setImageLoaded] = useState(false);
     const [uploading, setUploading] = useState(false);
-    const [deleting, setDeleting] = useState(false);
     const [dragging, setDragging] = useState(false);
+
+    const isProcessing = item?.processingStatus === "processing";
+    const canUpload = !isProcessing && !uploading;
 
     const handleFile = async (file: File) => {
         setUploading(true);
-        try {
-            await onUpload(file);
-        } finally {
-            setUploading(false);
-        }
-    };
-
-    const handleDrop = (e: React.DragEvent) => {
-        e.preventDefault();
-        setDragging(false);
-        const file = e.dataTransfer.files[0];
-        if (file && !item) handleFile(file);
-    };
-
-    const handleDelete = async () => {
-        if (!item) return;
-        setDeleting(true);
-        try {
-            await onDelete(item.id);
-        } finally {
-            setDeleting(false);
-        }
+        try { await onUpload(file); }
+        finally { setUploading(false); }
     };
 
     return (
-        <div className="flex flex-col gap-2">
-            {/* Label */}
-            <span className="text-sm font-light text-secondary-text">{label}</span>
-
-            <div className="rounded-xl border border-border-default bg-card-bg overflow-hidden">
-                {/* Image area */}
+        <Card>
+            <div className="flex flex-col gap-1 h-full">
+                <label className="text-badge-neutral-text">{label}</label>
                 <div
-                    className={`group relative h-44 w-full bg-secondary-bg overflow-hidden ${!item ? "cursor-pointer" : ""}`}
-                    onClick={() => !item && !uploading && inputRef.current?.click()}
-                    onDragOver={(e) => { e.preventDefault(); if (!item) setDragging(true); }}
+                    className={`
+                        group mt-1 relative flex-1 flex items-center justify-center
+                        min-h-44 overflow-hidden rounded-lg border border-dashed transition-colors
+                        ${dragging ? "border-primary-border-hover bg-primary-bg-hover" : "border-border-inside-card bg-input-inside-card"}
+                        ${canUpload ? "cursor-pointer hover:border-primary-border-hover hover:bg-primary-bg-hover" : ""}
+                    `}
+                    onClick={() => canUpload && inputRef.current?.click()}
+                    onDragOver={(e) => { e.preventDefault(); if (canUpload) setDragging(true); }}
                     onDragLeave={() => setDragging(false)}
-                    onDrop={handleDrop}
+                    onDrop={(e) => {
+                        e.preventDefault();
+                        setDragging(false);
+                        const file = e.dataTransfer.files[0];
+                        if (file && canUpload) handleFile(file);
+                    }}
                 >
                     {item ? (
                         <>
-                            {!imageLoaded && <div className="absolute inset-0 skeleton-block z-10" />}
+                            {!imageLoaded && <div className="absolute inset-0 skeleton-block" />}
                             <img
                                 src={item.mediumPictureUrl}
                                 alt={label}
                                 onLoad={() => setImageLoaded(true)}
-                                className={`h-full w-full object-cover transition-all duration-500 ease-out group-hover:scale-105 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
+                                className={`h-full w-full object-cover transition-opacity duration-500 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
                             />
-                            {/* Delete overlay */}
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                <button
-                                    type="button"
-                                    onClick={handleDelete}
-                                    disabled={deleting}
-                                    className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-light text-error-text bg-error-bg border border-error-border cursor-pointer hover:opacity-80 transition-opacity disabled:opacity-50"
-                                >
-                                    {deleting
-                                        ? <Loader size={14} className="animate-spin" />
-                                        : <Trash2 size={14} strokeWidth={1.5} />
+                            {isProcessing ? (
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                                    <div className="flex flex-col items-center gap-2">
+                                        <Loader size={20} className="animate-spin text-white" />
+                                        <span className="text-sm font-light text-white/80">Procesando...</span>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                                    {uploading
+                                        ? <Loader size={20} className="animate-spin text-white" />
+                                        : (
+                                            <div className="flex flex-col items-center gap-2">
+                                                <Upload size={20} strokeWidth={1.5} className="text-white" />
+                                                <span className="text-sm font-light text-white/80">Reemplazar</span>
+                                            </div>
+                                        )
                                     }
-                                    <span>{deleting ? "Eliminando..." : "Eliminar"}</span>
-                                </button>
-                            </div>
+                                </div>
+                            )}
                         </>
+                    ) : uploading ? (
+                        <div className="flex flex-col items-center gap-2">
+                            <Loader size={20} className="animate-spin text-primary-icon" />
+                            <span className="text-sm font-light text-badge-neutral-text">Subiendo...</span>
+                        </div>
                     ) : (
-                        /* Empty slot — upload area */
-                        <div className={`
-                            flex h-full w-full flex-col items-center justify-center gap-2
-                            transition-colors duration-200
-                            ${dragging
-                                ? "bg-primary-bg"
-                                : "hover:bg-secondary-bg-hover"
-                            }
-                            ${uploading ? "pointer-events-none opacity-60" : ""}
-                        `}>
-                            {uploading
-                                ? <Loader size={20} className="animate-spin text-primary-icon" />
-                                : <Upload size={20} strokeWidth={1.5} className="text-secondary-icon" />
-                            }
-                            <span className="text-sm font-light text-secondary-text">
-                                {uploading ? "Subiendo..." : "Subir imagen"}
-                            </span>
+                        <div className="flex flex-col items-center justify-center gap-2 px-6 py-8 text-center">
+                            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-primary-border bg-primary-bg transition-colors group-hover:border-primary-border-hover group-hover:bg-primary-bg-hover">
+                                <Upload className="h-4 w-4 text-primary-icon" strokeWidth={1.75} />
+                            </div>
+                            <span className="text-sm font-light text-badge-neutral-text opacity-90">Añadir imagen</span>
                         </div>
                     )}
-
                     <input
                         ref={inputRef}
                         type="file"
                         accept="image/*"
-                        className="hidden"
+                        className="sr-only"
                         onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) handleFile(file);
@@ -122,31 +108,27 @@ function ArtworkSlot({ label, item, onUpload, onDelete }: ArtworkSlotProps) {
                         }}
                     />
                 </div>
-
-                {/* Footer — only when there's an image */}
-                {item && (
-                    <div className="flex items-center justify-between px-3 py-2 border-t border-border-image">
-                        <span className="text-xs text-secondary-text font-light truncate max-w-[60%]">
-                            {item.id}
-                        </span>
-                        <StatusBadge status={item.processingStatus} className="px-2 py-0.5" />
-                    </div>
-                )}
             </div>
-        </div>
+        </Card>
     );
 }
 
 // ─── Store Picture Card ───────────────────────────────────────────────────────
 
-function StorePictureCard({ item, onDelete }: { item: DeveloperStorePicture; onDelete: (id: string) => Promise<void> }) {
+function StorePictureCard({ item, onDelete, canDelete }: {
+    item: DeveloperStorePicture;
+    onDelete: (id: string) => Promise<void>;
+    canDelete: boolean;
+}) {
     const [imageLoaded, setImageLoaded] = useState(false);
     const [deleting, setDeleting] = useState(false);
 
+    const isDeletable = canDelete && (item.processingStatus === "Completed" || item.processingStatus === "Failed");
+
     const handleDelete = async () => {
         setDeleting(true);
-        await onDelete(item.id);
-        setDeleting(false);
+        try { await onDelete(item.id); }
+        finally { setDeleting(false); }
     };
 
     return (
@@ -159,24 +141,25 @@ function StorePictureCard({ item, onDelete }: { item: DeveloperStorePicture; onD
                     onLoad={() => setImageLoaded(true)}
                     className={`h-full w-full object-cover transition-all duration-500 ease-out group-hover:scale-105 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                    <button
-                        type="button"
-                        onClick={handleDelete}
-                        disabled={deleting}
-                        className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-light text-error-text bg-error-bg border border-error-border cursor-pointer hover:opacity-80 transition-opacity disabled:opacity-50"
-                    >
-                        {deleting
-                            ? <Loader size={14} className="animate-spin" />
-                            : <Trash2 size={14} strokeWidth={1.5} />
-                        }
-                        <span>{deleting ? "Eliminando..." : "Eliminar"}</span>
-                    </button>
-                </div>
+                {isDeletable && (
+                    <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        <button
+                            type="button"
+                            onClick={handleDelete}
+                            disabled={deleting}
+                            className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-light text-error-text bg-error-bg border border-error-border cursor-pointer hover:opacity-80 transition-opacity disabled:opacity-50"
+                        >
+                            {deleting
+                                ? <Loader size={14} className="animate-spin" />
+                                : <Trash2 size={14} strokeWidth={1.5} />
+                            }
+                            <span>{deleting ? "Eliminando..." : "Eliminar"}</span>
+                        </button>
+                    </div>
+                )}
             </div>
-
             <div className="flex items-center justify-between px-3 py-2 border-t border-border-image">
-                <span className="text-xs text-secondary-text font-light truncate max-w-[60%]">
+                <span className="text-xs font-light text-secondary-text truncate max-w-[60%]">
                     {item.id}
                 </span>
                 <StatusBadge status={item.processingStatus} className="px-2 py-0.5" />
@@ -185,25 +168,26 @@ function StorePictureCard({ item, onDelete }: { item: DeveloperStorePicture; onD
     );
 }
 
-// ─── Store Pictures Add Button ─────────────────────────────────────────────────
+// ─── Add Store Picture ────────────────────────────────────────────────────────
 
 function AddStorePictureButton({ onUpload }: { onUpload: (file: File) => Promise<void> }) {
-    const inputRef = useRef<HTMLInputElement>(null);
     const [uploading, setUploading] = useState(false);
     const [dragging, setDragging] = useState(false);
 
     const handleFile = async (file: File) => {
         setUploading(true);
-        try {
-            await onUpload(file);
-        } finally {
-            setUploading(false);
-        }
+        try { await onUpload(file); }
+        finally { setUploading(false); }
     };
 
     return (
-        <div
-            onClick={() => !uploading && inputRef.current?.click()}
+        <label
+            className={`
+                group flex flex-col items-center justify-center gap-2 h-44 rounded-xl
+                border border-dashed transition-colors
+                ${dragging ? "border-primary-border-hover bg-primary-bg-hover" : "border-border-inside-card bg-input-inside-card hover:border-primary-border-hover hover:bg-primary-bg-hover"}
+                ${uploading ? "pointer-events-none opacity-60 cursor-default" : "cursor-pointer"}
+            `}
             onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
             onDragLeave={() => setDragging(false)}
             onDrop={(e) => {
@@ -212,36 +196,28 @@ function AddStorePictureButton({ onUpload }: { onUpload: (file: File) => Promise
                 const file = e.dataTransfer.files[0];
                 if (file) handleFile(file);
             }}
-            className={`
-                flex flex-col items-center justify-center gap-3 h-44 rounded-xl
-                border border-dashed cursor-pointer
-                transition-all duration-200
-                ${dragging
-                    ? "border-primary-border bg-primary-bg"
-                    : "border-border-default bg-secondary-bg hover:border-primary-border hover:bg-primary-bg"
-                }
-                ${uploading ? "pointer-events-none opacity-60" : ""}
-            `}
         >
-            {uploading
-                ? <Loader size={20} className="animate-spin text-primary-icon" />
-                : <Plus size={20} strokeWidth={1.5} className="text-secondary-icon" />
-            }
-            <span className="text-sm font-light text-secondary-text">
-                {uploading ? "Subiendo..." : "Añadir imagen"}
-            </span>
             <input
-                ref={inputRef}
                 type="file"
                 accept="image/*"
-                className="hidden"
+                className="sr-only"
                 onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) handleFile(file);
-                    e.target.value = "";
+                    e.currentTarget.value = "";
                 }}
             />
-        </div>
+            {uploading ? (
+                <Loader size={20} className="animate-spin text-primary-icon" />
+            ) : (
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-primary-border bg-primary-bg transition-colors group-hover:border-primary-border-hover group-hover:bg-primary-bg-hover">
+                    <Plus className="h-4 w-4 text-primary-icon" strokeWidth={1.75} />
+                </div>
+            )}
+            <span className="text-sm font-light text-badge-neutral-text opacity-90">
+                {uploading ? "Subiendo..." : "Añadir imagen"}
+            </span>
+        </label>
     );
 }
 
@@ -261,7 +237,6 @@ type ArtworksTabProps = {
 };
 
 export default function ArtworksTab({ game, onRefetch }: ArtworksTabProps) {
-    // Artworks — map by position key (assumes order: capsule, header, main)
     const [artworks, setArtworks] = useState<Record<ArtworkKey, DeveloperArtwork | null>>({
         capsule: game.artworks[0] ?? null,
         header:  game.artworks[1] ?? null,
@@ -270,7 +245,6 @@ export default function ArtworksTab({ game, onRefetch }: ArtworksTabProps) {
 
     const [storePictures, setStorePictures] = useState(game.storePictures);
 
-    // ── Artwork handlers ──
     const handleUploadArtwork = (key: ArtworkKey) => async (file: File) => {
         const formData = new FormData();
         formData.append("Artwork", file);
@@ -283,16 +257,6 @@ export default function ArtworksTab({ game, onRefetch }: ArtworksTabProps) {
         onRefetch();
     };
 
-    const handleDeleteArtwork = (key: ArtworkKey) => async (id: string) => {
-        const response = await apiClient.delete(`/games/${game.id}/artworks/${id}`);
-        if (!response.ok) {
-            throw new Error(getApiErrorMessage(response.status, {}, "No se pudo eliminar el artwork."));
-        }
-
-        setArtworks((prev) => ({ ...prev, [key]: null }));
-    };
-
-    // ── Store Pictures handlers ──
     const handleUploadStorePicture = async (file: File) => {
         const formData = new FormData();
         formData.append("StorePicture", file);
@@ -304,11 +268,7 @@ export default function ArtworksTab({ game, onRefetch }: ArtworksTabProps) {
     };
 
     const handleDeleteStorePicture = async (id: string) => {
-        const response = await apiClient.delete(`/games/${game.id}/store-pictures/${id}`);
-        if (!response.ok) {
-            throw new Error(getApiErrorMessage(response.status, {}, "No se pudo eliminar la imagen."));
-        }
-
+        await apiClient.delete(`/games/developer/store-picture/${id}`);
         setStorePictures((prev) => prev.filter((p) => p.id !== id));
     };
 
@@ -317,10 +277,6 @@ export default function ArtworksTab({ game, onRefetch }: ArtworksTabProps) {
 
             {/* ── Artworks ── */}
             <div className="flex flex-col gap-4">
-                <Divider title="Artworks" />
-                <p className="text-sm font-light text-secondary-text">
-                    Imágenes principales del juego. Cada slot tiene un propósito específico y solo puede contener una imagen.
-                </p>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                     {ARTWORK_SLOTS.map(({ key, label }) => (
                         <ArtworkSlot
@@ -328,7 +284,6 @@ export default function ArtworksTab({ game, onRefetch }: ArtworksTabProps) {
                             label={label}
                             item={artworks[key]}
                             onUpload={handleUploadArtwork(key)}
-                            onDelete={handleDeleteArtwork(key)}
                         />
                     ))}
                 </div>
@@ -338,17 +293,16 @@ export default function ArtworksTab({ game, onRefetch }: ArtworksTabProps) {
             <div className="flex flex-col gap-4">
                 <Divider title="Store Pictures" />
                 <p className="text-sm font-light text-secondary-text">
-                    Capturas y material visual que se mostrará en la página de la tienda.
+                    Estas imágenes se mostrarán en la página de tu juego en la tienda. Puedes subir varias y eliminarlas cuando quieras, pero ten en cuenta que cada imagen pasará por un proceso de revisión automática que puede tardar unos minutos. Durante ese tiempo, la imagen aparecerá como "Procesando..." y no podrás eliminarla ni subir una nueva para reemplazarla. Si el procesamiento falla, podrás intentar subirla de nuevo o eliminarla.
                 </p>
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {storePictures.length === 0 && (
-                        <div className="col-span-full flex flex-col items-center justify-center gap-2 py-6 text-secondary-text">
-                            <ImageOff size={24} strokeWidth={1.5} className="text-secondary-icon" />
-                            <span className="text-sm font-light">No hay imágenes de tienda todavía</span>
-                        </div>
-                    )}
                     {storePictures.map((pic) => (
-                        <StorePictureCard key={pic.id} item={pic} onDelete={handleDeleteStorePicture} />
+                        <StorePictureCard
+                            key={pic.id}
+                            item={pic}
+                            onDelete={handleDeleteStorePicture}
+                            canDelete={storePictures.length > 1}
+                        />
                     ))}
                     <AddStorePictureButton onUpload={handleUploadStorePicture} />
                 </div>
