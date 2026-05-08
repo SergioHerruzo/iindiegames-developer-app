@@ -5,11 +5,8 @@ import EditGameNavigationBar, { type GameTab } from "@components/EditGameNavigat
 import GeneralTab from "@components/GameDetails/GameDetailsGeneralTab";
 import ArtworksTab from "@components/GameDetails/GameDetailsAssetTab";
 import GameBuildsTab from "@components/GameDetails/GamebuildsTab";
+import AchievementsTab from "@components/GameDetails/AchievementsTab";
 import useGameDetails from "@/hooks/useGameDetails";
-
-function AchievementsTab() {
-    return <p className="text-secondary-text text-sm">Logros — próximamente.</p>;
-}
 
 function GameDetailsSkeleton() {
     return (
@@ -67,7 +64,7 @@ export default function Game() {
                         {activeTab === "general" && <GeneralTab game={game} onRefetch={refetch} />}
                         {activeTab === "artworks" && <ArtworksTab game={game} onRefetch={refetch} />}
                         {activeTab === "builds" && <GameBuildsTab gameId={game.id} />}
-                        {activeTab === "achievements" && <AchievementsTab />}
+                        {activeTab === "achievements" && <AchievementsTab gameId={game.id} />}
                     </>
                 )}
             </div>
