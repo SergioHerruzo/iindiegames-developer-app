@@ -206,7 +206,7 @@ export default function GameBuild() {
                             </Card>
                         )}
 
-                        {isUploadingFiles && files.length > 0 && (
+                        {isUploadingFiles && !filesLoading && files.length > 0 && (
                             <Card>
                                 <div className="flex flex-col gap-3">
                                     <div className="flex items-center gap-2">
