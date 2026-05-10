@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useParams } from "react-router";
+import { Link, useParams, useSearchParams } from "react-router";
 import { ArrowLeft } from "lucide-react";
 import EditGameNavigationBar, { type GameTab } from "@components/EditGameNavigationBar";
 import GeneralTab from "@components/GameDetails/GameDetailsGeneralTab";
@@ -25,7 +25,8 @@ function GameDetailsSkeleton() {
 
 export default function Game() {
     const { gameId } = useParams();
-    const [activeTab, setActiveTab] = useState<GameTab>("general");
+    const [searchParams] = useSearchParams();
+    const [activeTab, setActiveTab] = useState<GameTab>((searchParams.get("tab") as GameTab) ?? "general");
     const { game, loading, error, refetch } = useGameDetails(gameId);
 
     return (

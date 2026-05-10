@@ -35,6 +35,10 @@ type UseGameBuildActionsResult = {
     completeError: string | null;
     completeSuccess: boolean;
     handleComplete: () => Promise<void>;
+
+    isSettingExecutable: boolean;
+    setExecutableError: string | null;
+    handleSetExecutable: (filePath: string) => Promise<void>;
 };
 
 export default function useGameBuildActions(
@@ -43,7 +47,8 @@ export default function useGameBuildActions(
     isReadOnly: boolean,
     existingFiles: string[],
     onDeleteSuccess: () => void,
-    onUploadSuccess: () => void
+    onUploadSuccess: () => void,
+    onExecutableSet: () => void
 ): UseGameBuildActionsResult {
     const [versionName, setVersionName] = useState("");
     const [versionNameError, setVersionNameError] = useState<string | null>(null);
@@ -64,6 +69,9 @@ export default function useGameBuildActions(
     const [isCompleting, setIsCompleting] = useState(false);
     const [completeError, setCompleteError] = useState<string | null>(null);
     const [completeSuccess, setCompleteSuccess] = useState(false);
+
+    const [isSettingExecutable, setIsSettingExecutable] = useState(false);
+    const [setExecutableError, setSetExecutableError] = useState<string | null>(null);
 
     const [initialized, setInitialized] = useState(false);
     const savedVersionNameRef = useRef(initialVersionName);
@@ -280,6 +288,39 @@ export default function useGameBuildActions(
         }
     };
 
+    const handleSetExecutable = async (filePath: string) => {
+        if (!buildId) return;
+
+        setIsSettingExecutable(true);
+        setSetExecutableError(null);
+
+        try {
+            const response = await apiClient.patch(`/game-builds/${buildId}/executible-file`, {
+                FilePath: filePath,
+            });
+
+            if (!response.ok) {
+                throw new Error(
+                    getApiErrorMessage(
+                        response.status,
+                        {
+                            401: "No tienes permisos para modificar esta build.",
+                            403: "No tienes permisos para modificar esta build.",
+                            404: "La build no existe o fue eliminada.",
+                        },
+                        "No se pudo establecer el archivo ejecutable."
+                    )
+                );
+            }
+
+            onExecutableSet();
+        } catch (err) {
+            setSetExecutableError(err instanceof Error ? err.message : "Error inesperado.");
+        } finally {
+            setIsSettingExecutable(false);
+        }
+    };
+
     const isDirty = versionName.trim() !== savedVersionNameRef.current || selectedFiles.length > 0;
 
     return {
@@ -310,5 +351,9 @@ export default function useGameBuildActions(
         completeError,
         completeSuccess,
         handleComplete,
+
+        isSettingExecutable,
+        setExecutableError,
+        handleSetExecutable,
     };
 }

@@ -1,5 +1,5 @@
-import { Link, useNavigate, useParams } from "react-router";
-import { ArrowLeft, Trash2, Save, Loader, ExternalLink, Package, FolderOpen, CheckCircle } from "lucide-react";
+import { Link, useNavigate, useParams, useLocation } from "react-router";
+import { ArrowLeft, Trash2, Save, Loader, ExternalLink, Package, FolderOpen, CheckCircle, Terminal } from "lucide-react";
 import Card from "@components/Card";
 import { Input } from "@components/Input";
 import Divider from "@components/Divider";
@@ -30,7 +30,9 @@ const statusLabel = (status: string) => STATUS_LABELS[status] ?? status;
 export default function GameBuild() {
     const { buildId } = useParams();
     const navigate = useNavigate();
-    const { build, loading, error } = useGameBuildDetail(buildId);
+    const location = useLocation();
+    const backGameId = (location.state as { gameId?: string } | null)?.gameId;
+    const { build, loading, error, refetch: refetchBuild } = useGameBuildDetail(buildId);
     const { files, loading: filesLoading, error: filesError, refetch: refetchFiles } = useGameBuildFiles(buildId);
 
     const isReadOnly = Boolean(build?.isReleaseBuild);
@@ -65,13 +67,18 @@ export default function GameBuild() {
         completeError,
         completeSuccess,
         handleComplete,
+
+        isSettingExecutable,
+        setExecutableError,
+        handleSetExecutable,
     } = useGameBuildActions(
         buildId,
         build?.versionName ?? "",
         isReadOnly,
         files,
         () => navigate(-1),
-        () => refetchFiles()
+        () => refetchFiles(),
+        () => refetchBuild()
     );
 
     return (
@@ -79,7 +86,7 @@ export default function GameBuild() {
 
             {/* Back link */}
             <Link
-                to={-1 as unknown as string}
+                to={backGameId ? `/game-details/${backGameId}?tab=builds` : -1 as unknown as string}
                 className="group inline-flex items-center w-fit text-slate-600 dark:text-white/60 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors duration-300"
             >
                 <div className="flex items-center w-0 overflow-hidden opacity-0 -translate-x-4 transition-all duration-300 ease-out group-hover:w-6 group-hover:opacity-100 group-hover:translate-x-0">
@@ -177,7 +184,7 @@ export default function GameBuild() {
 
                         <BuildFileList files={files} loading={filesLoading} error={filesError} />
 
-                        {build.manifestUrl && (
+                        {build.status === "Completed" && build.manifestUrl && (
                             <Card>
                                 <div className="flex items-center justify-between">
                                     <div className="flex flex-col gap-0.5">
@@ -195,6 +202,31 @@ export default function GameBuild() {
                                         <ExternalLink size={14} strokeWidth={1.5} />
                                         Ver manifest
                                     </a>
+                                </div>
+                            </Card>
+                        )}
+
+                        {isUploadingFiles && files.length > 0 && (
+                            <Card>
+                                <div className="flex flex-col gap-3">
+                                    <div className="flex items-center gap-2">
+                                        <Terminal size={14} strokeWidth={1.5} className="text-secondary-icon" />
+                                        <span className="text-sm font-medium text-badge-neutral-text">Archivo ejecutable</span>
+                                    </div>
+                                    <select
+                                        value={build.executableFilePath ?? ""}
+                                        onChange={(e) => handleSetExecutable(e.target.value)}
+                                        disabled={isSettingExecutable}
+                                        className="w-full rounded-lg border border-secondary-border bg-secondary-bg px-3 py-2 text-sm text-slate-200 focus:outline-none focus:border-secondary-border-hover disabled:opacity-50 cursor-pointer"
+                                    >
+                                        <option value="" disabled>Selecciona el ejecutable principal...</option>
+                                        {files.map((file) => (
+                                            <option key={file} value={file}>{file}</option>
+                                        ))}
+                                    </select>
+                                    {setExecutableError && (
+                                        <p className="text-xs text-error-text">{setExecutableError}</p>
+                                    )}
                                 </div>
                             </Card>
                         )}
@@ -276,7 +308,7 @@ export default function GameBuild() {
                                 </PrimaryButton>
                             )}
                             {isUploadingFiles && (files?.length ?? 0) > 0 && (
-                                <PrimaryButton onClick={handleComplete} disabled={isCompleting || isSaving}>
+                                <PrimaryButton onClick={handleComplete} disabled={isCompleting || isSaving || !build.executableFilePath}>
                                     {isCompleting
                                         ? <><Loader size={14} className="animate-spin" /> Completando...</>
                                         : <><CheckCircle size={14} strokeWidth={1.5} /> Completar build</>

@@ -9,9 +9,9 @@ import type { DeveloperGameBuild } from "@models/DeveloperGameBuild";
 
 // ─── Build Card ───────────────────────────────────────────────────────────────
 
-function BuildCard({ build }: { build: DeveloperGameBuild }) {
+function BuildCard({ build, gameId }: { build: DeveloperGameBuild; gameId: string }) {
     return (
-        <Link to={`/game-builds/${build.id}`} className="flex flex-col gap-4 p-5 rounded-xl border border-border-default bg-card-bg hover:bg-secondary-bg hover:border-secondary-border transition-all duration-150">
+        <Link to={`/game-builds/${build.id}`} state={{ gameId }} className="flex flex-col gap-4 p-5 rounded-xl border border-border-default bg-card-bg hover:bg-secondary-bg hover:border-secondary-border transition-all duration-150">
             <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-secondary-bg border border-secondary-border shrink-0">
                     <Package size={22} strokeWidth={1.5} className="text-secondary-icon" />
@@ -110,7 +110,7 @@ export default function GameBuildsTab({ gameId }: { gameId: string }) {
                 {!error && !loading && items.length > 0 && (
                     <div className="grid grid-cols-2 gap-3">
                         {items.map((build) => (
-                            <BuildCard key={build.id} build={build} />
+                            <BuildCard key={build.id} build={build} gameId={gameId} />
                         ))}
                     </div>
                 )}

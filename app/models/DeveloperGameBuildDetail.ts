@@ -4,4 +4,5 @@ export type DeveloperGameBuildDetail = {
     status: string;
     isReleaseBuild: boolean;
     manifestUrl: string | null;
+    executableFilePath: string | null;
 }
