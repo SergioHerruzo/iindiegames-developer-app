@@ -17,13 +17,13 @@
   --color-border-image: #e2e8f0;
   --color-border-inside-card: #cbd5e1;
 
-  --color-primary-bg: rgba(16 185 129 / 0.15);
-  --color-primary-bg-hover: rgba(16 185 129 / 0.25);
-  --color-primary-border: rgba(167 243 208 / 0.6);
-  --color-primary-border-hover: rgba(167 243 208 / 0.8);
-  --color-primary-focus: rgba(52 211 153 / 0.6);
-  --color-primary-text: #047857;
-  --color-primary-icon: #059669;
+  --color-primary-bg: rgba(124 58 237 / 0.15);
+  --color-primary-bg-hover: rgba(124 58 237 / 0.25);
+  --color-primary-border: rgba(196 181 253 / 0.6);
+  --color-primary-border-hover: rgba(196 181 253 / 0.8);
+  --color-primary-focus: rgba(167 139 250 / 0.6);
+  --color-primary-text: #6d28d9;
+  --color-primary-icon: #7c3aed;
 
   --color-secondary-bg: rgba(255 255 255 / 0.4);
   --color-secondary-bg-hover: rgba(255 255 255 / 0.5);
@@ -82,13 +82,13 @@
 
     --color-divider: rgb(34 34 34);
 
-    --color-primary-bg: rgb(21 38 32);
-    --color-primary-bg-hover: rgb(23 46 38);
-    --color-primary-border: rgb(26 63 50);
-    --color-primary-border-hover: rgb(32 96 73);
-    --color-primary-focus: rgb(26 63 50);
-    --color-primary-text: rgb(35 197 153);
-    --color-primary-icon: rgb(17 156 109);
+    --color-primary-bg: rgb(28 14 56);
+    --color-primary-bg-hover: rgb(35 18 70);
+    --color-primary-border: rgb(50 25 100);
+    --color-primary-border-hover: rgb(70 35 140);
+    --color-primary-focus: rgb(50 25 100);
+    --color-primary-text: rgb(167 139 250);
+    --color-primary-icon: rgb(124 58 237);
 
     --color-secondary-bg: rgb(25 25 25);
     --color-secondary-bg-hover: rgb(28 28 28);
@@ -226,23 +226,23 @@
 
   .landing-bg {
     background:
-      radial-gradient(ellipse at 50% 35%, rgba(16 185 129 / 0.22) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 35%, rgba(124 58 237 / 0.22) 0%, transparent 60%),
       var(--color-bg-default);
   }
 
   [data-theme="dark"] .landing-bg {
     background:
-      radial-gradient(ellipse at 50% 35%, rgba(16 185 129 / 0.14) 0%, transparent 60%),
+      radial-gradient(ellipse at 50% 35%, rgba(124 58 237 / 0.14) 0%, transparent 60%),
       var(--color-bg-default);
   }
 
   .link {
-    @apply relative text-emerald-700 dark:text-emerald-400;
+    @apply relative text-violet-700 dark:text-violet-400;
 
     @apply after:content-['']
     after:absolute after:left-0 after:bottom-0
     after:h-px after:w-full
-    after:bg-emerald-500
+    after:bg-violet-500
     after:scale-x-0 after:origin-left
     after:transition-transform after:duration-300
     after:will-change-transform
