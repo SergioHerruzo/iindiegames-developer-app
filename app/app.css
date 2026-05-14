@@ -7,15 +7,15 @@
     "Poppins", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
     "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
-  --color-bg-default: rgba(250 250 250);
+  --color-bg-default: #f8fafc;
 
-  --color-card-bg: rgba(255 255 255 / 0.4);
-  --color-input-bg: rgba(255 255 255 / 0.4);
-  --color-input-inside-card: rgba(255 255 255 / 0.5);
+  --color-card-bg: #ffffff;
+  --color-input-bg: #ffffff;
+  --color-input-inside-card: #f8fafc;
 
-  --color-border-default: rgba(0 0 0 / 0.05);
-  --color-border-image: rgba(0 0 0 / 0.05);
-  --color-border-inside-card: rgba(0 0 0 / 0.1);
+  --color-border-default: #e2e8f0;
+  --color-border-image: #e2e8f0;
+  --color-border-inside-card: #cbd5e1;
 
   --color-primary-bg: rgba(16 185 129 / 0.15);
   --color-primary-bg-hover: rgba(16 185 129 / 0.25);
@@ -33,16 +33,16 @@
   --color-secondary-text: rgba(0 0 0 / 0.7);
   --color-secondary-icon: rgba(0 0 0 / 0.5);
 
-  --color-published-bg: rgba(16 185 129 / 0.15);
-  --color-published-border: rgba(16 185 129 / 0.2);
+  --color-published-bg: #d1fae5;
+  --color-published-border: #a7f3d0;
   --color-published-text: #047857;
 
-  --color-badge-neutral-bg: rgba(226 232 250 / 0.7);
-  --color-badge-neutral-border: rgba(226 232 250 / 0.6);
+  --color-badge-neutral-bg: #f1f5f9;
+  --color-badge-neutral-border: #e2e8f0;
   --color-badge-neutral-text: #475569;
 
-  --color-error-bg: rgba(244 63 94 / 0.15);
-  --color-error-border: rgba(244 63 94 / 0.2);
+  --color-error-bg: #ffe4e6;
+  --color-error-border: #fecdd3;
   --color-error-text: #be123c;
   --color-error-input-border: #f87171;
   --color-error-input-focus: #ef4444;
@@ -51,6 +51,9 @@
   --color-success-input-border: #34d399;
   --color-success-input-focus: #10b981;
   --color-success-message: #10b981;
+
+  --color-skeleton-block: #e2e8f0;
+  --color-skeleton-shimmer: rgba(255 255 255 / 0.7);
 
   --scrollbar-thumb: rgb(90 90 90);
   --scrollbar-thumb-hover: rgb(90 90 90);
@@ -199,6 +202,40 @@
 }
 
 @layer components {
+  .scrollbar-primary {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary-border-hover) transparent;
+  }
+
+  .scrollbar-primary::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-primary::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-primary::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary-border-hover);
+    border-radius: 9999px;
+  }
+
+  .scrollbar-primary::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-primary-focus);
+  }
+
+  .landing-bg {
+    background:
+      radial-gradient(ellipse at 50% 35%, rgba(16 185 129 / 0.22) 0%, transparent 60%),
+      var(--color-bg-default);
+  }
+
+  [data-theme="dark"] .landing-bg {
+    background:
+      radial-gradient(ellipse at 50% 35%, rgba(16 185 129 / 0.14) 0%, transparent 60%),
+      var(--color-bg-default);
+  }
+
   .link {
     @apply relative text-emerald-700 dark:text-emerald-400;
 

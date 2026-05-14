@@ -33,7 +33,7 @@ export function ProtectedRoute({
     if (!isAuthenticated) return null;
 
     if (allowedRoles && !allowedRoles.includes(profile?.role ?? "")) {
-        return <Navigate to="/unauthorized" replace />;
+        return <Navigate to="/" replace />;
     }
 
     return <Outlet />;

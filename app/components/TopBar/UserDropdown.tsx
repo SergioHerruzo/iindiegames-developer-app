@@ -18,7 +18,7 @@ export function UserDropdown({ isOpen }: Props) {
 
     const handleLogout = async () => {
         await logout();
-        navigate("/login", { replace: true });
+        navigate("/", { replace: true });
     };
 
     return (
