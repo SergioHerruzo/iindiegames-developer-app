@@ -21,6 +21,7 @@
       "@models/*": ["./app/models/*"],
       "@services/*": ["./app/services/*"],
       "@theme/*": ["./app/theme/*"],
+      "@hooks/*": ["./app/hooks/*"],
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,

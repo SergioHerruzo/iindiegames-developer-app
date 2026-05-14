@@ -12,6 +12,7 @@ export default defineConfig({
       "@models": "/app/models",
       "@services": "/app/services",
       "@theme": "/app/theme",
+      "@hooks": "/app/hooks",
     }
   },
 });
