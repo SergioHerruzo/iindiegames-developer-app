@@ -67,7 +67,7 @@ export default function PanelGameCard({ id, title, description, imageUrl, status
 
                 {/* Content Section */}
                 <div className="flex flex-col gap-2 p-4 flex-1">
-                    <h3 className="font-semibold text-slate-200">{title}</h3>
+                    <h3 className="font-semibold text-slate-700 dark:text-white/80">{title}</h3>
 
                     {/* Status Tags */}
                     <div className="inline-flex items-center gap-2">
