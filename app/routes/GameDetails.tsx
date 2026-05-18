@@ -35,7 +35,7 @@ export default function Game() {
             <div className="flex items-center gap-6">
                 <Link
                     to="/panel"
-                    className="group relative inline-flex items-center shrink-0 ml-5 text-slate-600 dark:text-white/60 hover:text-emerald-700 dark:hover:text-emerald-400 transition-colors duration-300"
+                    className="group relative inline-flex items-center shrink-0 ml-5 text-slate-600 dark:text-white/60 hover:text-primary-text transition-colors duration-300"
                 >
                     <ArrowLeft
                         size={16}
