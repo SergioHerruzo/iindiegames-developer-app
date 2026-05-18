@@ -17,10 +17,10 @@ export function ProtectedRoute({
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!isLoading && !isAuthenticated) {
+        if (requireAuth && !isLoading && !isAuthenticated) {
             navigate(redirectTo ?? "/login", { replace: true });
         }
-    }, [isLoading, isAuthenticated]);
+    }, [requireAuth, isLoading, isAuthenticated]);
 
     if (isLoading) return null;
 

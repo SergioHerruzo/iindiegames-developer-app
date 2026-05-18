@@ -53,7 +53,7 @@ export default function Register() {
         setIsPending(true);
         try {
             await register(email, password, user);
-            navigate("/confirm", { state: { email }, replace: true });
+            navigate("/confirm-register", { state: { email }, replace: true });
         } catch (err) {
             setError(parseAuthError(err));
         } finally {
