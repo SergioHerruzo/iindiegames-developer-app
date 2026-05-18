@@ -378,7 +378,7 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
                 </Card>
             </div>
 
-            {/* ── Guardar ── */}
+            {/* ── Guardar / Publicar ── */}
             <div className="flex flex-col gap-3">
                 {saveError && (
                     <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
@@ -390,41 +390,38 @@ export default function GameDetailsGeneralTab({ game, onRefetch }: GameDetailsGe
                         Cambios guardados correctamente.
                     </div>
                 )}
+                {publishError && (
+                    <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
+                        {publishError}
+                    </div>
+                )}
+                {publishSuccess && (
+                    <div className="rounded-lg border border-published-border bg-published-bg p-3 text-sm text-published-text">
+                        Juego publicado correctamente.
+                    </div>
+                )}
                 <div className="flex items-center justify-between gap-4">
                     <p className="text-sm font-light text-secondary-text">
                         {isDirty ? "Tienes cambios sin guardar." : "No hay cambios pendientes."}
                     </p>
-                    <PrimaryButton className="max-w-fit" onClick={handleSaveAll} disabled={isSaving || !isDirty}>
-                        {isSaving
-                            ? <><Loader size={14} className="animate-spin" /> Guardando...</>
-                            : <><Save size={14} strokeWidth={1.5} /> Guardar cambios</>
-                        }
-                    </PrimaryButton>
+                    <div className="flex items-center gap-3">
+                        {!game.isReleased && (
+                            <PrimaryButton className="max-w-fit" onClick={handlePublish} disabled={isPublishing}>
+                                {isPublishing
+                                    ? <><Loader size={14} className="animate-spin" /> Publicando...</>
+                                    : <><Globe size={14} strokeWidth={1.5} /> Publicar juego</>
+                                }
+                            </PrimaryButton>
+                        )}
+                        <PrimaryButton className="max-w-fit" onClick={handleSaveAll} disabled={isSaving || !isDirty}>
+                            {isSaving
+                                ? <><Loader size={14} className="animate-spin" /> Guardando...</>
+                                : <><Save size={14} strokeWidth={1.5} /> Guardar cambios</>
+                            }
+                        </PrimaryButton>
+                    </div>
                 </div>
             </div>
-
-            {/* Publish */}
-            {!game.isReleased && (
-                <div className="flex flex-col gap-3">
-                    <Divider title="Publicar" />
-                    {publishError && (
-                        <div className="rounded-lg border border-error-border bg-error-bg p-3 text-sm text-error-text">
-                            {publishError}
-                        </div>
-                    )}
-                    {publishSuccess && (
-                        <div className="rounded-lg border border-published-border bg-(--color-published-bg) p-3 text-sm text-(--color-published-text)">
-                            Juego publicado correctamente.
-                        </div>
-                    )}
-                    <PrimaryButton className="max-w-fit" onClick={handlePublish} disabled={isPublishing}>
-                        {isPublishing
-                            ? <><Loader size={14} className="animate-spin" /> Publicando...</>
-                            : <><Globe size={14} strokeWidth={1.5} /> Publicar juego</>
-                        }
-                    </PrimaryButton>
-                </div>
-            )}
         </div>
     );
 }
