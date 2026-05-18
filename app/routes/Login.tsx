@@ -97,16 +97,10 @@ export default function Login() {
                         {isPending ? "Iniciando sesión..." : "Iniciar Sesión"}
                     </PrimaryButton>
 
-                    <div className="flex flex-col gap-3">
-                        <p className="text-sm">
-                            Has olvidado tu contraseña?{" "}
-                            <Link to="/recover" className="link">Recuperar</Link>
-                        </p>
-                        <p className="text-sm">
-                            No tienes una cuenta?{" "}
-                            <Link to="/register" className="link">Registrarse</Link>
-                        </p>
-                    </div>
+                    <p className="text-sm">
+                        No tienes una cuenta?{" "}
+                        <Link to="/register" className="link">Registrarse</Link>
+                    </p>
                 </div>
             </Card>
         </form>
